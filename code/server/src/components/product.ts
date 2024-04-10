@@ -17,10 +17,18 @@ class Product {
      * @param model - The model of the product. This is the name of the product.
      * @param category - The category of the product. This is the type of product.
      * @param arrivalDate - The arrival date of the product at the store.
-     * @param sellingDate - The selling date of the product, is null if the product has not been sold yet. 
+     * @param sellingDate - The selling date of the product, is null if the product has not been sold yet.
      * @param details - Additional details about the product, can be null.
      */
-    constructor(code: string, sellingPrice: number, model: string, category: Category, arrivalDate: string | null, sellingDate: string | null, details: string | null) {
+    constructor(
+        code: string,
+        sellingPrice: number,
+        model: string,
+        category: Category,
+        arrivalDate: string | null,
+        sellingDate: string | null,
+        details: string | null,
+    ) {
         this.code = code;
         this.sellingPrice = sellingPrice;
         this.model = model;
@@ -40,5 +48,4 @@ enum Category {
     APPLIANCE = "Appliance",
 }
 
-
-export { Product, Category }
+export { Product, Category };

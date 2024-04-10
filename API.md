@@ -6,6 +6,7 @@ Request parameters, request body content, and optional query parameters must be 
 
 - in the different functions inside the `controllers` module
   Example:
+
   ```javascript
      async createUser(username: string, name: string, surname: string, password: string, role: string): Promise<boolean> {
         if(!username || !name || !surname || !password || !role) throw new WrongParametersError() //example error with the correct error code
@@ -15,8 +16,10 @@ Request parameters, request body content, and optional query parameters must be 
         return ret
     }
   ```
+
 - using middlewares directly when calling the routes in the `routers` module (preferred option for simplicity)
   Example:
+
   ```javascript
   this.router.post(
     "/",

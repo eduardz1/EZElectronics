@@ -1,15 +1,15 @@
-import { Product } from "./product"
+import { Product } from "./product";
 
 /**
  * Represents a shopping cart.
  */
 class Cart {
-    id: number
-    customer: string
-    paid: boolean
-    paymentDate: string
-    total: number
-    products: Product[]
+    id: number;
+    customer: string;
+    paid: boolean;
+    paymentDate: string;
+    total: number;
+    products: Product[];
 
     /**
      * Creates a new instance of the Cart class.
@@ -20,14 +20,21 @@ class Cart {
      * @param total - The total amount of the cart. It corresponds to the sum of the prices of all the products in the cart and is equal to 0 until the cart is paid for.
      * @param products - The products in the cart.
      */
-    constructor(id: number, customer: string, paid: boolean, paymentDate: string, total: number, products: Product[]) {
-        this.id = id
-        this.customer = customer
-        this.paid = paid
-        this.paymentDate = paymentDate
-        this.total = total
-        this.products = products
+    constructor(
+        id: number,
+        customer: string,
+        paid: boolean,
+        paymentDate: string,
+        total: number,
+        products: Product[],
+    ) {
+        this.id = id;
+        this.customer = customer;
+        this.paid = paid;
+        this.paymentDate = paymentDate;
+        this.total = total;
+        this.products = products;
     }
 }
 
-export default Cart
+export default Cart;

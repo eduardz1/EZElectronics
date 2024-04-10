@@ -1,0 +1,46 @@
+default_stages: [pre-commit, pre-push]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: check-yaml
+      - id: sort-simple-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v3.1.0"
+    hooks:
+      - id: prettier
+
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: "v9.0.0"
+  #   hooks:
+  #     - id: eslint
+  #       files: code/server/.*[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx in code/server
+  #       types: [file]
+  # TODO: maybe find a way to make eslint work
+  # - repo: local
+  #   hooks:
+  #     - id: eslint
+  #       name: eslint
+  #       entry: npx
+  #       language: system
+  #       files: code/server/.*[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx in code/server
+  #       types: [file]
+  #       args: ["eslint", "--fix", "code/server"]
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.39.0
+    hooks:
+      - id: markdownlint
+        args: ["--fix", "--disable", "MD013", "MD033"]
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.2.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: []
