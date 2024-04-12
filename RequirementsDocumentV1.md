@@ -10,28 +10,28 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
 
 # Contents
 
-- [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
-- [Contents](#contents)
-- [Informal description](#informal-description)
-- [Stakeholders](#stakeholders)
-- [Context Diagram and interfaces](#context-diagram-and-interfaces)
-  - [Context Diagram](#context-diagram)
-  - [Interfaces](#interfaces)
-- [Stories and personas](#stories-and-personas)
-- [Functional and non functional requirements](#functional-and-non-functional-requirements)
-  - [Functional Requirements](#functional-requirements)
-  - [Non Functional Requirements](#non-functional-requirements)
-- [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-  - [Use case diagram](#use-case-diagram)
-    - [Use case 1, UC1](#use-case-1-uc1)
-      - [Scenario 1.1](#scenario-11)
-      - [Scenario 1.2](#scenario-12)
-      - [Scenario 1.x](#scenario-1x)
-    - [Use case 2, UC2](#use-case-2-uc2)
-    - [Use case x, UCx](#use-case-x-ucx)
-- [Glossary](#glossary)
-- [System Design](#system-design)
-- [Deployment Diagram](#deployment-diagram)
+-   [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
+-   [Contents](#contents)
+-   [Informal description](#informal-description)
+-   [Stakeholders](#stakeholders)
+-   [Context Diagram and interfaces](#context-diagram-and-interfaces)
+    -   [Context Diagram](#context-diagram)
+    -   [Interfaces](#interfaces)
+-   [Stories and personas](#stories-and-personas)
+-   [Functional and non functional requirements](#functional-and-non-functional-requirements)
+    -   [Functional Requirements](#functional-requirements)
+    -   [Non Functional Requirements](#non-functional-requirements)
+-   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+    -   [Use case diagram](#use-case-diagram)
+        -   [Use case 1, UC1](#use-case-1-uc1)
+            -   [Scenario 1.1](#scenario-11)
+            -   [Scenario 1.2](#scenario-12)
+            -   [Scenario 1.x](#scenario-1x)
+        -   [Use case 2, UC2](#use-case-2-uc2)
+        -   [Use case x, UCx](#use-case-x-ucx)
+-   [Glossary](#glossary)
+-   [System Design](#system-design)
+-   [Deployment Diagram](#deployment-diagram)
 
 # Informal description
 
@@ -39,9 +39,13 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 # Stakeholders
 
-| Stakeholder name | Description |
-| :--------------: | :---------: |
-| Stakeholder x..  |             |
+|                          Stakeholder name                          | Description |
+| :----------------------------------------------------------------: | :---------: |
+|                             Customers                              |             |
+|                 Admin (tech admin, business admin)                 |             |
+|                               Store                                |             |
+|                          Payment Service                           |             |
+| Google Play Store & Apple App Store (legal + quality requirements) |             |
 
 # Context Diagram and interfaces
 
