@@ -21,8 +21,8 @@ class UserNotFoundError extends Error {
  * Represents an error that occurs when a user is not a manager.
  */
 class UserNotManagerError extends Error {
-    customMessage: String;
-    customCode: Number;
+    customMessage: string;
+    customCode: number;
 
     constructor() {
         super();
@@ -35,8 +35,8 @@ class UserNotManagerError extends Error {
  * Represents an error that occurs when a user is not a customer.
  */
 class UserNotCustomerError extends Error {
-    customMessage: String;
-    customCode: Number;
+    customMessage: string;
+    customCode: number;
 
     constructor() {
         super();
@@ -49,8 +49,8 @@ class UserNotCustomerError extends Error {
  * Represents an error that occurs when a username is already in use.
  */
 class UserAlreadyExistsError extends Error {
-    customMessage: String;
-    customCode: Number;
+    customMessage: string;
+    customCode: number;
 
     constructor() {
         super();

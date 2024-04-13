@@ -6,7 +6,7 @@ import ProductRoutes from "./routers/productRoutes";
 import CartRoutes from "./routers/cartRoutes";
 
 const morgan = require("morgan");
-const prefix = "/ezelectronics";
+const prefix = "/ezelectronics"; 
 
 /**
  * Initializes the routes for the application.
