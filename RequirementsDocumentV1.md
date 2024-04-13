@@ -23,7 +23,7 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
     -   [Non Functional Requirements](#non-functional-requirements)
 -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
     -   [Use case diagram](#use-case-diagram)
-        -   [Use case 1, UC1](#use-case-1-uc1)
+        -   [Use case 1, UC1 Authenticate](#use-case-1-uc1--authenticate)
             -   [Scenario 1.1](#scenario-11)
             -   [Scenario 1.2](#scenario-12)
             -   [Scenario 1.x](#scenario-1x)
@@ -39,21 +39,20 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 # Stakeholders
 
-|                          Stakeholder name                          | Description |
-| :----------------------------------------------------------------: | :---------: |
-|                             Customers                              |             |
-|                 Admin (tech admin, business admin)                 |             |
-|                               Store                                |             |
-|                          Payment Service                           |             |
-| Google Play Store & Apple App Store (legal + quality requirements) |             |
+|          Stakeholder name           |                                                                Description                                                                |
+| :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
+|              Customers              |                                              The customer of the each electronic goods store                                              |
+|               Admins                | IT administrator, Business administrator, Security Manager, DB Administrator, Community Moderator (for inappropriate description/reviews) |
+|        Physical Goods Store         |                                             Each of the electronics store, seen as an entity                                              |
+|           Payment Service           |                                                          PayPal/VISA/Mastercard                                                           |
+| Google Play Store & Apple App Store |                                                      (legal + quality requirements)                                                       |
+|             Competitors             |                                                             (Amazon/Ebay ...)                                                             |
 
 # Context Diagram and interfaces
 
 ## Context Diagram
 
-\<Define here Context diagram using UML use case diagram>
-
-\<actors are a subset of stakeholders>
+![context-diagram](imgs/context-diagram.svg)
 
 ## Interfaces
 
@@ -61,9 +60,13 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 \<GUIs will be described graphically in a separate document>
 
-|   Actor   | Logical Interface | Physical Interface |
-| :-------: | :---------------: | :----------------: |
-| Actor x.. |                   |                    |
+|                Actor                |                                                                 Logical Interface                                                                  | Physical Interface |
+| :---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
+|              Customer               |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
+|               Admins                |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
+|          Electronics Store          | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
+|           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      |
+| Google Play Store & Apple App Store |                                       API (to be defined - key functions: handle the app submission process)                                       |      Internet      |
 
 # Stories and personas
 
@@ -81,22 +84,35 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 \<they match to high level use cases>
 
-|  ID   | Description |
-| :---: | :---------: |
-|  FR1  |             |
-|  FR2  |             |
-| FRx.. |             |
+|  ID  |                                                                                   Description                                                                                    |
+| :--: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| FR1  |                                                                           Users can log in or log out                                                                            |
+| FR2  |                                       The system must be able to check if the user is logged in, and if not, return a 401 error response​                                        |
+| FR3  |                        The system must differentiate between customer and manager roles and allow access to specific functionalities based on these roles                        |
+| FR4  |                   The system must allow logged-in customers to add products to their cart, ensuring the product ID is valid and the product has not been sold                    |
+| FR5  |                                              The system must provide the ability to check out a cart, only if the cart is not empty                                              |
+| FR6  |                                   The system must be able to return the purchase history of the logged-in customer, excluding the current cart                                   |
+| FR7  |                                          The system must allow the removal of a product from the cart given a valid product ID and cart                                          |
+| FR8  |                The system must allow managers to register new products with valid details such as code, model, category, selling price, and optional arrival date                |
+| FR9  |            The system must permit the deletion of products by code and allow for the deletion of all products, the latter for testing purposes without authentication            |
+| FR10 | The system must enable managers to register the arrival of proposed products, sell products, and retrieve products by different criteria such as code, category, and sold status |
+| FR11 |                                                               managers can add, delete or update product listings                                                                |
+| FR12 |                                          Customers can browse products based on various criteria like category, model, and availability                                          |
+| FR14 |                                                              Customers can add products to their cart and checkout                                                               |
+| FR17 |                                                               The system maintains a history of customer purchases                                                               |
+| FR18 |                                                   The system provides role-based access control for different functionalities                                                    |
 
 ## Non Functional Requirements
 
 \<Describe constraints on functional requirements>
 
-|   ID    | Type (efficiency, reliability, ..) | Description | Refers to |
-| :-----: | :--------------------------------: | :---------: | :-------: |
-|  NFR1   |                                    |             |           |
-|  NFR2   |                                    |             |           |
-|  NFR3   |                                    |             |           |
-| NFRx .. |                                    |             |           |
+|   ID    | Type (efficiency, reliability, ..) |                                                   Description                                                    | Refers to  |
+| :-----: | :--------------------------------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
+|  NFR1   |             usability              | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
+|  NFR2   |              security              |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
+|  NFR3   |            reliability             |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
+|  NFR4   |            scalability             |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
+| NFRx .. |                                    |                                                                                                                  |            |
 
 # Use case diagram and use cases
 
@@ -106,15 +122,15 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 \<next describe here each use case in the UCD>
 
-### Use case 1, UC1
+### Use case 1, UC1 Authenticate
 
-| Actors Involved  |                                                                      |
-| :--------------: | :------------------------------------------------------------------: |
-|   Precondition   | \<Boolean expression, must evaluate to true before the UC can start> |
-|  Post condition  |  \<Boolean expression, must evaluate to true after UC is finished>   |
-| Nominal Scenario |         \<Textual description of actions executed by the UC>         |
-|     Variants     |                      \<other normal executions>                      |
-|    Exceptions    |                        \<exceptions, errors >                        |
+| Actors Involved  |                             User                             |
+| :--------------: | :----------------------------------------------------------: |
+|   Precondition   |                     User has an account                      |
+|  Post condition  |                User is logged in his account                 |
+| Nominal Scenario | User insert username and password to log in into his account |
+|     Variants     |            User can log in as costumer or manager            |
+|    Exceptions    |                       Error for log in                       |
 
 ##### Scenario 1.1
 
