@@ -13,7 +13,7 @@ const sqlite = require("sqlite3");
 // A separate database needs to be used for testing to avoid corrupting the development database and ensuring a clean state for each test.
 
 //The environment variable is set in the package.json file in the test script.
-let env = process.env.NODE_ENV ? process.env.NODE_ENV.trim() : "development";
+const env = process.env.NODE_ENV ? process.env.NODE_ENV.trim() : "development";
 
 // The database file path is determined based on the environment variable.
 const dbFilePath = env === "test" ? "./src/db/testdb.db" : "./src/db/db.db";

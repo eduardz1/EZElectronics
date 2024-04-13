@@ -52,7 +52,7 @@ class Authenticator {
                 (username: string, password: string, done: any) => {
                     copyThis.dao
                         .getIsUserAuthenticated(username, password)
-                        .then((authenticated: Boolean) => {
+                        .then((authenticated: boolean) => {
                             if (authenticated) {
                                 copyThis.dao
                                     .getUserByUsername(username)
