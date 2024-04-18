@@ -23,7 +23,7 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
     -   [Non Functional Requirements](#non-functional-requirements)
 -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
     -   [Use case diagram](#use-case-diagram)
-        -   [Use case 1, UC1 Authenticate](#use-case-1-uc1--authenticate)
+        -   [Use case 1, UC1 Authenticate](#use-case-1-uc1-authenticate)
             -   [Scenario 1.1](#scenario-11)
             -   [Scenario 1.2](#scenario-12)
             -   [Scenario 1.x](#scenario-1x)
@@ -48,6 +48,8 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 | Google Play Store & Apple App Store |                                                      (legal + quality requirements)                                                       |
 |             Competitors             |                                                             (Amazon/Ebay ...)                                                             |
 
+<!-- FIXME: discuss this |           Shipping Agency           |                                                        One or more (FedEX, UPS...)                                                        | -->
+
 # Context Diagram and interfaces
 
 ## Context Diagram
@@ -65,8 +67,9 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |              Customer               |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
 |               Admins                |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
 |          Electronics Store          | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
-|           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      |
 | Google Play Store & Apple App Store |                                       API (to be defined - key functions: handle the app submission process)                                       |      Internet      |
+
+<!-- FIXME: not present in the v1 API |           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      | -->
 
 # Stories and personas
 
