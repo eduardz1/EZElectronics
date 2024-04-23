@@ -123,7 +123,7 @@ dist
 .vscode-test
 
 # VSCode settings
-.vscode/settings.json
+.vscode/*
 
 # yarn v2
 .yarn/cache
