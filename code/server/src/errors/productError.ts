@@ -16,7 +16,7 @@ class ProductNotFoundError extends Error {
     }
 }
 
-/**
+/** // TODO: clarify, are ids automatically generated? If so, this error cannot occur
  * Represents an error that occurs when a product id already exists.
  */
 class ProductAlreadyExistsError extends Error {

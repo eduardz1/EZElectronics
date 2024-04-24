@@ -12,7 +12,7 @@ class Product {
 
     /**
      * Creates a new instance of the Product class.
-     * @param code - The product code. Every product has a unique code.
+     * @param code - The product code. Every product has a unique code. Every product of the same model has the same code. // FIXME: clarify this, it doesn't make sense
      * @param sellingPrice - The selling price of the product. This is the price at which the product is sold to the customer.
      * @param model - The model of the product. This is the name of the product.
      * @param category - The category of the product. This is the type of product.

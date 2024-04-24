@@ -8,36 +8,52 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
 | :------------: | :----: |
 |                |        |
 
-# Contents
+## Contents
 
 -   [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
--   [Contents](#contents)
--   [Informal description](#informal-description)
--   [Stakeholders](#stakeholders)
--   [Context Diagram and interfaces](#context-diagram-and-interfaces)
-    -   [Context Diagram](#context-diagram)
-    -   [Interfaces](#interfaces)
--   [Stories and personas](#stories-and-personas)
--   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-    -   [Functional Requirements](#functional-requirements)
-    -   [Non-Functional Requirements](#non-functional-requirements)
--   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-    -   [Use case diagram](#use-case-diagram)
-        -   [Use case 1, UC1 Authenticate](#use-case-1-uc1-authenticate)
-            -   [Scenario 1.1](#scenario-11)
-            -   [Scenario 1.2](#scenario-12)
-            -   [Scenario 1.x](#scenario-1x)
-        -   [Use case 2, UC2](#use-case-2-uc2)
-        -   [Use case x, UCx](#use-case-x-ucx)
--   [Glossary](#glossary)
--   [System Design](#system-design)
--   [Deployment Diagram](#deployment-diagram)
+    -   [Contents](#contents)
+    -   [Informal description](#informal-description)
+    -   [Stakeholders](#stakeholders)
+    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
+        -   [Context Diagram](#context-diagram)
+        -   [Interfaces](#interfaces)
+    -   [Stories and personas](#stories-and-personas)
+    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+        -   [Functional Requirements](#functional-requirements)
+        -   [Non-Functional Requirements](#non-functional-requirements)
+    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+        -   [Use case diagram](#use-case-diagram)
+        -   [UC1 - Log In](#uc1---log-in)
+            -   [Scenario 1a | User logs in into his account as Customer |](#scenario-1a--user-logs-in-into-his-account-as-customer-)
+                -   [Exception 1a.2a | Credential Error |](#exception-1a2a--credential-error-)
+            -   [Scenario 1b | User logs in into his account as Manager |](#scenario-1b--user-logs-in-into-his-account-as-manager-)
+                -   [Exception 1b.2a | Credential Error |](#exception-1b2a--credential-error-)
+        -   [UC2 - Log Out](#uc2---log-out)
+        -   [UC3 - Sign Up](#uc3---sign-up)
+            -   [Variant 3.2a | User registers as Manager |](#variant-32a--user-registers-as-manager-)
+            -   [Exception 3.3a | User Already Exists |](#exception-33a--user-already-exists-)
+        -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
+            -   [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
+            -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
+            -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
+            -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
+            -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+            -   [Exception 4.4a | Item Already in Cart |](#exception-44a--item-already-in-cart-)
+            -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+        -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
+            -   [Exception 5.3a | Arrival Date cannot be in the Future |](#exception-53a--arrival-date-cannot-be-in-the-future-)
+        -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
+        -   [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
+            -   [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
+            -   [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
+    -   [Glossary](#glossary)
+    -   [Deployment Diagram](#deployment-diagram)
 
-# Informal description
+## Informal description
 
 EZElectronics (read EaSy Electronics) is a software application designed to help managers of electronics stores to manage their products and offer them to customers through a dedicated website. Managers can assess the available products, record new ones, and confirm purchases. Customers can see available products, add them to a cart and see the history of their past purchases.
 
-# Stakeholders
+## Stakeholders
 
 | Stakeholder name |                     Description                      |
 | :--------------: | :--------------------------------------------------: |
@@ -53,17 +69,13 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 <!-- FIXME: discuss this |           Shipping Agency           |                                                        One or more (FedEX, UPS...)                                                        | -->
 
-# Context Diagram and interfaces
+## Context Diagram and interfaces
 
-## Context Diagram
+### Context Diagram
 
-![context-diagram](figures/imgs/context-diagram.svg)
+![context-diagram](figures/imgs/context-diagram-v1.svg)
 
-## Interfaces
-
-\<describe here each interface in the context diagram>
-
-\<GUIs will be described graphically in a separate document>
+### Interfaces
 
 |  Actor   |                                                                 Logical Interface                                                                  | Physical Interface |
 | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
@@ -75,27 +87,22 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 <!-- FIXME: not present in the v1 API |           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      | -->
 
-# Stories and personas
+## Stories and personas
 
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
+|    Persona    |                                                                                                                                                                                                                                Story                                                                                                                                                                                                                                |
+| :-----------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Manager Susan |                                                                                                                              Susan is an efficient and organized manager of an electronics store, today she received a new shipment for an XPS 13, she registers the product in the Laptop category and puts today as the arrival date                                                                                                                              |
+| Customer Jhon | Jhon is a customer interested in changing his old laptop, he goes to the EZElectronics website, he clicks on the Laptop category but he's overwhelmed by the choice, "maybe the website could be improved with a way to suggest me something for my needs" he wonders, after reading a bit online he comes to the conclusion that XPS 13 is the laptop of his choice, he searches for the model, clicks the add to cart button and then clicks the purchase button. |
 
-\<Persona is-an-instance-of actor>
+## Functional and non-functional requirements
 
-\<stories will be formalized later as scenarios in use cases>
-
-# Functional and non-functional requirements
-
-## Functional Requirements
-
-\<In the form DO SOMETHING, or VERB NOUN, describe high level capabilities of the system>
-
-\<they match to high level use cases>
+### Functional Requirements
 
 |   ID    |                                               Description                                               |
 | :-----: | :-----------------------------------------------------------------------------------------------------: |
 | **FR1** |                                      **Authentication Management**                                      |
-|   1.1   |                           Users must be able to log in with their credentials                           |
-|   1.2   |                                      Users must be able to log out                                      |
+|   1.1   |                          _Users_ must be able to log in with their credentials                          |
+|   1.2   |                                     _Users_ must be able to log out                                     |
 |   1.3   |           The system must be able to retrieve information about the currently logged-in user            |
 | **FR2** |                                           **User Management**                                           |
 |   2.1   |                             The system must be able to register a new user                              |
@@ -121,241 +128,297 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 <!-- TODO: legal constraints, GDPR, etc -->
 
-## Non-Functional Requirements
+### Non-Functional Requirements
 
 <!-- TODO: Define non-functional requirements -->
 
-|   ID    | Type (efficiency, reliability, ...) |                                                   Description                                                    | Refers to  |
-| :-----: | :---------------------------------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
-|  NFR1   |              usability              | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
-|  NFR2   |              security               |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
-|  NFR3   |             reliability             |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
-|  NFR4   |             scalability             |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
-| NFRx .. |                                     |                                                                                                                  |            |
+|    ID    |    Type     |                                                   Description                                                    | Refers to  |
+| :------: | :---------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
+| **NFR1** |  Usability  | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
+|   NFR2   |  security   |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
+|   NFR3   | reliability |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
+|   NFR4   | scalability |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
+| NFRx ..  |             |                                                                                                                  |            |
 
-# Use case diagram and use cases
+## Use case diagram and use cases
 
-## Use case diagram
+Use cases are ordered as follows: UCx where `x` is the use case number, if a more
+than one nominal scenario is present, each scenario is ordered as `xa` where `a` is
+a letter that identifies the scenario. If only one scenario is present, the
+scenario number (`SCENARIO#`) corresponds to the use case number. If an exception
+and/or a variant is present, it is ordered as `[SCENARIO#].zb` where `z` is the
+step where the exception/variant occurs, and `b` is a letter that identifies the
+exception/variant.
+
+### Use case diagram
 
 \<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
 
 \<next describe here each use case in the UCD>
 
-### Use case 1, UC1 Log in
+<!-- Only valuable fields are mentioned here to reduce clutter -->
 
-| Actors Involved  |             User              |
-| :--------------: | :---------------------------: |
-|   Precondition   |      User has an account      |
-|  Post condition  | User is logged in his account |
-| Nominal Scenario |              1.1              |
-|     Variants     |           1.2, 1.3            |
-|    Exceptions    |              1.4              |
+### UC1 - Log In
 
-### Scenario 1.1 | Log in: User log into his account |
+-   **Actors involved**: User
+-   **Informal Description**: User logs in into his account
+-   **Pre-condition**: User has an account either as a Customer or as a Manager
+-   **Post-condition**: User is logged in his account
+-   **Nominal Scenarios**: [1a, 1b]
+-   **Exceptions**: [1a.2a, 1b.2a]
 
-| :------------: | :-------------------------------: |
-| Precondition | User has an account |
-| Post condition | User is logged into his account |
+#### Scenario 1a | User logs in into his account as Customer |
 
-| Step# |               Actor               |                System                 |
-| :---: | :-------------------------------: | :-----------------------------------: |
-|   1   | User insert username and password |                                       |
-|   2   |                                   | Look for username and password in db, |
-|       |                                   |               check ok                |
-|       |                                   |                                       |
-|   3   |                                   |         User is authenticated         |
+-   **Precondition**: User has an account as Customer
+-   **Post condition**: User is logged into his account as Customer
 
-### Scenario 1.2 | Log in: User log into his account as Customer |
+| Step# |                 Actor                  |                        System                        |
+| :---: | :------------------------------------: | :--------------------------------------------------: |
+|   1   | Customer inserts username and password |                          /                           |
+|   2   |                   /                    | Found matching username and password in the Database |
 
-| :------------: | :-------------------------------------------: |
-| Precondition | User has an account |
-| Post condition | User is logged into his account as Customer |
+##### Exception 1a.2a | Credential Error |
 
-| Step# |               Actor               |                System                 |
-| :---: | :-------------------------------: | :-----------------------------------: |
-|   1   | User insert username and password |                                       |
-|   2   |                                   | Look for username and password in db, |
-|       |                                   |        check for customer flag        |
-|       |                                   |                                       |
-|   3   |                                   |         User is authenticated         |
-|       |                                   |                                       |
+|    Step#     | Actor |                         System                          |
+| :----------: | :---: | :-----------------------------------------------------: |
+|      2a      |   /   | Matching username or password not found in the Database |
+| Go to step 1 |   /   |                            /                            |
 
-### Scenario 1.3 | Log in: User log into his account as Manager |
+#### Scenario 1b | User logs in into his account as Manager |
 
-| :------------: | :------------------------------------------: |
-| Precondition | User has an account |
-| Post condition | User is logged into his account as Manager |
+-   **Precondition**: User has an account as Manager
+-   **Post condition**: User is logged into his account as Manager
 
-| Step# |               Actor               |                System                 |
-| :---: | :-------------------------------: | :-----------------------------------: |
-|   1   | User insert username and password |                                       |
-|   2   |                                   | Look for username and password in db, |
-|       |                                   |        check for manager flag         |
-|       |                                   |                                       |
-|   3   |                                   |         User is authenticated         |
-|       |                                   |                                       |
+| Step# |                 Actor                 |                       System                        |
+| :---: | :-----------------------------------: | :-------------------------------------------------: |
+|   1   | Manager inserts username and password |                          /                          |
+|   2   |                   /                   | Find matching username and password in the Database |
+|   3   |                   /                   |          User is authenticated as Manager           |
 
-### Scenario 1.4 | Log in: Error in log in |
+##### Exception 1b.2a | Credential Error |
 
-| :------------: | :--------------------------------: |
-| Precondition | User has an account |
-| Post condition | User does not log into his account |
+|    Step#     | Actor |                         System                          |
+| :----------: | :---: | :-----------------------------------------------------: |
+|      2a      |   /   | Matching username or password not found in the Database |
+| Go to step 1 |   /   |                            /                            |
 
-| Step# |               Actor               |                System                 |
-| :---: | :-------------------------------: | :-----------------------------------: |
-|   1   | User insert username and password |                                       |
-|   2   |                                   | Look for username and password in db, |
-|       |                                   |             check failed              |
-|       |                                   |                                       |
-|   3   |                                   |      User is not authenticated,       |
-|       |                                   |      User is blocked for 10 sec       |
+### UC2 - Log Out
 
-### Use case 2, UC2 Log Out
+-   **Actors involved**: User
+-   **Informal Description**: User logs out
+-   **Pre-condition**: User is logged in his account
+-   **Post-condition**: User is logged out from his account
 
-| Actors Involved  |        User        |
-| :--------------: | :----------------: |
-|   Precondition   |   User logged in   |
-|  Post condition  | User is logged out |
-| Nominal Scenario |        2.1         |
-|     Variants     |                    |
-|    Exceptions    |                    |
+| Step# |             Actor             |        System        |
+| :---: | :---------------------------: | :------------------: |
+|   1   | User clicks on log out button |          /           |
+|   2   |               /               | Ends session of user |
 
-### Scenario 2.1 | User logs out |
+### UC3 - Sign Up
 
-| :------------: | :----------------: |
-| Precondition | User logged in |
-| Post condition | User is logged out |
+-   **Actors involved**: User
+-   **Informal Description**: User registers a new account
+-   **Post-condition**: User is registered
+-   **Variants**: 3.2a
+-   **Exceptions**: [3.2, 3.3, 3.4]
 
-| Step# |         Actor          |        System        |
-| :---: | :--------------------: | :------------------: |
-|   1   | User clicks on log out |                      |
-|   2   |                        | Ends session of user |
-|       |                        |                      |
+| Step# |                           Actor                            |                          System                           |
+| :---: | :--------------------------------------------------------: | :-------------------------------------------------------: |
+|   1   |               User clicks on sign-up button                |                             /                             |
+|   2   | User fills in: Name, Surname, email, username and password |                             /                             |
+|   3   |                             /                              | Ensures that the username and email are not already taken |
+|   4   |                             /                              | Log-in the newly created account and refresh page to home |
 
-### Use case 3, UC3 Retrieves information
+#### Variant 3.2a | User registers as Manager |
 
-| Actors Involved  |           User            |
-| :--------------: | :-----------------------: |
-|   Precondition   |     User is logged in     |
-|  Post condition  | User sees his information |
-| Nominal Scenario |            3.1            |
-|     Variants     |                           |
-|    Exceptions    |                           |
+|    Step#    |                                           Actor                                           | System |
+| :---------: | :---------------------------------------------------------------------------------------: | :----: |
+|     2a      | User fills in: Name, Surname, email, username and password and selects `Manager` checkbox |   /    |
+| Continue UC |                                             /                                             |   /    |
 
-### Scenario 3.1 | |
+#### Exception 3.3a | User Already Exists |
 
-| :------------: | :-----------------------: |
-| Precondition | User is logged in |
-| Post condition | User sees his information |
+|    Step#     | Actor |                         System                         |
+| :----------: | :---: | :----------------------------------------------------: |
+|      3a      |   /   | Notifies user that username or email are already taken |
+| Go to step 2 |   /   |                           /                            |
 
-| Step# |             Actor             |                System                |
-| :---: | :---------------------------: | :----------------------------------: |
-|   1   | User clicks on profile button |                                      |
-|   2   |                               | Shows information of the logged user |
+### UC 4 - Customer Buys a Product
 
-### Use case 4, UC4 Sign Up
+<!-- TODO: add manager as actor, notify manager of the purchase -->
 
-| Actors Involved  |             User              |
-| :--------------: | :---------------------------: |
-|   Precondition   | User does not have an account |
-|  Post condition  |      User is registered       |
-| Nominal Scenario |              4.1              |
-|     Variants     |                               |
-|    Exceptions    |         4.2, 4.3, 4.4         |
+-   **Actors involved**: Customer
+-   **Informal Description**: Customer browses the website to buy a product, adds the item to the cart and clicks on the purchase button
+-   **Pre-condition**: Customer is logged in his account
+-   **Post-condition**: Customer has bought the product
+-   **Variants**: [4.1a, 4.7a, 4.7b, 4.7c]
+-   **Exceptions**: [4.4a, 4.8a]
 
-### Scenario 4.1 | User register for the first time on the website |
+|                 Step#                  |                             Actor                              |                           System                           |
+| :------------------------------------: | :------------------------------------------------------------: | :--------------------------------------------------------: |
+|                   1                    | Customer searches for a `product model` using the `search bar` |                             /                              |
+|                   2                    |                               /                                |       Displays all the products that match the query       |
+|      Optionally go back to step 1      |                               /                                |                             /                              |
+|                   3                    | Customer clicks on `add to cart` button for a specific product |                             /                              |
+|                   4                    |                               /                                |          Adds the product to the customer's cart           |
+|      Optionally go back to step 1      |                               /                                |                             /                              |
+|                   5                    |               Customer clicks on the `cart` icon               |                             /                              |
+|                   6                    |                               /                                |        Displays the cart with all the current items        |
+|      Optionally go back to step 1      |                               /                                |                             /                              |
+|                   7                    | Customer clicks on the `purchase` button in the cart interface |                             /                              |
+|                   8                    |                               /                                | Item is purchased, and its entry removed from the Database |
+| Optionally go back to step 1 or end UC |                               /                                |                             /                              |
 
-| :------------: | :---------------------------------------------: |
-| Precondition | User does not have an account |
-| Post condition | User is successfully registered |
+#### Variant 4.1a | Customer Chooses a Category |
 
-| Step# |             Actor              |                System                 |
-| :---: | :----------------------------: | :-----------------------------------: |
-|   1   | User fills in: Name, Surname,  |                                       |
-|       |   e-mail, username, password   |                                       |
-|   2   |                                |   Check if the username is already    |
-|       |                                |      registered, no match found       |
-|       |                                |                                       |
-|   3   |                                |  Check for password rules, satisfied  |
-|       |                                |                                       |
-|   4   |                                |  Sends e-mail with verification key   |
-|       |                                |                                       |
-|   5   | Receives email, sends key back |                                       |
-|       |                                |                                       |
-|   6   |                                |       Check key, check positive       |
-|       |                                |                                       |
-|   7   |                                |         **_TO BE ADDED FRx_**         |
-|       |                                | Show legal constraint, privacy terms, |
-|       |                                |            ask permissions            |
-|       |                                |                                       |
-|   8   |                                |     Account created, notify user      |
-|       |                                |                                       |
+|    Step#    |                   Actor                   | System |
+| :---------: | :---------------------------------------: | :----: |
+|     1a      | Customer selects a `category` from a list |   /    |
+| Continue UC |                     /                     |   /    |
 
-### Scenario 4.2 | Sign-up exception: User already registered on the website |
+<!-- TODO: variant about checking the store, checking the reviews, checking the description -->
 
-| :------------: | :-------------------------------------------------------: |
-| Precondition | User does have an account |
-| Post condition | |
+<!-- TODO: discuss this: even if there are 0 items because after you click the items gets sold, add to the cart anyway, so no exception on 3 -->
 
-| Step# |             Actor             |              System              |
-| :---: | :---------------------------: | :------------------------------: |
-|   1   | User fills in: Name, Surname, |                                  |
-|       |  e-mail, username, password   |                                  |
-|   2   |                               | Check if the username is already |
-|       |                               |     registered, match found      |
-|       |                               |                                  |
-|   3   |                               |      Notify user, error 409      |
+<!-- TODO: discuss this: no exceptions on empty cart or list of products, it's just empty -->
 
-### Scenario 4.3 | Sign-up exception: User violates password rules |
+<!-- TODO: discuss this: not an exception, because we stop the user -->
 
-| :------------: | :---------------------------------------------------------------------: |
-| Precondition | User does not have an account, user insert an incorrect password format |
-| Post condition | |
+#### Variant 4.7a | Empty Cart |
 
-| Step# |             Actor             |                 System                  |
-| :---: | :---------------------------: | :-------------------------------------: |
-|   1   | User fills in: Name, Surname, |                                         |
-|       |  e-mail, username, password   |                                         |
-|   2   |                               |    Check if the username is already     |
-|       |                               |       registered, no match found        |
-|       |                               |                                         |
-|   3   |                               | Check for password rules, not satisfied |
-|       |                               |                                         |
-|   4   |                               |  Error signaled "respect format rules"  |
+|                 Step#                  | Actor |                                   System                                   |
+| :------------------------------------: | :---: | :------------------------------------------------------------------------: |
+|                   7a                   |   /   | Notifies the user that the cart is empty (`purchase` button not clickable) |
+| Optionally go back to step 1 or end UC |   /   |                                     /                                      |
 
-### Scenario 4.4 | Sign-up exception: Error on e-mail |
+#### Variant 4.7b | Remove Item from Cart |
 
-| :------------: | :------------------------------------------------------------: |
-| Precondition | User does not have an account, user insert an incorrect e-mail |
-| Post condition | |
+|    Step#     |                     Actor                     |             System             |
+| :----------: | :-------------------------------------------: | :----------------------------: |
+|      7b      | Customer clicks on `remove` button of an item |               /                |
+|      8b      |                       /                       | Removes the item from the cart |
+| Go to step 6 |                       /                       |               /                |
 
-| Step# |             Actor             |               System                |
-| :---: | :---------------------------: | :---------------------------------: |
-|   1   | User fills in: Name, Surname, |                                     |
-|       |  e-mail, username, password   |                                     |
-|   2   |                               |  Check if the username is already   |
-|       |                               |     registered, no match found      |
-|       |                               |                                     |
-|   3   |                               | Check for password rules, satisfied |
-|       |                               |                                     |
-|   4   |                               | Sends e-mail with verification key  |
-|       |                               |                                     |
-|   5   |     Do not receive e-mail     |                                     |
-|       |                               |                                     |
-|   6   |                               |           Process aborts            |
+#### Variant 4.7c | Delete the Entire Cart |
 
-# Glossary
+|                 Step#                  |                  Actor                  |               System                |
+| :------------------------------------: | :-------------------------------------: | :---------------------------------: |
+|                   7c                   | Customer clicks on `delete cart` button |                  /                  |
+|                   8c                   |                    /                    | Deletes all the items from the cart |
+| Optionally go back to step 1 or end UC |                    /                    |                  /                  |
 
-\<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
+#### Variant 4.7d | Show Cart History |
 
-\<concepts must be used consistently all over the document, ex in use cases, requirements etc>
+<!-- TODO: discuss this: no exceptions because the button for past carts is not clickable -->
+
+|    Step#     |                     Actor                     |                  System                   |
+| :----------: | :-------------------------------------------: | :---------------------------------------: |
+|      7d      | Customer clicks on `show cart history` button |                     /                     |
+|      8d      |                       /                       | Displays list of all past + current carts |
+|      9d      |        Clicks on a cart from the list         |                     /                     |
+| Go to step 6 |                       /                       |                     /                     |
+
+#### Exception 4.4a | Item Already in Cart |
+
+<!-- TODO: make it possible to place multiple orders of the same item -->
+
+|    Step#    | Actor |                        System                         |
+| :---------: | :---: | :---------------------------------------------------: |
+|     4a      |   /   | Notifies the user that the product is already in cart |
+| Continue UC |   /   |                           /                           |
+
+#### Exception 4.8a | Product Already Sold |
+
+|    Step#    | Actor |                         System                         |
+| :---------: | :---: | :----------------------------------------------------: |
+|     8a      |   /   | Notifies the user that the product is already sold out |
+| Continue UC |   /   |                           /                            |
+
+### UC 5 - Manager Adds a Product
+
+<!-- FIXME: add exception if product id is not automatically generated -->
+
+-   **Actors involved**: Manager
+-   **Informal Description**: Manager adds a new product to his store
+-   **Pre-condition**: Manager is logged in his account
+-   **Post-condition**: Product is added to the store
+-   **Exceptions**: [5.3a]
+
+| Step# |                         Actor                          |              System              |
+| :---: | :----------------------------------------------------: | :------------------------------: |
+|   1   |         Manager clicks on `add product` button         |                /                 |
+|   2   | Manager fills in the product details and confirms them |                /                 |
+|   3   |                           /                            | Adds the product in the Database |
+
+#### Exception 5.3a | Arrival Date cannot be in the Future |
+
+|    Step#     | Actor |                               System                                |
+| :----------: | :---: | :-----------------------------------------------------------------: |
+|      3a      |   /   | Notifies the user that the `arrival date` is after the current date |
+| Go to step 2 |   /   |                                  /                                  |
+
+### UC 6 - Manager Marks a Product as Sold
+
+-   **Actors involved**: Manager
+-   **Informal Description**: Manager marks a product as sold
+-   **Pre-condition**: Manager is logged in his account
+-   **Post-condition**: Product is marked as sold
+
+| Step# |                         Actor                         |                  System                   |
+| :---: | :---------------------------------------------------: | :---------------------------------------: |
+|   1   | Manager clicks on `mark as sold` button for a product |                     /                     |
+|   2   |                           /                           | Marks the product as sold in the Database |
+
+<!-- TODO: discuss this: can't return error in code because it only shows products that
+are present in his account, selling date can't be after current date because of the
+constraints in insert product, given so arrival date is always before current date,
+the button is not clickable if the product is already sold, given that the manager
+is one there can't be errors in this instance -->
+
+### UC 7 - DB Admin Deletes a User
+
+-   **Actors involved**: DB Admin
+-   **Informal Description**: DB Admin deletes a user from the Database
+-   **Pre-condition**: Operation is performed from the company PC by an authorized DB Admin
+-   **Post-condition**: User is deleted from the Database
+-   **Variants**: [7.1a, 7.1b]
+
+<!-- TODO: discuss this: again in the cases where the selections are empty just display an empty selection -->
+
+| Step# |                      Actor                      |                  System                  |
+| :---: | :---------------------------------------------: | :--------------------------------------: |
+|   1   |     DB admin requests the list of all users     |                    /                     |
+|   2   |                        /                        | Displays the list of all the users in DB |
+|   3   | DB admin selects a user to delete from the list |                    /                     |
+|   4   |                        /                        |    Deletes the user from the Database    |
+
+#### Variant 7.1a | Filter by Role |
+
+|    Step#    |                        Actor                        | System |
+| :---------: | :-------------------------------------------------: | :----: |
+|     1a      | DB admin selects a role to filter the list of users |   /    |
+| Continue UC |                          /                          |   /    |
+
+#### Variant 7.1b | Filter by Username |
+
+|    Step#    |                        Actor                        | System |
+| :---------: | :-------------------------------------------------: | :----: |
+|     1b      | DB admin searches for a specific username in the DB |   /    |
+| Continue UC |                          /                          |   /    |
+
+## Glossary
+
+![glossary](figures/imgs/glossary-v1.svg)
+
+<!--
+FIXME: not necessary
 
 # System Design
 
 \<describe here system design>
 
-\<must be consistent with Context diagram>
+\<must be consistent with Context diagram> -->
 
-# Deployment Diagram
+## Deployment Diagram
 
-\<describe here deployment diagram >
+![Deployment Diagram](figures/imgs/deployment-diagram-v1.svg)

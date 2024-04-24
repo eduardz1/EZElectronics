@@ -24,7 +24,7 @@ class Cart {
         id: number,
         customer: string,
         paid: boolean,
-        paymentDate: string,
+        paymentDate: string, // TODO: should be a date
         total: number,
         products: Product[],
     ) {
