@@ -18,9 +18,9 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
     -   [Context Diagram](#context-diagram)
     -   [Interfaces](#interfaces)
 -   [Stories and personas](#stories-and-personas)
--   [Functional and non functional requirements](#functional-and-non-functional-requirements)
+-   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
     -   [Functional Requirements](#functional-requirements)
-    -   [Non Functional Requirements](#non-functional-requirements)
+    -   [Non-Functional Requirements](#non-functional-requirements)
 -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
     -   [Use case diagram](#use-case-diagram)
         -   [Use case 1, UC1 Authenticate](#use-case-1-uc1-authenticate)
@@ -39,14 +39,17 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 # Stakeholders
 
-|          Stakeholder name           |                                                                Description                                                                |
-| :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
-|              Customers              |                                              The customer of the each electronic goods store                                              |
-|               Admins                | IT administrator, Business administrator, Security Manager, DB Administrator, Community Moderator (for inappropriate description/reviews) |
-|        Physical Goods Store         |                                             Each of the electronics store, seen as an entity                                              |
+| Stakeholder name |                     Description                      |
+| :--------------: | :--------------------------------------------------: |
+|    Customers     |     The customer of each electronic goods store      |
+|      Admins      | IT administrator, Security Manager, DB Administrator |
+|     Manager      |               Electronic store manager               |
+
+<!--
+|      Admins      | IT administrator, Business administrator, Security Manager, DB Administrator, Community Moderator (for inappropriate description/reviews) |
 |           Payment Service           |                                                          PayPal/VISA/Mastercard                                                           |
 | Google Play Store & Apple App Store |                                                      (legal + quality requirements)                                                       |
-|             Competitors             |                                                             (Amazon/Ebay ...)                                                             |
+|             Competitors             |                                                             (Amazon/Ebay ...)                                                             | -->
 
 <!-- FIXME: discuss this |           Shipping Agency           |                                                        One or more (FedEX, UPS...)                                                        | -->
 
@@ -54,7 +57,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ## Context Diagram
 
-![context-diagram](imgs/context-diagram.svg)
+![context-diagram](figures/imgs/context-diagram.svg)
 
 ## Interfaces
 
@@ -62,12 +65,13 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 \<GUIs will be described graphically in a separate document>
 
-|                Actor                |                                                                 Logical Interface                                                                  | Physical Interface |
-| :---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
-|              Customer               |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
-|               Admins                |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
-|          Electronics Store          | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
-| Google Play Store & Apple App Store |                                       API (to be defined - key functions: handle the app submission process)                                       |      Internet      |
+|  Actor   |                                                                 Logical Interface                                                                  | Physical Interface |
+| :------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
+| Customer |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
+|  Admins  |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
+| Manager  | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
+
+<!-- | Google Play Store & Apple App Store |                                       API (to be defined - key functions: handle the app submission process)                                       |      Internet      | -->
 
 <!-- FIXME: not present in the v1 API |           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      | -->
 
@@ -79,7 +83,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 \<stories will be formalized later as scenarios in use cases>
 
-# Functional and non functional requirements
+# Functional and non-functional requirements
 
 ## Functional Requirements
 
@@ -87,35 +91,47 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 \<they match to high level use cases>
 
-|  ID  |                                                                                   Description                                                                                    |
-| :--: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| FR1  |                                                                           Users can log in or log out                                                                            |
-| FR2  |                                       The system must be able to check if the user is logged in, and if not, return a 401 error response​                                        |
-| FR3  |                        The system must differentiate between customer and manager roles and allow access to specific functionalities based on these roles                        |
-| FR4  |                   The system must allow logged-in customers to add products to their cart, ensuring the product ID is valid and the product has not been sold                    |
-| FR5  |                                              The system must provide the ability to check out a cart, only if the cart is not empty                                              |
-| FR6  |                                   The system must be able to return the purchase history of the logged-in customer, excluding the current cart                                   |
-| FR7  |                                          The system must allow the removal of a product from the cart given a valid product ID and cart                                          |
-| FR8  |                The system must allow managers to register new products with valid details such as code, model, category, selling price, and optional arrival date                |
-| FR9  |            The system must permit the deletion of products by code and allow for the deletion of all products, the latter for testing purposes without authentication            |
-| FR10 | The system must enable managers to register the arrival of proposed products, sell products, and retrieve products by different criteria such as code, category, and sold status |
-| FR11 |                                                               managers can add, delete or update product listings                                                                |
-| FR12 |                                          Customers can browse products based on various criteria like category, model, and availability                                          |
-| FR14 |                                                              Customers can add products to their cart and checkout                                                               |
-| FR17 |                                                               The system maintains a history of customer purchases                                                               |
-| FR18 |                                                   The system provides role-based access control for different functionalities                                                    |
+|   ID    |                                               Description                                               |
+| :-----: | :-----------------------------------------------------------------------------------------------------: |
+| **FR1** |                                      **Authentication Management**                                      |
+|   1.1   |                           Users must be able to log in with their credentials                           |
+|   1.2   |                                      Users must be able to log out                                      |
+|   1.3   |           The system must be able to retrieve information about the currently logged-in user            |
+| **FR2** |                                           **User Management**                                           |
+|   2.1   |                             The system must be able to register a new user                              |
+|   2.2   |                       The system must be able to provide a list of all the users                        |
+|   2.3   |            The system must be able to provide a list of all the users with a specified role             |
+|   2.4   | The system must be able to provide information about a user with a specified username from the Database |
+|   2.5   |     The DB admin must be able to delete a specific user with a specified username from the Database     |
+| **FR3** |                                         **Product Management**                                          |
+|   3.1   |        _Managers_ must be able to register a new product that doesn't exist yet in the Database         |
+|   3.2   |         _Managers_ must be able to register the arrival of a set of products of the same model          |
+|   3.3   |                           _Managers_ must be able to mark a product as `sold`                           |
+|   3.4   |               The system must be able to return all the products present in the Database                |
+|   3.5   |                    The system must be able to return a product given its unique code                    |
+|   3.6   |                 The system must be able to return all products of a specified category                  |
+|   3.7   |                   The system must be able to return all products of a specified model                   |
+| **FR4** |                                           **Cart Management**                                           |
+|   4.1   |               The system must be able to return the cart of the currently logged-in user                |
+|   4.2   |                       Logged-in users must be able to add a product to their cart                       |
+|   4.3   |                Logged-in _Customers_ must be able to pay the total amount of their cart                 |
+|   4.4   |                   Logged-in _Customers_ must be able to view their purchasing history                   |
+|   4.5   |                 Logged-in _Customers_ must be able to delete a product from their cart                  |
+|   4.6   |                         Logged-in _Customers_ must be able to reset their cart                          |
 
-## Non Functional Requirements
+<!-- TODO: legal constraints, GDPR, etc -->
 
-\<Describe constraints on functional requirements>
+## Non-Functional Requirements
 
-|   ID    | Type (efficiency, reliability, ..) |                                                   Description                                                    | Refers to  |
-| :-----: | :--------------------------------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
-|  NFR1   |             usability              | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
-|  NFR2   |              security              |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
-|  NFR3   |            reliability             |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
-|  NFR4   |            scalability             |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
-| NFRx .. |                                    |                                                                                                                  |            |
+<!-- TODO: Define non-functional requirements -->
+
+|   ID    | Type (efficiency, reliability, ...) |                                                   Description                                                    | Refers to  |
+| :-----: | :---------------------------------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
+|  NFR1   |              usability              | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
+|  NFR2   |              security               |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
+|  NFR3   |             reliability             |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
+|  NFR4   |             scalability             |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
+| NFRx .. |                                     |                                                                                                                  |            |
 
 # Use case diagram and use cases
 

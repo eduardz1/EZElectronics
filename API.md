@@ -121,6 +121,8 @@ Returns the list of all users.
     -   Example: `[{username: "Mario Rossi", name: "Mario", surname: "Rossi", role: "Customer"}, {username: "Giuseppe Verdi", name: "Giuseppe", surname: "Verdi", role: "Customer"}, {username: "Admin", name: "admin", surname: "admin", role: "Manager"}]`
 -   Access Constraints: None
 
+<!-- TODO: this should be only an admin route -->
+
 #### GET `ezelectronics/users/role/:role`
 
 Returns the list of all users with a specific role.
@@ -131,6 +133,8 @@ Returns the list of all users with a specific role.
 -   Response Body Content: An array of <b>User</b> objects where each one represents a user present in the database with the specified role
     -   Example: `[{username: "Mario Rossi", name: "Mario", surname: "Rossi", role: "Customer"}]`
 -   Access Constraints: None
+
+<!-- TODO: this should be only an admin route -->
 
 #### GET `ezelectronics/users/:username`
 
@@ -145,6 +149,8 @@ Returns a single user with a specific username.
 -   Additional Constraints:
     -   It should return a 404 error when `username` represents a user that does not exist in the database
 
+<!-- TODO: this should be only an admin route -->
+
 #### DELETE `ezelectronics/users/:username`
 
 Deletes a specific user, identified by the username, from the database
@@ -157,6 +163,8 @@ Deletes a specific user, identified by the username, from the database
 -   Additional Constraints:
     -   It should return a 404 error when `username` represents a user that does not exist in the database
 
+<!-- FIXME: this should be an admin route -->
+
 #### DELETE `ezelectronics/users`
 
 Deletes all users from the database. This route is only used for testing purposes, as it allows the deletion of all users to ensure an empty database.
@@ -165,6 +173,8 @@ Deletes all users from the database. This route is only used for testing purpose
 -   Request Body Content: None
 -   Response Body Content: None
 -   Access Constraints: None
+
+<!-- FIXME: this should be an admin route -->
 
 ### Product APIs
 
@@ -224,6 +234,9 @@ Marks a product as sold
     -   It should return an error if the product has already been sold
 
 #### GET `ezelectronics/products`
+
+<!-- TODO: optional query parameters: sold, implies that we must have a button to filter and see all the sold items (just like eBay does)
+this should be available for all pages, also in model/:models this optional query parameter shows up -->
 
 Returns all products present in the database.
 
@@ -388,3 +401,5 @@ Deletes all existing carts. This route is only used for testing purposes, as it 
 -   Request Body Content: None
 -   Response Body Content: None
 -   Access Constraints: None
+
+<!-- TODO: this should be an admin route -->
