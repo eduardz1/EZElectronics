@@ -10,44 +10,44 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
 
 ## Contents
 
--   [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
-    -   [Contents](#contents)
-    -   [Informal description](#informal-description)
-    -   [Stakeholders](#stakeholders)
-    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
-        -   [Context Diagram](#context-diagram)
-        -   [Interfaces](#interfaces)
-    -   [Stories and personas](#stories-and-personas)
-    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-        -   [Functional Requirements](#functional-requirements)
-        -   [Non-Functional Requirements](#non-functional-requirements)
-    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-        -   [Use case diagram](#use-case-diagram)
-        -   [UC1 - Log In](#uc1---log-in)
-            -   [Scenario 1a | User logs in into his account as Customer |](#scenario-1a--user-logs-in-into-his-account-as-customer-)
-                -   [Exception 1a.2a | Credential Error |](#exception-1a2a--credential-error-)
-            -   [Scenario 1b | User logs in into his account as Manager |](#scenario-1b--user-logs-in-into-his-account-as-manager-)
-                -   [Exception 1b.2a | Credential Error |](#exception-1b2a--credential-error-)
-        -   [UC2 - Log Out](#uc2---log-out)
-        -   [UC3 - Sign Up](#uc3---sign-up)
-            -   [Variant 3.2a | User registers as Manager |](#variant-32a--user-registers-as-manager-)
-            -   [Exception 3.3a | User Already Exists |](#exception-33a--user-already-exists-)
-        -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
-            -   [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
-            -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
-            -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
-            -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
-            -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
-            -   [Exception 4.4a | Item Already in Cart |](#exception-44a--item-already-in-cart-)
-            -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
-        -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
-            -   [Exception 5.3a | Arrival Date cannot be in the Future |](#exception-53a--arrival-date-cannot-be-in-the-future-)
-        -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
-        -   [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
-            -   [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
-            -   [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
-    -   [Glossary](#glossary)
-    -   [Deployment Diagram](#deployment-diagram)
+- [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
+  - [Contents](#contents)
+  - [Informal description](#informal-description)
+  - [Stakeholders](#stakeholders)
+  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
+    - [Context Diagram](#context-diagram)
+    - [Interfaces](#interfaces)
+  - [Stories and personas](#stories-and-personas)
+  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+    - [Functional Requirements](#functional-requirements)
+    - [Non-Functional Requirements](#non-functional-requirements)
+  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+    - [Use case diagram](#use-case-diagram)
+    - [UC1 - Log In](#uc1---log-in)
+      - [Scenario 1a | User logs in into his account as Customer |](#scenario-1a--user-logs-in-into-his-account-as-customer-)
+        - [Exception 1a.2a | Credential Error |](#exception-1a2a--credential-error-)
+      - [Scenario 1b | User logs in into his account as Manager |](#scenario-1b--user-logs-in-into-his-account-as-manager-)
+        - [Exception 1b.2a | Credential Error |](#exception-1b2a--credential-error-)
+    - [UC2 - Log Out](#uc2---log-out)
+    - [UC3 - Sign Up](#uc3---sign-up)
+      - [Variant 3.2a | User registers as Manager |](#variant-32a--user-registers-as-manager-)
+      - [Exception 3.3a | User Already Exists |](#exception-33a--user-already-exists-)
+    - [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
+      - [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
+      - [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
+      - [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
+      - [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
+      - [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+      - [Exception 4.4a | Item Already in Cart |](#exception-44a--item-already-in-cart-)
+      - [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+    - [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
+      - [Exception 5.3a | Arrival Date cannot be in the Future |](#exception-53a--arrival-date-cannot-be-in-the-future-)
+    - [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
+    - [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
+      - [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
+      - [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
+  - [Glossary](#glossary)
+  - [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -134,11 +134,22 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 |    ID    |    Type     |                                                   Description                                                    | Refers to  |
 | :------: | :---------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
-| **NFR1** |  Usability  | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
-|   NFR2   |  security   |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
-|   NFR3   | reliability |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
-|   NFR4   | scalability |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
-| NFRx ..  |             |                                                                                                                  |            |
+| **NFR1** |  **performance**  |                       |                                                              |
+|   NFR1.1 |               |              All API responses should be returned within 500 milliseconds under normal load conditions.               |  FR3.1,FR3.2, FR3.3,FR3.4,FR3.5,FR3.6,FR3.7,FR1.1, FR1.2, FR1.3  |
+|   NFR1.2 |               |          The system must support handling up to 10,000 concurrent users without performance degradation.        |  FR1.1, FR1.2, FR1.32   |
+| **NFR2** | **scalability** |      |     |
+|   NFR2.1 |                 |           The system should be scalable to accommodate increased traffic, supporting automatic scaling of resources | FR2.1, FR2.2, FR2.3, FR2.4, FR2.5|
+|   NFR2.2|    |              Database queries must be optimized to handle large data volumes and complex queries efficiently.|       FR2.1, FR2.2, FR2.3, FR2.4, FR2.5, FR3.1, FR3.2, FR3.3, FR3.4, FR3.5, FR3.6,FR3.7               |
+| **NFR3** |     **Reliability**          |                            |       |
+|   NFR3.1 |               |         The system should aim for a 99.99% uptime        |  FR1.1, FR1.2, FR1.3   |
+| **NFR4**   | **Security** |     |     |
+| NFR4.1  |               |       All data exchanges between the client and server must be encrypted.     |  FR1.1, FR1.2, FR1.3|
+| **NFR6**|  **Usability**  |                                                                                                                                           |                                   |
+|  NFR6.1  |                 | All API endpoints must provide meaningful error messages that accurately describe the error conditions and suggest possible remediations. | FR2.1, FR2.2, FR2.3, FR2.4, FR2.5 |
+|  NFR6.2  |                 |               The API documentation must be clear, complete, and accessible online with examples of requests and responses.               |          FR4.1 to FR4.6           |
+| **NFR9** | **Testability** |                                                                                                                                           |                                   |
+|  NFR9.1  |                 |           The API should support automated testing environments with capabilities for integration, load, and security testing.            |          FR4.1 to FR4.6           |
+|  NFR9.2  |                 |                          Provide a sandbox environment for testing API integrations without affecting live data.                          |          FR4.1 to FR4.6           |
 
 ## Use case diagram and use cases
 
