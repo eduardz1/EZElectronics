@@ -1,16 +1,15 @@
-# Requirements Document - current EZElectronics
+# Requirements Document - future EZElectronics
 
-Date:
+Date: 2024-05-01
 
-Version: V1 - description of EZElectronics in CURRENT form (as received by teachers)
 
-| Version number | Change |
-| :------------: | :----: |
-|                |        |
+| Version number |                                                                                                                                Change                                                                                                                                 |
+| :------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|       2        | Fixed general issues on APIs and fixed corresponding table of access rights, this leads to a better formalization of the `Admin` figure, rethought about possible stakeholders and corresponding actors, added a number of use cases for quality-of-life improvements |
 
 ## Contents
 
-- [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
+- [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
   - [Contents](#contents)
   - [Informal description](#informal-description)
   - [Stakeholders](#stakeholders)
@@ -19,7 +18,8 @@ Version: V1 - description of EZElectronics in CURRENT form (as received by teach
     - [Interfaces](#interfaces)
   - [Stories and personas](#stories-and-personas)
   - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-    - [Functional Requirements](#functional-requirements)
+    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
+    - [Non-Functional Requirements](#non-functional-requirements)
   - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
     - [Use case diagram](#use-case-diagram)
     - [UC1 - Log In](#uc1---log-in)
@@ -45,48 +45,46 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 | :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
 |              Customers              |                                                The customer of each electronic goods store                                                |
 |               Admins                |                                           IT administrator, Security Manager, DB Administrator                                            |
+|               Visitor               |                        Considered like a customer that is not logged in, will be prompted to log in to add to cart                        | Smartphone/PC |
 |               Manager               |                                                         Electronic store manager                                                          |
 |               Admins                | IT administrator, Business administrator, Security Manager, DB Administrator, Community Moderator (for inappropriate description/reviews) |
 |           Payment Service           |                                                          PayPal/VISA/Mastercard                                                           |
 | Google Play Store & Apple App Store |                                                      (legal + quality requirements)                                                       |
-|             Competitors             |                                                             (Amazon/Ebay ...)                                                             |
-|           Shipping Agency           |                                                        One or more (FedEX, UPS...)                                                        |
+|             Competitors             |                                                             (Amazon/eBay ...)                                                             |
+|           Shipping Agency           |                                                        One or more (FedEx, UPS...)                                                        |
+|          Product Suppliers          |                                                 Manufacturers, Distributors, Wholesalers                                                  |
+|          Legal Authorities          |        GDPR, EULA, Consumer Protection Laws, Tax Authorities, Data Protection Authorities, Intellectual Property Authorities, etc.        |
 
 ## Context Diagram and interfaces
 
 ### Context Diagram
 
-![context-diagram](figures/imgs/context-diagram.svg)
+![context-diagram](figures/imgs/context-diagram-v2.svg)
 
 ### Interfaces
-
-\<describe here each interface in the context diagram>
-
-\<GUIs will be described graphically in a separate document>
 
 |                Actor                |                                                                 Logical Interface                                                                  | Physical Interface |
 | :---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
 |              Customer               |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
 |               Admins                |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
+|               Visitor               |                                                 GUI (same as customer, but with limited functions)                                                 |   Smartphone/PC    |
 |               Manager               | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
 | Google Play Store & Apple App Store |                                       API (to be defined - key functions: handle the app submission process)                                       |      Internet      |
 |           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      |
 
 ## Stories and personas
 
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
 
-\<Persona is-an-instance-of actor>
-
-\<stories will be formalized later as scenarios in use cases>
+|    Persona    |                                                                                                                                                                                                                                Story                                                                                                                                                                                                                                |
+| :-----------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Manager Susan |                                                                                                                              Susan is an efficient and organized manager of an electronics store, today she received a new shipment for an XPS 13, she registers the product in the Laptop category and puts today as the arrival date                                                                                                                              |
+| Customer Jhon | Jhon is a customer interested in changing his old laptop, he goes to the EZElectronics website, he clicks on the Laptop category but he's overwhelmed by the choice, "maybe the website could be improved with a way to suggest me something for my needs" he wonders, after reading a bit online he comes to the conclusion that XPS 13 is the laptop of his choice, he searches for the model, clicks the add to cart button and then clicks the purchase button. |
 
 ## Functional and non-functional requirements
 
-### Functional Requirements
+### Functional Requirements + Access Rights
 
-\<In the form DO SOMETHING, or VERB NOUN, describe high level capabilities of the system>
-
-\<they match to high level use cases>
+<!-- TODO: access rights -->
 
 |   ID    |                                                                                                  Description                                                                                                  |
 | :-----: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -94,7 +92,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |   1.1   |                                                                             _Users_ must be able to log in with their credentials                                                                             |
 |   1.2   |                                                                                        _Users_ must be able to log out                                                                                        |
 |   1.3   |                                                              The system must be able to retrieve information about the currently logged-in user                                                               |
-|   1.4   |                                                 Support multiple Multi-Factor Authentication methods including  including SMS, email.                                                  |
+|   1.4   |                                                             Support multiple Multi-Factor Authentication methods including  including SMS, email.                                                             |
 |   1.5   |                                                                      Users must reset passwords securely via email or SMS verification.                                                                       |
 |   1.6   |                                               Passwords must be at least 8 characters long with uppercase, lowercase letters, numbers, and special characters.                                                |
 |   1.7   |                                                              User accounts should lock for 5 minutes after 5 consecutive failed login attempts.                                                               |
@@ -102,13 +100,13 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |   2.1   |                                                                                The system must be able to register a new user                                                                                 |
 |   2.2   |                                                                          The system must be able to provide a list of all the users                                                                           |
 |   2.3   |                                                               The system must be able to provide a list of all the users with a specified role                                                                |
-|   2.4   |                             Allow users to update their profile information, such as name, surname,email and password, to ensure accuracy and security of their account details.                              |
+|   2.4   |                             Allow users to update their profile information, such as name, surname, email and password, to ensure accuracy and security of their account details.                             |
 |   2.5   |                                   Require email verification for user registration to ensure that users provide valid email addresses and to prevent spam or fake accounts.                                   |
 |   2.6   |                        Provide functionality to search for users based on criteria such as username, name, surname, or role, enabling administrators to manage users more efficiently.                        |
 |   2.7   |                                        Allow administrators to deactivate or permanently delete user accounts, when necessary  such as in cases of policy violations.                                         |
 |   2.8   |                                                                                   Allow managers to see the sales history.                                                                                    |
-|   2.9   |                                                                                       show Legal constarints(GDPR,EULA)                                                                                       |
-|  2.10   |                                                                               Ask users premissions for personal data treatment                                                                               |
+|   2.9   |                                                                                   Show Legal constraints (GDPR, EULA, ...)                                                                                    |
+|  2.10   |                                                                               Ask users permissions for personal data treatment                                                                               |
 | **FR3** |                                                                                            **Product Management**                                                                                             |
 |   3.1   |                                                           _Managers_ must be able to register a new product that doesn't exist yet in the Database                                                            |
 |   3.2   |                                                            _Managers_ must be able to register the arrival of a set of products of the same model                                                             |
@@ -134,19 +132,30 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |   4.6   |                                                                            Logged-in _Customers_ must be able to reset their cart                                                                             |
 |   4.7   |                                     Multiple Payment Options: Offer a variety of payment methods to users during checkout, including credit/debit cards, digital wallets.                                     |
 |   4.8   | Provide users with immediate confirmation of successful payment transactions, including order summaries, receipt details, and transaction IDs, to instill confidence and transparency in the payment process. |
-<!-- TODO: legal constraints, GDPR, etc
+
 
 ### Non-Functional Requirements
 
 <!-- TODO: Define non-functional requirements -->
 
-|   ID    |    Type     |                                                   Description                                                    | Refers to  |
-| :-----: | :---------: | :--------------------------------------------------------------------------------------------------------------: | :--------: |
-|  NFR1   |  usability  | The system should be user-friendly and intuitive, with a response time of no more than 2 seconds for any action. | FR12, FR14 |
-|  NFR2   |  security   |              User data should be encrypted, and secure login/logout processes must be implemented.               |  FR1, FR2  |
-|  NFR3   | reliability |          The system should be available at 99.9% of the time with high backup and recovery procedures.           |  all FRs   |
-|  NFR4   | scalability |   The system should handle up to x users and x number of products entries without degradations of performances   |  all FRs   |
-| NFRx .. |             |                                                                                                                  |            |
+|    ID    |      Type       |                                                            Description                                                             |                                     Refers to                                     |
+| :------: | :-------------: | :--------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
+| **NFR1** | **performance** |                                                                                                                                    |                                                                                   |
+|  NFR1.1  |                 |                     All API responses should be returned within 500 milliseconds under normal load conditions.                     |          FR3.1,FR3.2, FR3.3,FR3.4,FR3.5,FR3.6,FR3.7,FR1.1, FR1.2, FR1.3           |
+|  NFR1.2  |                 |                  The system must support handling up to 10,000 concurrent users without performance degradation.                   |                               FR1.1, FR1.2, FR1.32                                |
+| **NFR2** | **scalability** |                                                                                                                                    |                                                                                   |
+|  NFR2.1  |                 |             The system should be scalable to accommodate increased traffic, supporting automatic scaling of resources              |                         FR2.1, FR2.2, FR2.3, FR2.4, FR2.5                         |
+|  NFR2.2  |                 |                  Database queries must be optimized to handle large data volumes and complex queries efficiently.                  | FR2.1, FR2.2, FR2.3, FR2.4, FR2.5, FR3.1, FR3.2, FR3.3, FR3.4, FR3.5, FR3.6,FR3.7 |
+| **NFR3** | **Reliability** |                                                                                                                                    |                                                                                   |
+|  NFR3.1  |                 |                                             The system should aim for a 99.99% uptime                                              |                                FR1.1, FR1.2, FR1.3                                |
+| **NFR4** |  **Security**   |                                                                                                                                    |                                                                                   |
+|  NFR4.1  |                 |                                All data exchanges between the client and server must be encrypted.                                 |                                FR1.1, FR1.2, FR1.3                                |
+| **NFR6** |  **Usability**  |                                                                                                                                    |                                                                                   |
+|  NFR6.1  |                 | All API endpoints must provide meaningful error messages that accurately describe the error conditions and suggest possible fixes. |                         FR2.1, FR2.2, FR2.3, FR2.4, FR2.5                         |
+|  NFR6.2  |                 |           The API documentation must be clear, complete, and accessible online with examples of requests and responses.            |                                  FR4.1 to FR4.6                                   |
+| **NFR9** | **Testability** |                                                                                                                                    |                                                                                   |
+|  NFR9.1  |                 |        The API should support automated testing environments with capabilities for integration, load, and security testing.        |                                  FR4.1 to FR4.6                                   |
+|  NFR9.2  |                 |                      Provide a sandbox environment for testing API integrations without affecting live data.                       |                                  FR4.1 to FR4.6                                   |
 
 ## Use case diagram and use cases
 
@@ -181,15 +190,15 @@ occurs, and a is a letter that identifies the exception/variant.
 
 | Step# |                 Actor                  |                        System                        |
 | :---: | :------------------------------------: | :--------------------------------------------------: |
-|   1   | Customer inserts username and password |                          /                           |
-|   2   |                   /                    | Found matching username and password in the Database |
+|   1   | Customer inserts username and password |                                                      |
+|   2   |                                        | Found matching username and password in the Database |
 
 ##### Exception 1.1.2.a | Credential Error |
 
 |    Step#     | Actor |                         System                          |
 | :----------: | :---: | :-----------------------------------------------------: |
-|     2.a      |   /   | Matching username or password not found in the Database |
-| Go to step 1 |   /   |                            /                            |
+|     2.a      |       | Matching username or password not found in the Database |
+| Go to step 1 |       |                                                         |
 
 #### Scenario 1.2 | User logs in into his account as Manager |
 
@@ -198,16 +207,16 @@ occurs, and a is a letter that identifies the exception/variant.
 
 | Step# |                 Actor                 |                       System                        |
 | :---: | :-----------------------------------: | :-------------------------------------------------: |
-|   1   | Manager inserts username and password |                          /                          |
-|   2   |                   /                   | Find matching username and password in the Database |
-|   3   |                   /                   |          User is authenticated as Manager           |
+|   1   | Manager inserts username and password |                                                     |
+|   2   |                                       | Find matching username and password in the Database |
+|   3   |                                       |          User is authenticated as Manager           |
 
 ##### Exception 1.2.2.a | Credential Error |
 
 |    Step#     | Actor |                         System                          |
 | :----------: | :---: | :-----------------------------------------------------: |
-|     2.a      |   /   | Matching username or password not found in the Database |
-| Go to step 1 |   /   |                            /                            |
+|     2.a      |       | Matching username or password not found in the Database |
+| Go to step 1 |       |                                                         |
 
 ### UC2 - Log Out
 
@@ -218,8 +227,8 @@ occurs, and a is a letter that identifies the exception/variant.
 
 | Step# |             Actor             |        System        |
 | :---: | :---------------------------: | :------------------: |
-|   1   | User clicks on log out button |          /           |
-|   2   |               /               | Ends session of user |
+|   1   | User clicks on log out button |                      |
+|   2   |                               | Ends session of user |
 
 ### UC3 - Sign Up
 
@@ -231,17 +240,19 @@ occurs, and a is a letter that identifies the exception/variant.
 
 | Step# |                           Actor                            |                           System                           |
 | :---: | :--------------------------------------------------------: | :--------------------------------------------------------: |
-|   1   |               User clicks on sign-up button                |                             /                              |
-|   2   | User fills in: Name, Surname, email, username and password |                             /                              |
-|   3   |                             /                              | Ensures that the nickname and email are not already taken  |
-|   4   |                             /                              |         Ensures that chosen password matches rules         |
-|   5   |                             /                              | Ensures that confirmation password matches chosen password |
-|   6   |                             /                              |             Sends e-mail with verification key             |
-|   7   |    Pastes verification key into the corresponding field    |                             /                              |
-|   8   |                             /                              |         Ensures that verification key corresponds          |
-|   9   |                             /                              |                       Displays EULA                        |
-|  10   |                     User accepts EULA                      |                             /                              |
-|  11   |                             /                              | Log-in the newly created account and refresh page to home  |
+|   1   |               User clicks on sign-up button                |                                                            |
+|   2   | User fills in: Name, Surname, email, username and password |                                                            |
+|   3   |                                                            | Ensures that the nickname and email are not already taken  |
+|   4   |                                                            |         Ensures that chosen password matches rules         |
+|   5   |                                                            | Ensures that confirmation password matches chosen password |
+|   6   |                                                            |             Sends e-mail with verification key             |
+|   7   |    Pastes verification key into the corresponding field    |                                                            |
+|   8   |                                                            |         Ensures that verification key corresponds          |
+|   9   |                                                            |                       Displays EULA                        |
+|  10   |                     User accepts EULA                      |                                                            |
+|  11   |                                                            | Log-in the newly created account and refresh page to home  |
+
+<!-- TODO: from this onwards it needs to be revised -->
 
 ### Scenario 4.2 | Sign-up exception: User already registered on the website |
 
@@ -301,15 +312,6 @@ occurs, and a is a letter that identifies the exception/variant.
 \<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
 
 \<concepts must be used consistently all over the document, ex in use cases, requirements etc>
-
-<!--
-FIXME: not necessary
-
-# System Design
-
-\<describe here system design>
-
-\<must be consistent with Context diagram> -->
 
 ## Deployment Diagram
 
