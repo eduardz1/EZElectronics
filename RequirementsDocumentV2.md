@@ -8,31 +8,31 @@ Date: 2024-05-01
 
 ## Contents
 
--   [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
-    -   [Contents](#contents)
-    -   [Informal description](#informal-description)
-    -   [Stakeholders](#stakeholders)
-    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
-        -   [Context Diagram](#context-diagram)
-        -   [Interfaces](#interfaces)
-    -   [Stories and personas](#stories-and-personas)
-    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-        -   [Functional Requirements + Access Rights](#functional-requirements--access-rights)
-        -   [Non-Functional Requirements](#non-functional-requirements)
-    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-        -   [Use case diagram](#use-case-diagram)
-        -   [UC1 - Log In](#uc1---log-in)
-            -   [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
-                -   [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
-            -   [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
-                -   [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
-        -   [UC2 - Log Out](#uc2---log-out)
-        -   [UC3 - Sign Up](#uc3---sign-up)
-        -   [Scenario 4.2 | Sign-up exception: User already registered on the website |](#scenario-42--sign-up-exception-user-already-registered-on-the-website-)
-        -   [Scenario 4.3 | Sign-up exception: User violates password rules |](#scenario-43--sign-up-exception-user-violates-password-rules-)
-        -   [Scenario 4.4 | Sign-up exception: Error on e-mail |](#scenario-44--sign-up-exception-error-on-e-mail-)
-    -   [Glossary](#glossary)
-    -   [Deployment Diagram](#deployment-diagram)
+- [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
+  - [Contents](#contents)
+  - [Informal description](#informal-description)
+  - [Stakeholders](#stakeholders)
+  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
+    - [Context Diagram](#context-diagram)
+    - [Interfaces](#interfaces)
+  - [Stories and personas](#stories-and-personas)
+  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
+    - [Non-Functional Requirements](#non-functional-requirements)
+  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+    - [Use case diagram](#use-case-diagram)
+    - [UC1 - Log In](#uc1---log-in)
+      - [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
+        - [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
+      - [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
+        - [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
+    - [UC2 - Log Out](#uc2---log-out)
+    - [UC3 - Sign Up](#uc3---sign-up)
+    - [Scenario 4.2 | Sign-up exception: User already registered on the website |](#scenario-42--sign-up-exception-user-already-registered-on-the-website-)
+    - [Scenario 4.3 | Sign-up exception: User violates password rules |](#scenario-43--sign-up-exception-user-violates-password-rules-)
+    - [Scenario 4.4 | Sign-up exception: Error on e-mail |](#scenario-44--sign-up-exception-error-on-e-mail-)
+  - [Glossary](#glossary)
+  - [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -149,18 +149,18 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |  NFR2.3  |                 |             The system should manage up to 10,000 products and handle 1,000 users at the same time without any issues.             |                                    FR3.4,FR4.2                                    |
 | **NFR3** | **Reliability** |                                                                                                                                    |                                                                                   |
 |  NFR3.1  |                 |                                             The system should aim for a 99.99% uptime                                              |                                FR1.1, FR1.2, FR1.3                                |
-|  NFR3.1  |                 |                    If something goes wrong, the system tries to fix itself so users don’t have to do anything.                     |                            All functional requirements                            |
+|  NFR3.2  |                 |        The system should handle software and hardware failures gracefully without losing user data or major functionality.         |                            All functional requirements                            |
 | **NFR4** |  **Security**   |                                                                                                                                    |                                                                                   |
 |  NFR4.1  |                 |                                All data exchanges between the client and server must be encrypted.                                 |                                FR1.1, FR1.2, FR1.3                                |
 |  NFR4.2  |                 |                    The system undergoes frequent security reviews to identify and correct any vulnerabilities.                     |                                    FR1.1,FR1.2                                    |
-| **NFR6** |  **Usability**  |                                                                                                                                    |                                                                                   |
-|  NFR6.1  |                 | All API endpoints must provide meaningful error messages that accurately describe the error conditions and suggest possible fixes. |                         FR2.1, FR2.2, FR2.3, FR2.4, FR2.5                         |
-|  NFR6.2  |                 |           The API documentation must be clear, complete, and accessible online with examples of requests and responses.            |                                  FR4.1 to FR4.6                                   |
-|  NFR6.3  |                 |                   The system looks good and works well on any device, whether it's a computer, tablet, or phone.                   |                            All functioanl requirements                            |
-| **NFR9** | **Testability** |                                                                                                                                    |                                                                                   |
-|  NFR9.1  |                 |        The API should support automated testing environments with capabilities for integration, load, and security testing.        |                                  FR4.1 to FR4.6                                   |
-|  NFR9.2  |                 |                      Provide a sandbox environment for testing API integrations without affecting live data.                       |                                  FR4.1 to FR4.6                                   |
-|  NFR9.3  |                 |         The system keeps detailed records of its performance and any problems that occur, making it easier to fix issues.          |                            All functional requirements                            |
+| **NFR5** |  **Usability**  |                                                                                                                                    |                                                                                   |
+|  NFR5.1  |                 | All API endpoints must provide meaningful error messages that accurately describe the error conditions and suggest possible fixes. |                         FR2.1, FR2.2, FR2.3, FR2.4, FR2.5                         |
+|  NFR5.2  |                 |           The API documentation must be clear, complete, and accessible online with examples of requests and responses.            |                                  FR4.1 to FR4.6                                   |
+|  NFR5.3  |                 |                   The system looks good and works well on any device, whether it's a computer, tablet, or phone.                   |                            All functioanl requirements                            |
+| **NFR6** | **Testability** |                                                                                                                                    |                                                                                   |
+|  NFR6.1  |                 |        The API should support automated testing environments with capabilities for integration, load, and security testing.        |                                  FR4.1 to FR4.6                                   |
+|  NFR6.2  |                 |                      Provide a sandbox environment for testing API integrations without affecting live data.                       |                                  FR4.1 to FR4.6                                   |
+|  NFR6.3  |                 |         The system keeps detailed records of its performance and any problems that occur, making it easier to fix issues.          |                            All functional requirements                            |
 
 ## Use case diagram and use cases
 
