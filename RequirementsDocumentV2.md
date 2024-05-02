@@ -2,38 +2,37 @@
 
 Date: 2024-05-01
 
-
 | Version number |                                                                                                                                Change                                                                                                                                 |
 | :------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |       2        | Fixed general issues on APIs and fixed corresponding table of access rights, this leads to a better formalization of the `Admin` figure, rethought about possible stakeholders and corresponding actors, added a number of use cases for quality-of-life improvements |
 
 ## Contents
 
-- [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
-  - [Contents](#contents)
-  - [Informal description](#informal-description)
-  - [Stakeholders](#stakeholders)
-  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
-    - [Context Diagram](#context-diagram)
-    - [Interfaces](#interfaces)
-  - [Stories and personas](#stories-and-personas)
-  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
-    - [Non-Functional Requirements](#non-functional-requirements)
-  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-    - [Use case diagram](#use-case-diagram)
-    - [UC1 - Log In](#uc1---log-in)
-      - [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
-        - [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
-      - [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
-        - [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
-    - [UC2 - Log Out](#uc2---log-out)
-    - [UC3 - Sign Up](#uc3---sign-up)
-    - [Scenario 4.2 | Sign-up exception: User already registered on the website |](#scenario-42--sign-up-exception-user-already-registered-on-the-website-)
-    - [Scenario 4.3 | Sign-up exception: User violates password rules |](#scenario-43--sign-up-exception-user-violates-password-rules-)
-    - [Scenario 4.4 | Sign-up exception: Error on e-mail |](#scenario-44--sign-up-exception-error-on-e-mail-)
-  - [Glossary](#glossary)
-  - [Deployment Diagram](#deployment-diagram)
+-   [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
+    -   [Contents](#contents)
+    -   [Informal description](#informal-description)
+    -   [Stakeholders](#stakeholders)
+    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
+        -   [Context Diagram](#context-diagram)
+        -   [Interfaces](#interfaces)
+    -   [Stories and personas](#stories-and-personas)
+    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+        -   [Functional Requirements + Access Rights](#functional-requirements--access-rights)
+        -   [Non-Functional Requirements](#non-functional-requirements)
+    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+        -   [Use case diagram](#use-case-diagram)
+        -   [UC1 - Log In](#uc1---log-in)
+            -   [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
+                -   [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
+            -   [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
+                -   [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
+        -   [UC2 - Log Out](#uc2---log-out)
+        -   [UC3 - Sign Up](#uc3---sign-up)
+        -   [Scenario 4.2 | Sign-up exception: User already registered on the website |](#scenario-42--sign-up-exception-user-already-registered-on-the-website-)
+        -   [Scenario 4.3 | Sign-up exception: User violates password rules |](#scenario-43--sign-up-exception-user-violates-password-rules-)
+        -   [Scenario 4.4 | Sign-up exception: Error on e-mail |](#scenario-44--sign-up-exception-error-on-e-mail-)
+    -   [Glossary](#glossary)
+    -   [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -42,7 +41,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 ## Stakeholders
 
 |          Stakeholder name           |                                                                Description                                                                |
-| :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
+| :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | ------------- |
 |              Customers              |                                                The customer of each electronic goods store                                                |
 |               Admins                |                                           IT administrator, Security Manager, DB Administrator                                            |
 |               Visitor               |                        Considered like a customer that is not logged in, will be prompted to log in to add to cart                        | Smartphone/PC |
@@ -74,7 +73,6 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ## Stories and personas
 
-
 |    Persona    |                                                                                                                                                                                                                                Story                                                                                                                                                                                                                                |
 | :-----------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | Manager Susan |                                                                                                                              Susan is an efficient and organized manager of an electronics store, today she received a new shipment for an XPS 13, she registers the product in the Laptop category and puts today as the arrival date                                                                                                                              |
@@ -86,53 +84,53 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 <!-- TODO: access rights -->
 
-|   ID    |                                                                                                  Description                                                                                                  |
-| :-----: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| **FR1** |                                                                                         **Authentication Management**                                                                                         |
-|   1.1   |                                                                             _Users_ must be able to log in with their credentials                                                                             |
-|   1.2   |                                                                                        _Users_ must be able to log out                                                                                        |
-|   1.3   |                                                              The system must be able to retrieve information about the currently logged-in user                                                               |
-|   1.4   |                                                             Support multiple Multi-Factor Authentication methods including  including SMS, email.                                                             |
-|   1.5   |                                                                      Users must reset passwords securely via email or SMS verification.                                                                       |
-|   1.6   |                                               Passwords must be at least 8 characters long with uppercase, lowercase letters, numbers, and special characters.                                                |
-|   1.7   |                                                              User accounts should lock for 5 minutes after 5 consecutive failed login attempts.                                                               |
-| **FR2** |                                                                                              **User Management**                                                                                              |
-|   2.1   |                                                                                The system must be able to register a new user                                                                                 |
-|   2.2   |                                                                          The system must be able to provide a list of all the users                                                                           |
-|   2.3   |                                                               The system must be able to provide a list of all the users with a specified role                                                                |
-|   2.4   |                             Allow users to update their profile information, such as name, surname, email and password, to ensure accuracy and security of their account details.                             |
-|   2.5   |                                   Require email verification for user registration to ensure that users provide valid email addresses and to prevent spam or fake accounts.                                   |
-|   2.6   |                        Provide functionality to search for users based on criteria such as username, name, surname, or role, enabling administrators to manage users more efficiently.                        |
-|   2.7   |                                        Allow administrators to deactivate or permanently delete user accounts, when necessary  such as in cases of policy violations.                                         |
-|   2.8   |                                                                                   Allow managers to see the sales history.                                                                                    |
-|   2.9   |                                                                                   Show Legal constraints (GDPR, EULA, ...)                                                                                    |
-|  2.10   |                                                                               Ask users permissions for personal data treatment                                                                               |
-| **FR3** |                                                                                            **Product Management**                                                                                             |
-|   3.1   |                                                           _Managers_ must be able to register a new product that doesn't exist yet in the Database                                                            |
-|   3.2   |                                                            _Managers_ must be able to register the arrival of a set of products of the same model                                                             |
-|   3.3   |                                                                              _Managers_ must be able to mark a product as `sold`                                                                              |
-|   3.4   |                                                                  The system must be able to return all the products present in the Database                                                                   |
-|   3.5   |                                                                       The system must be able to return a product given its unique code                                                                       |
-|   3.6   |                                                                    The system must be able to return all products of a specified category                                                                     |
-|   3.7   |                                                                      The system must be able to return all products of a specified model                                                                      |
-|   3.8   |                        Enable managers to upload product images to enhance the visual presentation of products on the website and provide customers with a better shopping experience.                        |
-|   3.9   |               Allow customers to submit reviews and ratings for products they have purchased, providing valuable feedback for both customers and managers and influencing purchasing decisions.               |
-|  3.10   |                      Implement product recommendation features based on customer browsing and purchasing history to suggest relevant products and increase cross-selling opportunities.                       |
-|  3.11   |                                                                     The system must be able to return all products of a specified brand.                                                                      |
-|  3.12   |                                                                  The system must be able to return all products in a specified price range.                                                                   |
-|  3.13   |                           Allow managers to edit existing product information such as selling price, model, category, and details to keep product listings accurate and up-to-date.                           |
-|  3.14   |                                     Implement inventory management features to track the quantity of each product in stock, allowing managers to adjust inventory levels.                                     |
-|  3.15   |            Display the availability status of each product (e.g., "In Stock", "Out of Stock") on the product listing page to inform customers about product availability before making a purchase.            |
-| **FR4** |                                                                                              **Cart Management**                                                                                              |
-|   4.1   |                                                                  The system must be able to return the cart of the currently logged-in user                                                                   |
-|   4.2   |                                                                          Logged-in users must be able to add a product to their cart                                                                          |
-|   4.3   |                                                                   Logged-in _Customers_ must be able to pay the total amount of their cart                                                                    |
-|   4.4   |                                                                      Logged-in _Customers_ must be able to view their purchasing history                                                                      |
-|   4.5   |                                                                    Logged-in _Customers_ must be able to delete a product from their cart                                                                     |
-|   4.6   |                                                                            Logged-in _Customers_ must be able to reset their cart                                                                             |
-|   4.7   |                                     Multiple Payment Options: Offer a variety of payment methods to users during checkout, including credit/debit cards, digital wallets.                                     |
-|   4.8   | Provide users with immediate confirmation of successful payment transactions, including order summaries, receipt details, and transaction IDs, to instill confidence and transparency in the payment process. |
-
+|   ID    |                                                      Description                                                      |
+| :-----: | :-------------------------------------------------------------------------------------------------------------------: |
+| **FR1** |                                             **Authentication Management**                                             |
+|   1.1   |                                _Users_ must be able to log in with their credentials.                                 |
+|   1.2   |                                           _Users_ must be able to log out.                                            |
+|   1.3   |                 The system must be able to retrieve information about the currently logged-in _user_.                 |
+|   1.4   |                      Support multiple Multi-Factor Authentication methods including SMS, email.                       |
+|   1.5   |                         _Users_ must reset passwords securely via email or SMS verification.                          |
+|   1.6   | Passwords must be at least 8 characters long including uppercase, lowercase letters, numbers, and special characters. |
+|   1.7   |                 _User_ accounts should lock for 5 minutes after 5 consecutive failed login attempts.                  |
+| **FR2** |                                                  **User Management**                                                  |
+|   2.1   |                                   The system must be able to register a new _user_                                    |
+|   2.2   |                             The system must be able to provide a list of all the _users_                              |
+|   2.3   |                  The system must be able to provide a list of all the _users_ with a specified role                   |
+|   2.4   |               _Users_ can update their profile information, such as name, surname, email and password.                |
+|   2.5   |                           The system will require an email verification via OTP validation.                           |
+|   2.6   |                  _Managers_ must be able to search users by name, surname, email, username or role.                   |
+|   2.7   |            _Admins_ must be able to ban users, temporarily or permanently, in cases of policy violations.             |
+|   2.8   |                                       Allow managers to see the sales history.                                        |
+|   2.9   |                                       Show Legal constraints (GDPR, EULA, ...)                                        |
+|  2.10   |                                  Ask _users_ permissions for personal data treatment                                  |
+| **FR3** |                                                **Product Management**                                                 |
+|   3.1   |               _Managers_ must be able to register a new product that doesn't exist yet in the Database.               |
+|   3.2   |                _Managers_ must be able to register the arrival of a set of products of the same model.                |
+|   3.3   |                                 _Managers_ must be able to mark a product as `sold`.                                  |
+|   3.4   |                      The system must be able to return all the products present in the Database.                      |
+|   3.5   |                          The system must be able to return a product given its unique code.                           |
+|   3.6   |                        The system must be able to return all products of a specified category.                        |
+|   3.7   |                         The system must be able to return all products of a specified model.                          |
+|   3.8   |                                   _Managers_ must be able to upload product images.                                   |
+|   3.9   |                   _Customers_ must be able to submit reviews and ratings for the product purchased.                   |
+|  3.10   |           The system must implement product recommendation features based on _customer_ purchasing history.           |
+|  3.11   |                         The system must be able to return all products of a specified brand.                          |
+|  3.12   |                      The system must be able to return all products in a specified price range.                       |
+|  3.13   |   _Managers_ must be able to edit existing product information such as selling price, model, category, and details.   |
+|  3.14   |         The system must implement inventory management features allowing managers to adjust inventory levels.         |
+|  3.15   |                             _Customers_ must be able to add a product to their wishlist.                              |
+|  3.15   |             The system must display the availability status of each product on the product listing page.              |
+| **FR4** |                                                  **Cart Management**                                                  |
+|   4.1   |                      The system must be able to return the cart of the currently logged-in user.                      |
+|   4.2   |                            Logged-in _users_ must be able to add a product to their cart.                             |
+|   4.3   |                       Logged-in _Customers_ must be able to pay the total amount of their cart.                       |
+|   4.4   |                         Logged-in _Customers_ must be able to view their purchasing history.                          |
+|   4.5   |                        Logged-in _Customers_ must be able to delete a product from their cart.                        |
+|   4.6   |                                Logged-in _Customers_ must be able to reset their cart.                                |
+|   4.7   |    The system must offer different payment methods during checkout, including credit/debit cards, digital wallets.    |
+|   4.8   |                The system must provide costumers with confirmation of successful payment transactions.                |
 
 ### Non-Functional Requirements
 
