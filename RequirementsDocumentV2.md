@@ -8,31 +8,50 @@ Date: 2024-05-01
 
 ## Contents
 
-- [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
-  - [Contents](#contents)
-  - [Informal description](#informal-description)
-  - [Stakeholders](#stakeholders)
-  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
-    - [Context Diagram](#context-diagram)
-    - [Interfaces](#interfaces)
-  - [Stories and personas](#stories-and-personas)
-  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
-    - [Non-Functional Requirements](#non-functional-requirements)
-  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-    - [Use case diagram](#use-case-diagram)
-    - [UC1 - Log In](#uc1---log-in)
-      - [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
-        - [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
-      - [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
-        - [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
-    - [UC2 - Log Out](#uc2---log-out)
-    - [UC3 - Sign Up](#uc3---sign-up)
-    - [Scenario 4.2 | Sign-up exception: User already registered on the website |](#scenario-42--sign-up-exception-user-already-registered-on-the-website-)
-    - [Scenario 4.3 | Sign-up exception: User violates password rules |](#scenario-43--sign-up-exception-user-violates-password-rules-)
-    - [Scenario 4.4 | Sign-up exception: Error on e-mail |](#scenario-44--sign-up-exception-error-on-e-mail-)
-  - [Glossary](#glossary)
-  - [Deployment Diagram](#deployment-diagram)
+-   [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
+    -   [Contents](#contents)
+    -   [Informal description](#informal-description)
+    -   [Stakeholders](#stakeholders)
+    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
+        -   [Context Diagram](#context-diagram)
+        -   [Interfaces](#interfaces)
+    -   [Stories and personas](#stories-and-personas)
+    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+        -   [Functional Requirements + Access Rights](#functional-requirements--access-rights)
+        -   [Non-Functional Requirements](#non-functional-requirements)
+    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+        -   [Use case diagram](#use-case-diagram)
+        -   [UC1 - Log In](#uc1---log-in)
+            -   [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
+                -   [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
+            -   [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
+                -   [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
+        -   [UC2 - Log Out](#uc2---log-out)
+        -   [UC3 - Sign Up](#uc3---sign-up)
+        -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
+            -   [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
+            -   [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
+            -   [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
+            -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
+            -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
+            -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
+            -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+            -   [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
+            -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+        -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
+            -   [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
+                -   [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
+                -   [Exception 5a.3b | Product Already Exists |](#exception-5a3b--product-already-exists-)
+            -   [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
+                -   [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
+        -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
+        -   [Scenario 6a](#scenario-6a)
+        -   [6.1a|Manager edit availability|](#61amanager-edit-availability)
+        -   [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
+            -   [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
+            -   [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
+    -   [Glossary](#glossary)
+    -   [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -259,58 +278,222 @@ occurs, and a is a letter that identifies the exception/variant.
 
 <!-- TODO: from this onwards it needs to be revised -->
 
-### Scenario 4.2 | Sign-up exception: User already registered on the website |
+### UC 4 - Customer Buys a Product
 
-| :------------: | :-------------------------------------------------------: |
-| Precondition | User does have an account |
-| Post condition | |
+<!-- TODO: add manager as actor, notify manager of the purchase -->
 
-| Step# |             Actor             |              System              |
-| :---: | :---------------------------: | :------------------------------: |
-|   1   | User fills in: Name, Surname, |                                  |
-|       |  e-mail, username, password   |                                  |
-|   2   |                               | Check if the username is already |
-|       |                               |     registered, match found      |
-|       |                               |                                  |
-|   3   |                               |      Notify user, error 409      |
+-   **Actors involved**: Customer, Manager
+-   **Informal Description**: Customer browses the website to buy a product, adds the item to the cart and clicks on the purchase button
+-   **Pre-condition**: Customer is logged in his account
+-   **Post-condition**: Customer has bought the product
+-   **Variants**: [4.1a, 4.3a, 4.3b, 4.7a, 4.7b, 4.7c]
+-   **Exceptions**: [4.4a, 4.8a]
 
-### Scenario 4.3 | Sign-up exception: User violates password rules |
+|                 Step#                  |                             Actor                              |                           System                           |
+| :------------------------------------: | :------------------------------------------------------------: | :--------------------------------------------------------: |
+|                   1                    | Customer searches for a `product model` using the `search bar` |                                                            |
+|                   2                    |                                                                |       Displays all the products that match the query       |
+|      Optionally go back to step 1      |                                                                |                                                            |
+|                   3                    | Customer clicks on `add to cart` button for a specific product |                                                            |
+|                   4                    |                                                                |          Adds the product to the customer's cart           |
+|      Optionally go back to step 1      |                                                                |                                                            |
+|                   5                    |               Customer clicks on the `cart` icon               |                                                            |
+|                   6                    |                                                                |        Displays the cart with all the current items        |
+|      Optionally go back to step 1      |                                                                |                                                            |
+|                   7                    | Customer clicks on the `purchase` button in the cart interface |                                                            |
+|                   8                    |                                                                | Item is purchased, and its entry removed from the Database |
+|                   9                    |                                                                |               Notify manager of the purchase               |
+|                   10                   |  Manager decreases the availability of the purchased product   |                                                            |
+| Optionally go back to step 1 or end UC |                                                                |                                                            |
 
-| :------------: | :---------------------------------------------------------------------: |
-| Precondition | User does not have an account, user insert an incorrect password format |
-| Post condition | |
+#### Variant 4.1a | Customer Chooses a Category |
 
-| Step# |             Actor             |                 System                  |
-| :---: | :---------------------------: | :-------------------------------------: |
-|   1   | User fills in: Name, Surname, |                                         |
-|       |  e-mail, username, password   |                                         |
-|   2   |                               |    Check if the username is already     |
-|       |                               |       registered, no match found        |
-|       |                               |                                         |
-|   3   |                               | Check for password rules, not satisfied |
-|       |                               |                                         |
-|   4   |                               |  Error signaled "respect format rules"  |
+|    Step#    |                   Actor                   | System |
+| :---------: | :---------------------------------------: | :----: |
+|     1a      | Customer selects a `category` from a list |        |
+| Continue UC |                                           |        |
 
-### Scenario 4.4 | Sign-up exception: Error on e-mail |
+#### Variant 4.3a | Customer adds product to wishlist |
 
-| :------------: | :------------------------------------------------------------: |
-| Precondition | User does not have an account, user insert an incorrect e-mail |
-| Post condition | |
+|       Step#       |                               Actor                                |                   System                    |
+| :---------------: | :----------------------------------------------------------------: | :-----------------------------------------: |
+|        3a         | Customer clicks on `add to wishlist` button for a specific product |                                             |
+|        4a         |                                                                    | Adds the product to the customer's wishlist |
+| Go back to step 3 |                                                                    |                                             |
 
-| Step# |             Actor             |               System                |
-| :---: | :---------------------------: | :---------------------------------: |
-|   1   | User fills in: Name, Surname, |                                     |
-|       |  e-mail, username, password   |                                     |
-|   2   |                               |  Check if the username is already   |
-|       |                               |     registered, no match found      |
-|       |                               |                                     |
-|   3   |                               | Check for password rules, satisfied |
-|       |                               |                                     |
-|   4   |                               | Sends e-mail with verification key  |
-|       |                               |                                     |
-|   5   |     Do not receive e-mail     |                                     |
-|       |                               |                                     |
-|   6   |                               |           Process aborts            |
+#### Variant 4.3b | Customer views the product page |
+
+|    Step#    |                           Actor                           |                     System                      |
+| :---------: | :-------------------------------------------------------: | :---------------------------------------------: |
+|     3b      | Customer clicks on `product` panel for a specific product |                                                 |
+|     4b      |                                                           | Shows product page with reviews and description |
+| Continue UC |                                                           |                                                 |
+
+<!-- TODO: variant about checking the store, checking the reviews, checking the description -->
+
+<!-- TODO: discuss this: even if there are 0 items because after you click the items gets sold, add to the cart anyway, so no exception on 3 -->
+
+<!-- TODO: discuss this: no exceptions on empty cart or list of products, it's just empty -->
+
+<!-- TODO: discuss this: not an exception, because we stop the user -->
+
+#### Variant 4.7a | Empty Cart |
+
+|                 Step#                  | Actor |                                   System                                   |
+| :------------------------------------: | :---: | :------------------------------------------------------------------------: |
+|                   7a                   |       | Notifies the user that the cart is empty (`purchase` button not clickable) |
+| Optionally go back to step 1 or end UC |       |                                                                            |
+
+#### Variant 4.7b | Remove Item from Cart |
+
+|    Step#     |                     Actor                     |             System             |
+| :----------: | :-------------------------------------------: | :----------------------------: |
+|      7b      | Customer clicks on `remove` button of an item |                                |
+|      8b      |                                               | Removes the item from the cart |
+| Go to step 6 |                                               |                                |
+
+#### Variant 4.7c | Delete the Entire Cart |
+
+|                 Step#                  |                  Actor                  |               System                |
+| :------------------------------------: | :-------------------------------------: | :---------------------------------: |
+|                   7c                   | Customer clicks on `delete cart` button |                                     |
+|                   8c                   |                                         | Deletes all the items from the cart |
+| Optionally go back to step 1 or end UC |                                         |                                     |
+
+#### Variant 4.7d | Show Cart History |
+
+<!-- TODO: discuss this: no exceptions because the button for past carts is not clickable -->
+
+|    Step#     |                     Actor                     |                  System                   |
+| :----------: | :-------------------------------------------: | :---------------------------------------: |
+|      7d      | Customer clicks on `show cart history` button |                                           |
+|      8d      |                                               | Displays list of all past + current carts |
+|      9d      |        Clicks on a cart from the list         |                                           |
+| Go to step 6 |                                               |                                           |
+
+#### Exception 4.4a | Item Already in a Cart |
+
+<!-- TODO: make it possible to place multiple orders of the same item -->
+
+|    Step#    | Actor |                         System                          |
+| :---------: | :---: | :-----------------------------------------------------: |
+|     4a      |       | Notifies the user that the product is already in a cart |
+| Continue UC |       |                                                         |
+
+#### Exception 4.8a | Product Already Sold |
+
+|    Step#    | Actor |                         System                         |
+| :---------: | :---: | :----------------------------------------------------: |
+|     8a      |       | Notifies the user that the product is already sold out |
+| Continue UC |       |                                                        |
+
+### UC 5 - Manager Adds a Product
+
+<!-- FIXME: add exception if product id is not automatically generated -->
+
+-   **Actors involved**: Manager
+-   **Informal Description**: Manager adds a new product to his store
+-   **Pre-condition**: Manager is logged in his account
+-   **Post-condition**: Product(s) is(are) added to the store
+-   **Nominal Scenario**: [5a, 5b]
+-   **Exceptions**: [5a.3a, 5a.3b, 5b.3a]
+
+#### Scenario 5a | Manager adds a new product to the store |
+
+| Step# |                         Actor                          |              System              |
+| :---: | :----------------------------------------------------: | :------------------------------: |
+|   1   |         Manager clicks on `add product` button         |                                  |
+|   2   | Manager fills in the product details and confirms them |                                  |
+|   3   |                                                        | Adds the product in the Database |
+
+##### Exception 5a.3a | Arrival Date cannot be in the Future |
+
+|    Step#     | Actor |                               System                                |
+| :----------: | :---: | :-----------------------------------------------------------------: |
+|      3a      |       | Notifies the user that the `arrival date` is after the current date |
+| Go to step 2 |       |                                                                     |
+
+##### Exception 5a.3b | Product Already Exists |
+
+|    Step#     | Actor |                                       System                                       |
+| :----------: | :---: | :--------------------------------------------------------------------------------: |
+|      3b      |       | Notifies the user that the product already exists in DB (duplicate product `code`) |
+| Go to step 2 |       |                                                                                    |
+
+#### Scenario 5b | Manager adds a new set of products to the store |
+
+| Step# |                                                     Actor                                                     |                  System                  |
+| :---: | :-----------------------------------------------------------------------------------------------------------: | :--------------------------------------: |
+|   1   |                                    Manager clicks on `add product` button                                     |                                          |
+|   2   | Manager fills in the product details without specifying the product `code`, a `quantity` is specified instead |                                          |
+|   3   |                                                                                                               | Adds the set of products in the Database |
+
+##### Exception 5b.3a | Arrival Date cannot be in the Future |
+
+|    Step#     | Actor |                               System                                |
+| :----------: | :---: | :-----------------------------------------------------------------: |
+|      3a      |       | Notifies the user that the `arrival date` is after the current date |
+| Go to step 2 |       |                                                                     |
+
+### UC 6 - Manager Marks a Product as Sold
+
+-   **Actors involved**: Manager
+-   **Informal Description**: Manager marks a product as sold
+-   **Pre-condition**: Manager is logged in his account
+-   **Post-condition**: Product is marked as sold
+-   **Nominal Scenario**: 6a
+-   **Variants**: 6.1a
+
+### Scenario 6a
+
+| Step# |                         Actor                         |                  System                   |
+| :---: | :---------------------------------------------------: | :---------------------------------------: |
+|   1   | Manager clicks on `mark as sold` button for a product |                                           |
+|   2   |                                                       | Marks the product as sold in the Database |
+
+### 6.1a|Manager edit availability|
+
+| Step# |                     Actor                     |               System                |
+| :---: | :-------------------------------------------: | :---------------------------------: |
+| 6.1a  | Manager clicks on 'edit' button for a product |                                     |
+| 6.2a  |                                               | Updates availability of the product |
+
+<!-- TODO: discuss this: can't return error in code because it only shows products that
+are present in his account, selling date can't be after current date because of the
+constraints in insert product, given so arrival date is always before current date,
+the button is not clickable if the product is already sold, given that the manager
+is one there can't be errors in this instance -->
+
+### UC 7 - DB Admin Deletes a User
+
+-   **Actors involved**: DB Admin
+-   **Informal Description**: DB Admin deletes a user from the Database
+-   **Pre-condition**: Operation is performed from the company PC by an authorized DB Admin
+-   **Post-condition**: User is deleted from the Database
+-   **Variants**: [7.1a, 7.1b]
+
+<!-- TODO: discuss this: again in the cases where the selections are empty just display an empty selection -->
+
+| Step# |                      Actor                      |                  System                  |
+| :---: | :---------------------------------------------: | :--------------------------------------: |
+|   1   |     DB admin requests the list of all users     |                                          |
+|   2   |                                                 | Displays the list of all the users in DB |
+|   3   | DB admin selects a user to delete from the list |                                          |
+|   4   |                                                 |    Deletes the user from the Database    |
+
+#### Variant 7.1a | Filter by Role |
+
+|    Step#    |                        Actor                        | System |
+| :---------: | :-------------------------------------------------: | :----: |
+|     1a      | DB admin selects a role to filter the list of users |        |
+| Continue UC |                                                     |        |
+
+#### Variant 7.1b | Filter by Username |
+
+|    Step#    |                        Actor                        | System |
+| :---------: | :-------------------------------------------------: | :----: |
+|     1b      | DB admin searches for a specific username in the DB |        |
+| Continue UC |                                                     |        |
 
 ## Glossary
 
