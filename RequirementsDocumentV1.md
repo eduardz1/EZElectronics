@@ -2,55 +2,54 @@
 
 Date: 2024-05-01
 
-
 | Version number | Change |
 | :------------: | :----: |
 |       1        |   /    |
 
 ## Contents
 
-- [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
-  - [Contents](#contents)
-  - [Informal description](#informal-description)
-  - [Stakeholders](#stakeholders)
-  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
-    - [Context Diagram](#context-diagram)
-    - [Interfaces](#interfaces)
-  - [Stories and personas](#stories-and-personas)
-  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
-    - [Non-Functional Requirements](#non-functional-requirements)
-  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-    - [Use case diagram](#use-case-diagram)
-    - [UC1 - Log In](#uc1---log-in)
-      - [Scenario 1a | User logs in into his account as Customer |](#scenario-1a--user-logs-in-into-his-account-as-customer-)
-        - [Exception 1a.2a | Credential Error |](#exception-1a2a--credential-error-)
-      - [Scenario 1b | User logs in into his account as Manager |](#scenario-1b--user-logs-in-into-his-account-as-manager-)
-        - [Exception 1b.2a | Credential Error |](#exception-1b2a--credential-error-)
-    - [UC2 - Log Out](#uc2---log-out)
-    - [UC3 - Sign Up](#uc3---sign-up)
-      - [Variant 3.2a | User registers as Manager |](#variant-32a--user-registers-as-manager-)
-      - [Exception 3.3a | User Already Exists |](#exception-33a--user-already-exists-)
-    - [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
-      - [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
-      - [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
-      - [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
-      - [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
-      - [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
-      - [Exception 4.4a | Item Already in Cart |](#exception-44a--item-already-in-cart-)
-      - [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
-    - [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
-      - [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
-        - [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
-        - [Exception 5a.3b | Product Already Exists |](#exception-5a3b--product-already-exists-)
-      - [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
-        - [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
-    - [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
-    - [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
-      - [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
-      - [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
-  - [Glossary](#glossary)
-  - [Deployment Diagram](#deployment-diagram)
+-   [Requirements Document - current EZElectronics](#requirements-document---current-ezelectronics)
+    -   [Contents](#contents)
+    -   [Informal description](#informal-description)
+    -   [Stakeholders](#stakeholders)
+    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
+        -   [Context Diagram](#context-diagram)
+        -   [Interfaces](#interfaces)
+    -   [Stories and personas](#stories-and-personas)
+    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+        -   [Functional Requirements + Access Rights](#functional-requirements--access-rights)
+        -   [Non-Functional Requirements](#non-functional-requirements)
+    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+        -   [Use case diagram](#use-case-diagram)
+        -   [UC1 - Log In](#uc1---log-in)
+            -   [Scenario 1a | User logs in into his account as Customer |](#scenario-1a--user-logs-in-into-his-account-as-customer-)
+                -   [Exception 1a.2a | Credential Error |](#exception-1a2a--credential-error-)
+            -   [Scenario 1b | User logs in into his account as Manager |](#scenario-1b--user-logs-in-into-his-account-as-manager-)
+                -   [Exception 1b.2a | Credential Error |](#exception-1b2a--credential-error-)
+        -   [UC2 - Log Out](#uc2---log-out)
+        -   [UC3 - Sign Up](#uc3---sign-up)
+            -   [Variant 3.2a | User registers as Manager |](#variant-32a--user-registers-as-manager-)
+            -   [Exception 3.3a | User Already Exists |](#exception-33a--user-already-exists-)
+        -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
+            -   [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
+            -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
+            -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
+            -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
+            -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+            -   [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
+            -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+        -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
+            -   [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
+                -   [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
+                -   [Exception 5a.3b | Product Already Exists |](#exception-5a3b--product-already-exists-)
+            -   [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
+                -   [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
+        -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
+        -   [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
+            -   [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
+            -   [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
+    -   [Glossary](#glossary)
+    -   [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -75,7 +74,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |  Actor   |                                                                 Logical Interface                                                                  | Physical Interface |
 | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
 | Customer |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
-|  Admins  |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
+|  Admins  |                                      TUI (to be defined -key functions: all functions + management functions)                                      |         PC         |
 | Manager  | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
 
 ## Stories and personas
@@ -89,33 +88,33 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Functional Requirements + Access Rights
 
-|   ID    |                                               Description                                               | Customer | Manager | Admin |
-| :-----: | :-----------------------------------------------------------------------------------------------------: | :------: | :-----: | :---: |
-| **FR1** |                                      **Authentication Management**                                      |          |         |       |
-|   1.1   |                          _Users_ must be able to log in with their credentials                          |    Y     |    Y    |   X   |
-|   1.2   |                                     _Users_ must be able to log out                                     |    Y     |    Y    |   X   |
-|   1.3   |           The system must be able to retrieve information about the currently logged-in user            |    Y     |    Y    |   X   |
-| **FR2** |                                           **User Management**                                           |          |         |       |
-|   2.1   |                             The system must be able to register a new user                              |    Y     |    Y    |   Y   |
-|   2.2   |                       The system must be able to provide a list of all the users                        |    X     |    X    |   Y   |
-|   2.3   |            The system must be able to provide a list of all the users with a specified role             |    X     |    X    |   Y   |
-|   2.4   | The system must be able to provide information about a user with a specified username from the Database |    X     |    X    |   Y   |
-|   2.5   |     The DB admin must be able to delete a specific user with a specified username from the Database     |    X     |    X    |   Y   |
-| **FR3** |                                         **Product Management**                                          |          |         |       |
-|   3.1   |        _Managers_ must be able to register a new product that doesn't exist yet in the Database         |    X     |    Y    |   Y   |
-|   3.2   |         _Managers_ must be able to register the arrival of a set of products of the same model          |    X     |    Y    |   Y   |
-|   3.3   |                           _Managers_ must be able to mark a product as `sold`                           |    X     |    Y    |   Y   |
-|   3.4   |         The system must be able to return to a _User_ all the products present in the Database          |    Y     |    Y    |   Y   |
-|   3.5   |                    The system must be able to return a product given its unique code                    |    Y     |    Y    |   Y   |
-|   3.6   |                 The system must be able to return all products of a specified category                  |    Y     |    Y    |   Y   |
-|   3.7   |                   The system must be able to return all products of a specified model                   |    Y     |    Y    |   Y   |
-| **FR4** |                                           **Cart Management**                                           |          |         |       |
-|   4.1   |            The system must be able to return the cart of the currently logged-in _Customer_             |    Y     |    X    |   X   |
-|   4.2   |                       Logged-in users must be able to add a product to their cart                       |    Y     |    X    |   X   |
-|   4.3   |                Logged-in _Customers_ must be able to pay the total amount of their cart                 |    Y     |    X    |   X   |
-|   4.4   |                   Logged-in _Customers_ must be able to view their purchasing history                   |    Y     |    X    |   X   |
-|   4.5   |                 Logged-in _Customers_ must be able to delete a product from their cart                  |    Y     |    X    |   X   |
-|   4.6   |                         Logged-in _Customers_ must be able to reset their cart                          |    Y     |    X    |   X   |
+|   ID    |                                                Description                                                | Customer | Manager | Admin |
+| :-----: | :-------------------------------------------------------------------------------------------------------: | :------: | :-----: | :---: |
+| **FR1** |                                       **Authentication Management**                                       |          |         |       |
+|   1.1   |                           _Users_ must be able to log in with their credentials                           |    Y     |    Y    |   X   |
+|   1.2   |                                      _Users_ must be able to log out                                      |    Y     |    Y    |   X   |
+|   1.3   |           The system must be able to retrieve information about the currently logged-in _User_            |    Y     |    Y    |   X   |
+| **FR2** |                                            **User Management**                                            |          |         |       |
+|   2.1   |                             The system must be able to register a new _user_                              |    Y     |    Y    |   Y   |
+|   2.2   |                       The system must be able to provide a list of all the _users_                        |    X     |    X    |   Y   |
+|   2.3   |            The system must be able to provide a list of all the _users_ with a specified role             |    X     |    X    |   Y   |
+|   2.4   | The system must be able to provide information about a _user_ with a specified username from the Database |    X     |    X    |   Y   |
+|   2.5   |     The DB admin must be able to delete a specific _user_ with a specified username from the Database     |    X     |    X    |   Y   |
+| **FR3** |                                          **Product Management**                                           |          |         |       |
+|   3.1   |         _Managers_ must be able to register a new product that doesn't exist yet in the Database          |    X     |    Y    |   Y   |
+|   3.2   |          _Managers_ must be able to register the arrival of a set of products of the same model           |    X     |    Y    |   Y   |
+|   3.3   |                            _Managers_ must be able to mark a product as `sold`                            |    X     |    Y    |   Y   |
+|   3.4   |          The system must be able to return to a _User_ all the products present in the Database           |    Y     |    Y    |   Y   |
+|   3.5   |                     The system must be able to return a product given its unique code                     |    Y     |    Y    |   Y   |
+|   3.6   |                  The system must be able to return all products of a specified category                   |    Y     |    Y    |   Y   |
+|   3.7   |                    The system must be able to return all products of a specified model                    |    Y     |    Y    |   Y   |
+| **FR4** |                                            **Cart Management**                                            |          |         |       |
+|   4.1   |             The system must be able to return the cart of the currently logged-in _Customer_              |    Y     |    X    |   X   |
+|   4.2   |                       Logged-in _users_ must be able to add a product to their cart                       |    Y     |    X    |   X   |
+|   4.3   |                 Logged-in _Customers_ must be able to pay the total amount of their cart                  |    Y     |    X    |   X   |
+|   4.4   |                    Logged-in _Customers_ must be able to view their purchasing history                    |    Y     |    X    |   X   |
+|   4.5   |                  Logged-in _Customers_ must be able to delete a product from their cart                   |    Y     |    X    |   X   |
+|   4.6   |                          Logged-in _Customers_ must be able to reset their cart                           |    Y     |    X    |   X   |
 
 ### Non-Functional Requirements
 
@@ -316,14 +315,14 @@ exception/variant.
 |      9d      |        Clicks on a cart from the list         |                                           |
 | Go to step 6 |                                               |                                           |
 
-#### Exception 4.4a | Item Already in Cart |
+#### Exception 4.4a | Item Already in a Cart |
 
 <!-- TODO: make it possible to place multiple orders of the same item -->
 
-|    Step#    | Actor |                        System                         |
-| :---------: | :---: | :---------------------------------------------------: |
-|     4a      |       | Notifies the user that the product is already in cart |
-| Continue UC |       |                                                       |
+|    Step#    | Actor |                         System                          |
+| :---------: | :---: | :-----------------------------------------------------: |
+|     4a      |       | Notifies the user that the product is already in a cart |
+| Continue UC |       |                                                         |
 
 #### Exception 4.8a | Product Already Sold |
 
