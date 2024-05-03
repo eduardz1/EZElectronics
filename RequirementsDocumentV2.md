@@ -2,9 +2,9 @@
 
 Date: 2024-05-01
 
-| Version number |                                                                                                                                Change                                                                                                                                 |
-| :------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|       2        | Fixed general issues on APIs and fixed corresponding table of access rights, this leads to a better formalization of the `Admin` figure, rethought about possible stakeholders and corresponding actors, added a number of use cases for quality-of-life improvements |
+| Version number |                                                                                                                                                           Change                                                                                                                                                           |
+| :------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|       2        | Fixed general issues on APIs and fixed corresponding table of access rights, this leads to a better formalization of the `Admin` figure, rethought about possible stakeholders and corresponding actors, added a number of use cases for quality-of-life improvements like automatically generating products code as UUIDs |
 
 ## Contents
 
@@ -29,27 +29,31 @@ Date: 2024-05-01
         -   [UC2 - Log Out](#uc2---log-out)
         -   [UC3 - Sign Up](#uc3---sign-up)
         -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
-            -   [Variant 4.1a | Customer Chooses a Category |](#variant-41a--customer-chooses-a-category-)
+            -   [Variant 4.1a | User Chooses a Category |](#variant-41a--user-chooses-a-category-)
+            -   [Variant 4.1b | User Chooses a Brand |](#variant-41b--user-chooses-a-brand-)
+            -   [Variant 4.1c | User Chooses a Price Range |](#variant-41c--user-chooses-a-price-range-)
             -   [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
             -   [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
             -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
             -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
             -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
             -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+        -   [Exception 4.3a | User not logged in as Customer](#exception-43a--user-not-logged-in-as-customer)
             -   [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
             -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+        -   [Exception 4.9a | Payment unsuccessful](#exception-49a--payment-unsuccessful)
         -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
             -   [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
                 -   [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
-                -   [Exception 5a.3b | Product Already Exists |](#exception-5a3b--product-already-exists-)
             -   [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
                 -   [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
         -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
         -   [Scenario 6a](#scenario-6a)
-        -   [6.1a|Manager edit availability|](#61amanager-edit-availability)
-        -   [UC 7 - DB Admin Deletes a User](#uc-7---db-admin-deletes-a-user)
-            -   [Variant 7.1a | Filter by Role |](#variant-71a--filter-by-role-)
-            -   [Variant 7.1b | Filter by Username |](#variant-71b--filter-by-username-)
+        -   [UC 7 - Manager edit information of existing product](#uc-7---manager-edit-information-of-existing-product)
+        -   [UC 8 - DB Admin Deletes a User](#uc-8---db-admin-deletes-a-user)
+            -   [Variant 8.1a | Filter by Role |](#variant-81a--filter-by-role-)
+            -   [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
+        -   [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
     -   [Glossary](#glossary)
     -   [Deployment Diagram](#deployment-diagram)
 
@@ -59,20 +63,19 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ## Stakeholders
 
-|          Stakeholder name           |                                                                Description                                                                |
-| :---------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | ------------- |
-|              Customers              |                                                The customer of each electronic goods store                                                |
-|               Admins                |                                           IT administrator, Security Manager, DB Administrator                                            |
-|               Visitor               |                        Considered like a customer that is not logged in, will be prompted to log in to add to cart                        | Smartphone/PC |
-|               Manager               |                                                         Electronic store manager                                                          |
-|               Admins                | IT administrator, Business administrator, Security Manager, DB Administrator, Community Moderator (for inappropriate description/reviews) |
-|           Payment Service           |                                                          PayPal/VISA/Mastercard                                                           |
-| Google Play Store & Apple App Store |                                                      (legal + quality requirements)                                                       |
-|             Competitors             |                                                             (Amazon/eBay ...)                                                             |
-|           Shipping Agency           |                                                        One or more (FedEx, UPS...)                                                        |
-|          Product Suppliers          |                                                 Manufacturers, Distributors, Wholesalers                                                  |
-|          Legal Authorities          |        GDPR, EULA, Consumer Protection Laws, Tax Authorities, Data Protection Authorities, Intellectual Property Authorities, etc.        |
-|              Investors              |                                                  People who have invested in the company                                                  |
+| Stakeholder name  |                                                                Description                                                                |
+| :---------------: | :---------------------------------------------------------------------------------------------------------------------------------------: |
+|     Customers     |                                                The customer of each electronic goods store                                                |
+|      Admins       |                                           IT administrator, Security Manager, DB Administrator                                            |
+|      Visitor      |                        Considered like a customer that is not logged in, will be prompted to log in to add to cart                        |
+|      Manager      |                                                         Electronic store manager                                                          |
+|      Admins       | IT administrator, Business administrator, Security Manager, DB Administrator, Community Moderator (for inappropriate description/reviews) |
+|  Payment Service  |                                                          PayPal/VISA/Mastercard                                                           |
+|    Competitors    |                                                             (Amazon/eBay ...)                                                             |
+|  Shipping Agency  |                                                        One or more (FedEx, UPS...)                                                        |
+| Product Suppliers |                                                 Manufacturers, Distributors, Wholesalers                                                  |
+| Legal Authorities |        GDPR, EULA, Consumer Protection Laws, Tax Authorities, Data Protection Authorities, Intellectual Property Authorities, etc.        |
+|     Investors     |                                                  People who have invested in the company                                                  |
 
 ## Context Diagram and interfaces
 
@@ -82,14 +85,13 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Interfaces
 
-|                Actor                |                                                                 Logical Interface                                                                  | Physical Interface |
-| :---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
-|              Customer               |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
-|               Admins                |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
-|               Visitor               |                                                 GUI (same as customer, but with limited functions)                                                 |   Smartphone/PC    |
-|               Manager               | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
-| Google Play Store & Apple App Store |                                       API (to be defined - key functions: handle the app submission process)                                       |      Internet      |
-|           Payment Service           |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      |
+|      Actor      |                                                                 Logical Interface                                                                  | Physical Interface |
+| :-------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------: |
+|    Customer     |                    GUI (to be defined -key functions: browse the electronics store, search for items, buy items, leave reviews)                    |   Smartphone/PC    |
+|     Admins      |                                    GUI/TUI (to be defined -key functions: all functions + management functions)                                    |         PC         |
+|     Visitor     |                                                 GUI (same as customer, but with limited functions)                                                 |   Smartphone/PC    |
+|     Manager     | GUI (to be defined - key functions: manage the sales and visualize stats on them, get in direct contact with the Community Moderator for problems) |   Smartphone/PC    |
+| Payment Service |                                    API (to be defined - key functions: handle payments, refunds, and disputes)                                     |      Internet      |
 
 ## Stories and personas
 
@@ -130,7 +132,6 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |   3.2   |                _Managers_ must be able to register the arrival of a set of products of the same model.                |
 |   3.3   |                                 _Managers_ must be able to mark a product as `sold`.                                  |
 |   3.4   |                      The system must be able to return all the products present in the Database.                      |
-|   3.5   |                          The system must be able to return a product given its unique code.                           |
 |   3.6   |                        The system must be able to return all products of a specified category.                        |
 |   3.7   |                         The system must be able to return all products of a specified model.                          |
 |   3.8   |                                   _Managers_ must be able to upload product images.                                   |
@@ -176,7 +177,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 | **NFR5** |  **Usability**  |                                                                                                                                    |                                                                                   |
 |  NFR5.1  |                 | All API endpoints must provide meaningful error messages that accurately describe the error conditions and suggest possible fixes. |                         FR2.1, FR2.2, FR2.3, FR2.4, FR2.5                         |
 |  NFR5.2  |                 |           The API documentation must be clear, complete, and accessible online with examples of requests and responses.            |                                  FR4.1 to FR4.6                                   |
-|  NFR5.3  |                 |                   The system looks good and works well on any device, whether it's a computer, tablet, or phone.                   |                            All functioanl requirements                            |
+|  NFR5.3  |                 |                  The system looks good and works well on any device, whether it's a computer, tablet, or mobile.                   |                            All functioanl requirements                            |
 | **NFR6** | **Testability** |                                                                                                                                    |                                                                                   |
 |  NFR6.1  |                 |        The API should support automated testing environments with capabilities for integration, load, and security testing.        |                                  FR4.1 to FR4.6                                   |
 |  NFR6.2  |                 |                      Provide a sandbox environment for testing API integrations without affecting live data.                       |                                  FR4.1 to FR4.6                                   |
@@ -281,38 +282,49 @@ occurs, and a is a letter that identifies the exception/variant.
 
 ### UC 4 - Customer Buys a Product
 
-<!-- TODO: add manager as actor, notify manager of the purchase -->
-
--   **Actors involved**: Customer, Manager
--   **Informal Description**: Customer browses the website to buy a product, adds the item to the cart and clicks on the purchase button
--   **Pre-condition**: Customer is logged in his account
+-   **Actors involved**: User, Customer, Manager
+-   **Informal Description**: User browses the website to buy a product, adds the item to the cart and clicks on the purchase button
 -   **Post-condition**: Customer has bought the product
 -   **Variants**: [4.1a, 4.3a, 4.3b, 4.7a, 4.7b, 4.7c]
--   **Exceptions**: [4.4a, 4.8a]
+-   **Exceptions**: [4.3a, 4.4a, 4.8a, 4.9a]
 
-|                 Step#                  |                             Actor                              |                           System                           |
-| :------------------------------------: | :------------------------------------------------------------: | :--------------------------------------------------------: |
-|                   1                    | Customer searches for a `product model` using the `search bar` |                                                            |
-|                   2                    |                                                                |       Displays all the products that match the query       |
-|      Optionally go back to step 1      |                                                                |                                                            |
-|                   3                    | Customer clicks on `add to cart` button for a specific product |                                                            |
-|                   4                    |                                                                |          Adds the product to the customer's cart           |
-|      Optionally go back to step 1      |                                                                |                                                            |
-|                   5                    |               Customer clicks on the `cart` icon               |                                                            |
-|                   6                    |                                                                |        Displays the cart with all the current items        |
-|      Optionally go back to step 1      |                                                                |                                                            |
-|                   7                    | Customer clicks on the `purchase` button in the cart interface |                                                            |
-|                   8                    |                                                                | Item is purchased, and its entry removed from the Database |
-|                   9                    |                                                                |               Notify manager of the purchase               |
-|                   10                   |  Manager decreases the availability of the purchased product   |                                                            |
-| Optionally go back to step 1 or end UC |                                                                |                                                            |
+|                 Step#                  |                             Actor                              |                       System                        |
+| :------------------------------------: | :------------------------------------------------------------: | :-------------------------------------------------: |
+|                   1                    |   User searches for a `product model` using the `search bar`   |                                                     |
+|                   2                    |                                                                |   Displays all the products that match the query    |
+|      Optionally go back to step 1      |                                                                |                                                     |
+|                   3                    |   User clicks on `add to cart` button for a specific product   |                                                     |
+|                   4                    |                                                                |       Adds the product to the customer's cart       |
+|      Optionally go back to step 1      |                                                                |                                                     |
+|                   5                    |               Customer clicks on the `cart` icon               |                                                     |
+|                   6                    |                                                                |    Displays the cart with all the current items     |
+|      Optionally go back to step 1      |                                                                |                                                     |
+|                   7                    | Customer clicks on the `purchase` button in the cart interface |                                                     |
+|                   8                    |                                                                | Item is purchased, and updates product availability |
+|                   9                    |                                                                |       Notifies successful payment transaction       |
+|                   10                   |                                                                |           Notify manager of the purchase            |
+| Optionally go back to step 1 or end UC |                                                                |                                                     |
 
-#### Variant 4.1a | Customer Chooses a Category |
+#### Variant 4.1a | User Chooses a Category |
 
-|    Step#    |                   Actor                   | System |
-| :---------: | :---------------------------------------: | :----: |
-|     1a      | Customer selects a `category` from a list |        |
-| Continue UC |                                           |        |
+|    Step#    |                 Actor                 | System |
+| :---------: | :-----------------------------------: | :----: |
+|     1a      | User selects a `category` from a list |        |
+| Continue UC |                                       |        |
+
+#### Variant 4.1b | User Chooses a Brand |
+
+|    Step#    |               Actor                | System |
+| :---------: | :--------------------------------: | :----: |
+|     1b      | User selects a `brand` from a list |        |
+| Continue UC |                                    |        |
+
+#### Variant 4.1c | User Chooses a Price Range |
+
+|    Step#    |                  Actor                   | System |
+| :---------: | :--------------------------------------: | :----: |
+|     1a      | User selects a `price range` from a list |        |
+| Continue UC |                                          |        |
 
 #### Variant 4.3a | Customer adds product to wishlist |
 
@@ -372,6 +384,13 @@ occurs, and a is a letter that identifies the exception/variant.
 |      9d      |        Clicks on a cart from the list         |                                           |
 | Go to step 6 |                                               |                                           |
 
+### Exception 4.3a | User not logged in as Customer
+
+|        Step#        | Actor |                    System                     |
+| :-----------------: | :---: | :-------------------------------------------: |
+|         3a          |       | Notify user that is not logged in as Customer |
+| UC goes back to UC1 |       |                                               |
+
 #### Exception 4.4a | Item Already in a Cart |
 
 <!-- TODO: make it possible to place multiple orders of the same item -->
@@ -383,10 +402,21 @@ occurs, and a is a letter that identifies the exception/variant.
 
 #### Exception 4.8a | Product Already Sold |
 
+If the product availability is 0 when `purchase` button is clicked the system will send a message error, aborting the purchase process
+
 |    Step#    | Actor |                         System                         |
 | :---------: | :---: | :----------------------------------------------------: |
 |     8a      |       | Notifies the user that the product is already sold out |
 | Continue UC |       |                                                        |
+
+### Exception 4.9a | Payment unsuccessful
+
+If occurs an error in payment after verification on availability this exception will happen
+
+|    Step#     | Actor |                     System                      |
+| :----------: | :---: | :---------------------------------------------: |
+|      9a      |       | Notifies user with error in payment transaction |
+| Go to step 8 |       |                                                 |
 
 ### UC 5 - Manager Adds a Product
 
@@ -414,13 +444,6 @@ occurs, and a is a letter that identifies the exception/variant.
 |      3a      |       | Notifies the user that the `arrival date` is after the current date |
 | Go to step 2 |       |                                                                     |
 
-##### Exception 5a.3b | Product Already Exists |
-
-|    Step#     | Actor |                                       System                                       |
-| :----------: | :---: | :--------------------------------------------------------------------------------: |
-|      3b      |       | Notifies the user that the product already exists in DB (duplicate product `code`) |
-| Go to step 2 |       |                                                                                    |
-
 #### Scenario 5b | Manager adds a new set of products to the store |
 
 | Step# |                                                     Actor                                                     |                  System                  |
@@ -442,8 +465,6 @@ occurs, and a is a letter that identifies the exception/variant.
 -   **Informal Description**: Manager marks a product as sold
 -   **Pre-condition**: Manager is logged in his account
 -   **Post-condition**: Product is marked as sold
--   **Nominal Scenario**: 6a
--   **Variants**: 6.1a
 
 ### Scenario 6a
 
@@ -451,13 +472,7 @@ occurs, and a is a letter that identifies the exception/variant.
 | :---: | :---------------------------------------------------: | :---------------------------------------: |
 |   1   | Manager clicks on `mark as sold` button for a product |                                           |
 |   2   |                                                       | Marks the product as sold in the Database |
-
-### 6.1a|Manager edit availability|
-
-| Step# |                     Actor                     |               System                |
-| :---: | :-------------------------------------------: | :---------------------------------: |
-| 6.1a  | Manager clicks on 'edit' button for a product |                                     |
-| 6.2a  |                                               | Updates availability of the product |
+|   3   |                                                       |  Decreases its availability accordingly   |
 
 <!-- TODO: discuss this: can't return error in code because it only shows products that
 are present in his account, selling date can't be after current date because of the
@@ -465,13 +480,28 @@ constraints in insert product, given so arrival date is always before current da
 the button is not clickable if the product is already sold, given that the manager
 is one there can't be errors in this instance -->
 
-### UC 7 - DB Admin Deletes a User
+### UC 7 - Manager edit information of existing product
+
+-   **Actors involved**: Manager
+-   **Informal Description**: Manager edit information of existing product
+-   **Pre-condition**: Manager must be logged in
+-   **Post-condition**: Product information are modified
+-   **Exceptions**: No exceptions can occur because system won't allow wrong images or strings format.
+
+| Step# |                                          Actor                                           |                System                 |
+| :---: | :--------------------------------------------------------------------------------------: | :-----------------------------------: |
+|   1   |                             Manager clicks on `edit` button                              |                                       |
+|   2   |                                                                                          | Displays the product information page |
+|   3   | Manager edits product information (image, price, availability, model, category, details) |                                       |
+|   4   |                                                                                          |        Updates Database status        |
+
+### UC 8 - DB Admin Deletes a User
 
 -   **Actors involved**: DB Admin
 -   **Informal Description**: DB Admin deletes a user from the Database
 -   **Pre-condition**: Operation is performed from the company PC by an authorized DB Admin
 -   **Post-condition**: User is deleted from the Database
--   **Variants**: [7.1a, 7.1b]
+-   **Variants**: [8.1a, 8.1b]
 
 <!-- TODO: discuss this: again in the cases where the selections are empty just display an empty selection -->
 
@@ -482,25 +512,39 @@ is one there can't be errors in this instance -->
 |   3   | DB admin selects a user to delete from the list |                                          |
 |   4   |                                                 |    Deletes the user from the Database    |
 
-#### Variant 7.1a | Filter by Role |
+#### Variant 8.1a | Filter by Role |
 
 |    Step#    |                        Actor                        | System |
 | :---------: | :-------------------------------------------------: | :----: |
 |     1a      | DB admin selects a role to filter the list of users |        |
 | Continue UC |                                                     |        |
 
-#### Variant 7.1b | Filter by Username |
+#### Variant 8.1b | Filter by Username |
 
 |    Step#    |                        Actor                        | System |
 | :---------: | :-------------------------------------------------: | :----: |
 |     1b      | DB admin searches for a specific username in the DB |        |
 | Continue UC |                                                     |        |
 
+### UC 9 - Customer submits rating and review
+
+-   **Actors involved**: Customer
+-   **Informal Description**: Customer submits rating and review of a purchased
+-   **Pre-condition**: Customer is logged in and product model occurs at least one time in Customer's cart history
+-   **Post-condition**: Customer submits rating and review for the product
+-   **Exceptions**: No exceptions can occur because system won't allow wrong images or strings format.
+
+| Step# |                                          Actor                                           |             System              |
+| :---: | :--------------------------------------------------------------------------------------: | :-----------------------------: |
+|   1   |                            Customer clicks on `review` button                            |                                 |
+|   2   |                                                                                          | Displays Rating and Review page |
+|   3   | Customer writes a review and add his rating for the product, optionally can add an image |                                 |
+|   4   |                             Customer clicks on `post` button                             |                                 |
+|   5   |                                                                                          |     Updates database status     |
+
 ## Glossary
 
-\<use UML class diagram to define important terms, or concepts in the domain of the application, and their relationships>
-
-\<concepts must be used consistently all over the document, ex in use cases, requirements etc>
+![Glossary](figures/imgs/glossary-v2.svg)
 
 ## Deployment Diagram
 
