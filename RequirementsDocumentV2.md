@@ -72,6 +72,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |           Shipping Agency           |                                                        One or more (FedEx, UPS...)                                                        |
 |          Product Suppliers          |                                                 Manufacturers, Distributors, Wholesalers                                                  |
 |          Legal Authorities          |        GDPR, EULA, Consumer Protection Laws, Tax Authorities, Data Protection Authorities, Intellectual Property Authorities, etc.        |
+|              Investors              |                                                  People who have invested in the company                                                  |
 
 ## Context Diagram and interfaces
 

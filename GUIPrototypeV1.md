@@ -2,11 +2,13 @@
 
 <!-- TODO: -->
 
-Authors: 
+Authors:
 
 Date:
 
 Version:
+
+## FIXME! broken images
 
 ![add to cart](figures/imgs/gui/add-to-cart.png)
 
