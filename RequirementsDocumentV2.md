@@ -34,6 +34,7 @@ Date: 2024-05-01
             -   [Variant 4.1c | User Chooses a Price Range |](#variant-41c--user-chooses-a-price-range-)
             -   [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
             -   [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
+            -   [Variant 4.5a | Customer views the wishlist |](#variant-45a--customer-views-the-wishlist-)
             -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
             -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
             -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
@@ -286,7 +287,7 @@ occurs, and a is a letter that identifies the exception/variant.
 -   **Actors involved**: User, Customer, Manager
 -   **Informal Description**: User browses the website to buy a product, adds the item to the cart and clicks on the purchase button
 -   **Post-condition**: Customer has bought the product
--   **Variants**: [4.1a, 4.3a, 4.3b, 4.7a, 4.7b, 4.7c]
+-   **Variants**: [4.1a, 4.3a, 4.3b, 4.5a, 4.7a, 4.7b, 4.7c]
 -   **Exceptions**: [4.3a, 4.4a, 4.8a, 4.9a]
 
 |                 Step#                  |                             Actor                              |                       System                        |
@@ -337,11 +338,11 @@ occurs, and a is a letter that identifies the exception/variant.
 
 #### Variant 4.3b | Customer views the product page |
 
-|    Step#    |                           Actor                           |                     System                      |
-| :---------: | :-------------------------------------------------------: | :---------------------------------------------: |
-|     3b      | Customer clicks on `product` panel for a specific product |                                                 |
-|     4b      |                                                           | Shows product page with reviews and description |
-| Continue UC |                                                           |                                                 |
+|       Step#       |                           Actor                           |                     System                      |
+| :---------------: | :-------------------------------------------------------: | :---------------------------------------------: |
+|        3b         | Customer clicks on `product` panel for a specific product |                                                 |
+|        4b         |                                                           | Shows product page with reviews and description |
+| Go back to step 3 |                                                           |                                                 |
 
 <!-- TODO: variant about checking the store, checking the reviews, checking the description -->
 
@@ -350,6 +351,14 @@ occurs, and a is a letter that identifies the exception/variant.
 <!-- TODO: discuss this: no exceptions on empty cart or list of products, it's just empty -->
 
 <!-- TODO: discuss this: not an exception, because we stop the user -->
+
+#### Variant 4.5a | Customer views the wishlist |
+
+|    Step#    |                Actor                 |       System        |
+| :---------: | :----------------------------------: | :-----------------: |
+|     5a      | Customer clicks on `wishlist` button |                     |
+|     4b      |                                      | Shows wishlist page |
+| Continue UC |                                      |                     |
 
 #### Variant 4.7a | Empty Cart |
 
