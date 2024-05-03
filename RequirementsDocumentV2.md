@@ -48,12 +48,12 @@ Date: 2024-05-01
             -   [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
                 -   [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
         -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
-        -   [Scenario 6a](#scenario-6a)
         -   [UC 7 - Manager edit information of existing product](#uc-7---manager-edit-information-of-existing-product)
         -   [UC 8 - DB Admin Deletes a User](#uc-8---db-admin-deletes-a-user)
             -   [Variant 8.1a | Filter by Role |](#variant-81a--filter-by-role-)
             -   [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
         -   [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
+        -   [UC 10 - Community Moderator Deletes a Review](#uc-10---community-moderator-deletes-a-review)
     -   [Glossary](#glossary)
     -   [Deployment Diagram](#deployment-diagram)
 
@@ -127,6 +127,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |   2.8   |                                       Allow managers to see the sales history.                                        |
 |   2.9   |                                       Show Legal constraints (GDPR, EULA, ...)                                        |
 |  2.10   |                                  Ask _users_ permissions for personal data treatment                                  |
+|  2.11   |                                 _Community Moderators_ must be able to delete reviews                                 |
 | **FR3** |                                                **Product Management**                                                 |
 |   3.1   |               _Managers_ must be able to register a new product that doesn't exist yet in the Database.               |
 |   3.2   |                _Managers_ must be able to register the arrival of a set of products of the same model.                |
@@ -420,8 +421,6 @@ If occurs an error in payment after verification on availability this exception 
 
 ### UC 5 - Manager Adds a Product
 
-<!-- FIXME: add exception if product id is not automatically generated -->
-
 -   **Actors involved**: Manager
 -   **Informal Description**: Manager adds a new product to his store
 -   **Pre-condition**: Manager is logged in his account
@@ -465,20 +464,17 @@ If occurs an error in payment after verification on availability this exception 
 -   **Informal Description**: Manager marks a product as sold
 -   **Pre-condition**: Manager is logged in his account
 -   **Post-condition**: Product is marked as sold
-
-### Scenario 6a
+-   **Exceptions**: can't return error in code because it only shows products that
+    are present in his account, selling date can't be after current date because of the
+    constraints in insert product, given so arrival date is always before current date,
+    the button is not clickable if the product is already sold, given that the manager
+    is one there can't be errors in this instance
 
 | Step# |                         Actor                         |                  System                   |
 | :---: | :---------------------------------------------------: | :---------------------------------------: |
 |   1   | Manager clicks on `mark as sold` button for a product |                                           |
 |   2   |                                                       | Marks the product as sold in the Database |
 |   3   |                                                       |  Decreases its availability accordingly   |
-
-<!-- TODO: discuss this: can't return error in code because it only shows products that
-are present in his account, selling date can't be after current date because of the
-constraints in insert product, given so arrival date is always before current date,
-the button is not clickable if the product is already sold, given that the manager
-is one there can't be errors in this instance -->
 
 ### UC 7 - Manager edit information of existing product
 
@@ -541,6 +537,18 @@ is one there can't be errors in this instance -->
 |   3   | Customer writes a review and add his rating for the product, optionally can add an image |                                 |
 |   4   |                             Customer clicks on `post` button                             |                                 |
 |   5   |                                                                                          |     Updates database status     |
+
+### UC 10 - Community Moderator Deletes a Review
+
+-   **Actors involved**: Community Moderator
+-   **Informal Description**: Community Moderator deletes a review
+-   **Pre-condition**: Community Moderator is logged in
+-   **Post-condition**: Review is deleted
+
+| Step# |                         Actor                          |                System                |
+| :---: | :----------------------------------------------------: | :----------------------------------: |
+|   1   | Moderator clicks on `delete` button on the review page |                                      |
+|   2   |                                                        | Deletes the review from the Database |
 
 ## Glossary
 
