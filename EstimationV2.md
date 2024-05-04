@@ -72,7 +72,7 @@ Hatched areas represent calendar time.
 
 # Summary
 
-|      Estimate by       | Estimated effort (person hours) | Estimated duration (person calendar weeks) |                                                     comments                                                     |
+|      Estimate by       | Estimated effort (person hours) | Estimated duration (person calendar weeks) |                                                     Comments                                                     |
 | :--------------------: | :-----------------------------: | :----------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
 |          Size          |               350               |                    8.8                     |                             This estimation is derived only from the envisioned code                             |
 | Product decomposition  |               535               |                    13.4                    | This estimation takes into account more variables than the size estimation, leading to a more accurate estimate. |
