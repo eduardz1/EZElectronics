@@ -8,55 +8,55 @@ Date: 2024-05-01
 
 ## Contents
 
--   [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
-    -   [Contents](#contents)
-    -   [Informal description](#informal-description)
-    -   [Stakeholders](#stakeholders)
-    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
-        -   [Context Diagram](#context-diagram)
-        -   [Interfaces](#interfaces)
-    -   [Stories and personas](#stories-and-personas)
-    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-        -   [Functional Requirements + Access Rights](#functional-requirements--access-rights)
-        -   [Non-Functional Requirements](#non-functional-requirements)
-    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-        -   [Use case diagram](#use-case-diagram)
-        -   [UC1 - Log In](#uc1---log-in)
-            -   [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
-                -   [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
-            -   [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
-                -   [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
-        -   [UC2 - Log Out](#uc2---log-out)
-        -   [UC3 - Sign Up](#uc3---sign-up)
-        -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
-            -   [Variant 4.1a | User Chooses a Category |](#variant-41a--user-chooses-a-category-)
-            -   [Variant 4.1b | User Chooses a Brand |](#variant-41b--user-chooses-a-brand-)
-            -   [Variant 4.1c | User Chooses a Price Range |](#variant-41c--user-chooses-a-price-range-)
-            -   [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
-            -   [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
-            -   [Variant 4.5a | Customer views the wishlist |](#variant-45a--customer-views-the-wishlist-)
-            -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
-            -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
-            -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
-            -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
-        -   [Exception 4.3a | User not logged in as Customer](#exception-43a--user-not-logged-in-as-customer)
-            -   [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
-            -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
-        -   [Exception 4.9a | Payment unsuccessful](#exception-49a--payment-unsuccessful)
-        -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
-            -   [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
-                -   [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
-            -   [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
-                -   [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
-        -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
-        -   [UC 7 - Manager edit information of existing product](#uc-7---manager-edit-information-of-existing-product)
-        -   [UC 8 - DB Admin Deletes a User](#uc-8---db-admin-deletes-a-user)
-            -   [Variant 8.1a | Filter by Role |](#variant-81a--filter-by-role-)
-            -   [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
-        -   [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
-        -   [UC 10 - Community Moderator Deletes a Review](#uc-10---community-moderator-deletes-a-review)
-    -   [Glossary](#glossary)
-    -   [Deployment Diagram](#deployment-diagram)
+- [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
+  - [Contents](#contents)
+  - [Informal description](#informal-description)
+  - [Stakeholders](#stakeholders)
+  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
+    - [Context Diagram](#context-diagram)
+    - [Interfaces](#interfaces)
+  - [Stories and personas](#stories-and-personas)
+  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
+    - [Non-Functional Requirements](#non-functional-requirements)
+  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+    - [Use case diagram](#use-case-diagram)
+    - [UC1 - Log In](#uc1---log-in)
+      - [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
+        - [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
+      - [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
+        - [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
+    - [UC2 - Log Out](#uc2---log-out)
+    - [UC3 - Sign Up](#uc3---sign-up)
+    - [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
+      - [Variant 4.1a | User Chooses a Category |](#variant-41a--user-chooses-a-category-)
+      - [Variant 4.1b | User Chooses a Brand |](#variant-41b--user-chooses-a-brand-)
+      - [Variant 4.1c | User Chooses a Price Range |](#variant-41c--user-chooses-a-price-range-)
+      - [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
+      - [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
+      - [Variant 4.5a | Customer views the wishlist |](#variant-45a--customer-views-the-wishlist-)
+      - [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
+      - [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
+      - [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
+      - [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+    - [Exception 4.3a | User not logged in as Customer](#exception-43a--user-not-logged-in-as-customer)
+      - [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
+      - [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+    - [Exception 4.9a | Payment unsuccessful](#exception-49a--payment-unsuccessful)
+    - [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
+      - [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
+        - [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
+      - [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
+        - [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
+    - [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
+    - [UC 7 - Manager edit information of existing product](#uc-7---manager-edit-information-of-existing-product)
+    - [UC 8 - DB Admin Deletes a User](#uc-8---db-admin-deletes-a-user)
+      - [Variant 8.1a | Filter by Role |](#variant-81a--filter-by-role-)
+      - [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
+    - [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
+    - [UC 10 - Community Moderator Deletes a Review](#uc-10---community-moderator-deletes-a-review)
+  - [Glossary](#glossary)
+  - [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -105,7 +105,6 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Functional Requirements + Access Rights
 
-<!-- TODO: access rights -->
 
 |   ID    |                                                      Description                                                      |
 | :-----: | :-------------------------------------------------------------------------------------------------------------------: |
@@ -144,7 +143,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |  3.13   |   _Managers_ must be able to edit existing product information such as selling price, model, category, and details.   |
 |  3.14   |         The system must implement inventory management features allowing managers to adjust inventory levels.         |
 |  3.15   |                             _Customers_ must be able to add a product to their wishlist.                              |
-|  3.15   |             The system must display the availability status of each product on the product listing page.              |
+|  3.16  |             The system must display the availability status of each product on the product listing page.              |
 | **FR4** |                                                  **Cart Management**                                                  |
 |   4.1   |                      The system must be able to return the cart of the currently logged-in user.                      |
 |   4.2   |                            Logged-in _users_ must be able to add a product to their cart.                             |
@@ -157,7 +156,6 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Non-Functional Requirements
 
-<!-- TODO: Define non-functional requirements -->
 
 |    ID    |      Type       |                                                            Description                                                             |                                     Refers to                                     |
 | :------: | :-------------: | :--------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
@@ -198,7 +196,6 @@ occurs, and a is a letter that identifies the exception/variant.
 
 ![Use Case Diagram](figures/v2/use-case-diagram.drawio.svg)
 
-<!-- Only valuable fields are mentioned here to reduce clutter -->
 
 ### UC1 - Log In
 
@@ -278,7 +275,6 @@ occurs, and a is a letter that identifies the exception/variant.
 |  10   |                     User accepts EULA                      |                                                            |
 |  11   |                                                            | Log-in the newly created account and refresh page to home  |
 
-<!-- TODO: from this onwards it needs to be revised -->
 
 ### UC 4 - Customer Buys a Product
 
@@ -342,13 +338,6 @@ occurs, and a is a letter that identifies the exception/variant.
 |        4b         |                                                           | Shows product page with reviews and description |
 | Go back to step 3 |                                                           |                                                 |
 
-<!-- TODO: variant about checking the store, checking the reviews, checking the description -->
-
-<!-- TODO: discuss this: even if there are 0 items because after you click the items gets sold, add to the cart anyway, so no exception on 3 -->
-
-<!-- TODO: discuss this: no exceptions on empty cart or list of products, it's just empty -->
-
-<!-- TODO: discuss this: not an exception, because we stop the user -->
 
 #### Variant 4.5a | Customer views the wishlist |
 
@@ -383,7 +372,6 @@ occurs, and a is a letter that identifies the exception/variant.
 
 #### Variant 4.7d | Show Cart History |
 
-<!-- TODO: discuss this: no exceptions because the button for past carts is not clickable -->
 
 |    Step#     |                     Actor                     |                  System                   |
 | :----------: | :-------------------------------------------: | :---------------------------------------: |
@@ -401,7 +389,6 @@ occurs, and a is a letter that identifies the exception/variant.
 
 #### Exception 4.4a | Item Already in a Cart |
 
-<!-- TODO: make it possible to place multiple orders of the same item -->
 
 |    Step#    | Actor |                         System                          |
 | :---------: | :---: | :-----------------------------------------------------: |
@@ -473,7 +460,7 @@ If occurs an error in payment after verification on availability this exception 
 -   **Post-condition**: Product is marked as sold
 -   **Exceptions**: can't return error in code because it only shows products that
     are present in his account, selling date can't be after current date because of the
-    constraints in insert product, given so arrival date is always before current date,
+    constraints in insert product, given that arrival date is always before current date,
     the button is not clickable if the product is already sold, given that the manager
     is one there can't be errors in this instance
 
@@ -506,7 +493,6 @@ If occurs an error in payment after verification on availability this exception 
 -   **Post-condition**: User is deleted from the Database
 -   **Variants**: [8.1a, 8.1b]
 
-<!-- TODO: discuss this: again in the cases where the selections are empty just display an empty selection -->
 
 | Step# |                      Actor                      |                  System                  |
 | :---: | :---------------------------------------------: | :--------------------------------------: |
