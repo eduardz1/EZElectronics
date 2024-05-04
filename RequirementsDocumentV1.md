@@ -118,7 +118,6 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Non-Functional Requirements
 
-<!-- TODO: Define non-functional requirements -->
 
 |    ID    |      Type       |                                                            Description                                                             |                                     Refers to                                     |
 | :------: | :-------------: | :--------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
@@ -153,7 +152,6 @@ exception/variant.
 
 ### Use case diagram
 
-<!-- Only valuable fields are mentioned here to reduce clutter -->
 
 ### UC1 - Log In
 
@@ -271,13 +269,6 @@ exception/variant.
 |     1a      | Customer selects a `category` from a list |        |
 | Continue UC |                                           |        |
 
-<!-- TODO: variant about checking the store, checking the reviews, checking the description -->
-
-<!-- TODO: discuss this: even if there are 0 items because after you click the items gets sold, add to the cart anyway, so no exception on 3 -->
-
-<!-- TODO: discuss this: no exceptions on empty cart or list of products, it's just empty -->
-
-<!-- TODO: discuss this: not an exception, because we stop the user -->
 
 #### Variant 4.7a | Empty Cart |
 
@@ -304,7 +295,6 @@ exception/variant.
 
 #### Variant 4.7d | Show Cart History |
 
-<!-- TODO: discuss this: no exceptions because the button for past carts is not clickable -->
 
 |    Step#     |                     Actor                     |                  System                   |
 | :----------: | :-------------------------------------------: | :---------------------------------------: |
@@ -315,7 +305,6 @@ exception/variant.
 
 #### Exception 4.4a | Item Already in a Cart |
 
-<!-- TODO: make it possible to place multiple orders of the same item -->
 
 |    Step#    | Actor |                         System                          |
 | :---------: | :---: | :-----------------------------------------------------: |
@@ -330,8 +319,6 @@ exception/variant.
 | Continue UC |       |                                                        |
 
 ### UC 5 - Manager Adds a Product
-
-<!-- FIXME: add exception if product id is not automatically generated -->
 
 -   **Actors involved**: Manager
 -   **Informal Description**: Manager adds a new product to his store
@@ -389,11 +376,6 @@ exception/variant.
 |   1   | Manager clicks on `mark as sold` button for a product |                                           |
 |   2   |                                                       | Marks the product as sold in the Database |
 
-<!-- TODO: discuss this: can't return error in code because it only shows products that
-are present in his account, selling date can't be after current date because of the
-constraints in insert product, given so arrival date is always before current date,
-the button is not clickable if the product is already sold, given that the manager
-is one there can't be errors in this instance -->
 
 ### UC 7 - DB Admin Deletes a User
 
@@ -403,7 +385,6 @@ is one there can't be errors in this instance -->
 -   **Post-condition**: User is deleted from the Database
 -   **Variants**: [7.1a, 7.1b]
 
-<!-- TODO: discuss this: again in the cases where the selections are empty just display an empty selection -->
 
 | Step# |                      Actor                      |                  System                  |
 | :---: | :---------------------------------------------: | :--------------------------------------: |
