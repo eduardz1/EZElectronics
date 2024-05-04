@@ -133,17 +133,17 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 |   3.2   |                _Managers_ must be able to register the arrival of a set of products of the same model.                |
 |   3.3   |                                 _Managers_ must be able to mark a product as `sold`.                                  |
 |   3.4   |                      The system must be able to return all the products present in the Database.                      |
-|   3.6   |                        The system must be able to return all products of a specified category.                        |
-|   3.7   |                         The system must be able to return all products of a specified model.                          |
-|   3.8   |                                   _Managers_ must be able to upload product images.                                   |
-|   3.9   |                   _Customers_ must be able to submit reviews and ratings for the product purchased.                   |
-|  3.10   |           The system must implement product recommendation features based on _customer_ purchasing history.           |
-|  3.11   |                         The system must be able to return all products of a specified brand.                          |
-|  3.12   |                      The system must be able to return all products in a specified price range.                       |
-|  3.13   |   _Managers_ must be able to edit existing product information such as selling price, model, category, and details.   |
-|  3.14   |         The system must implement inventory management features allowing managers to adjust inventory levels.         |
-|  3.15   |                             _Customers_ must be able to add a product to their wishlist.                              |
-|  3.16  |             The system must display the availability status of each product on the product listing page.              |
+|   3.5   |                        The system must be able to return all products of a specified category.                        |
+|   3.6   |                         The system must be able to return all products of a specified model.                          |
+|   3.7   |                                   _Managers_ must be able to upload product images.                                   |
+|   3.8   |                   _Customers_ must be able to submit reviews and ratings for the product purchased.                   |
+|   3.9   |           The system must implement product recommendation features based on _customer_ purchasing history.           |
+|  3.10   |                         The system must be able to return all products of a specified brand.                          |
+|  3.11   |                      The system must be able to return all products in a specified price range.                       |
+|  3.12   |   _Managers_ must be able to edit existing product information such as selling price, model, category, and details.   |
+|  3.13   |         The system must implement inventory management features allowing managers to adjust inventory levels.         |
+|  3.14   |                             _Customers_ must be able to add a product to their wishlist.                              |
+|  3.15   |             The system must display the availability status of each product on the product listing page.              |
 | **FR4** |                                                  **Cart Management**                                                  |
 |   4.1   |                      The system must be able to return the cart of the currently logged-in user.                      |
 |   4.2   |                            Logged-in _users_ must be able to add a product to their cart.                             |
