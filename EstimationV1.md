@@ -10,9 +10,9 @@ Consider the EZElectronics project in CURRENT version (as given by the teachers)
 
 ## Estimate by size
 
-|                                                                                                        |      Estimate      |                                                                                                             comments                                                                                                             |
+|                                                                                                        |      Estimate      |                                                                                                             Comments                                                                                                             |
 | :----------------------------------------------------------------------------------------------------: | :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                            NC = Estimated number of classes to be developed                            |         4          |                                                                              we have 4 classes : Authentication, User, Product and Cart Management                                                                               |
+|                            NC = Estimated number of classes to be developed                            |         4          |                                                                              We have 4 classes : Authentication, User, Product and Cart Management                                                                               |
 |                              A = Estimated average size per class, in LOC                              |       600LOC       | We estimate the Authentication component will require about 300 lines of code (LOC), while Cart Management will need significantly more. Given the complexities involved, 600 LOC is a suitable average estimate for each class. |
 |                           S = Estimated size of project, in LOC (= NC \* A)                            |      2400LOC       |                                                                        The size of project is a number of classes times Estimated average size per class.                                                                        |
 |          E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)          |  240 person hours  |                                      The total estimated LOC for the project is 2400. Dividing this by 10 LOC per person-hour results in a total estimated labor time of 240 person-hours.                                       |
@@ -52,9 +52,11 @@ All of our activities are based on the `IEEE 12207` standard.
 
 With a total estimated effort of $\sum{\sum_{i=a}^f i} = 412$ person hours, we can calculate that it will take $\approx 2.6$ calendar weeks to complete the project, given a team of 4 people working 8 hours a day, 5 days a week.
 
-## TODO! GANTT CHART
+### Gantt Chart
 
-Insert here Gantt chart with above activities
+Hatched areas represent calendar time.
+
+![Gantt Chart](figures/v1/gantt-chart.drawio.svg)
 
 ## Summary
 

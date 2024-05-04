@@ -10,22 +10,22 @@ Version:
 
 ## FIXME! broken images
 
-![add to cart](figures/imgs/gui/add-to-cart.png)
+![add to cart](figures/v1/gui/add-to-cart.png)
 
-![appliance-model](figures/imgs/gui/appliance-models.png)
+![appliance-model](figures/v1/gui/appliance-models.png)
 
-![landing page](figures/imgs/gui/landing-page.png)
+![landing page](figures/v1/gui/landing-page.png)
 
-![laptop models](figures/imgs/gui/laptops-models.png)
+![laptop models](figures/v1/gui/laptops-models.png)
 
-![login page](figures/imgs/gui/login-page.png)
+![login page](figures/v1/gui/login-page.png)
 
-![manager add to cart](figures/imgs/gui/manager-add-product.png)
+![manager add to cart](figures/v1/gui/manager-add-product.png)
 
-![manager](figures/imgs/gui/manager.png)
+![manager](figures/v1/gui/manager.png)
 
-![shopping basket](figures/imgs/gui/shopping-basket.png)
+![shopping basket](figures/v1/gui/shopping-basket.png)
 
-![sign up page](figures/imgs/gui/sign-up-page.png)
+![sign up page](figures/v1/gui/sign-up-page.png)
 
-![smartphone models](figures/imgs/gui/smartphone-models.png)
+![smartphone models](figures/v1/gui/smartphone-models.png)

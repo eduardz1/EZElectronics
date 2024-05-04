@@ -82,7 +82,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Context Diagram
 
-![context-diagram](figures/imgs/context-diagram-v2.svg)
+![context-diagram](figures/v2/context-diagram.drawio.svg)
 
 ### Interfaces
 
@@ -196,9 +196,7 @@ occurs, and a is a letter that identifies the exception/variant.
 
 ### Use case diagram
 
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
-
-\<next describe here each use case in the UCD>
+![Use Case Diagram](figures/v2/use-case-diagram.drawio.svg)
 
 <!-- Only valuable fields are mentioned here to reduce clutter -->
 
@@ -561,8 +559,8 @@ If occurs an error in payment after verification on availability this exception 
 
 ## Glossary
 
-![Glossary](figures/imgs/glossary-v2.svg)
+![Glossary](figures/v2/glossary.drawio.svg)
 
 ## Deployment Diagram
 
-![Deployment Diagram](figures/imgs/deployment-diagram-v1.svg)
+![Deployment Diagram](figures/v2/deployment-diagram.drawio.svg)

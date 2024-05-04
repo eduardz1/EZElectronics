@@ -16,13 +16,13 @@ We believe in `v2` we'll be able to improve the project without increasing the c
 
 ## TODO! DESCRIPTIONS
 
-|                                                                                                        | Estimate           |
-| ------------------------------------------------------------------------------------------------------ | ------------------ |
-| NC = Estimated number of classes to be developed                                                       | 7                  |
-| A = Estimated average size per class, in LOC                                                           | 500                |
-| S = Estimated size of project, in LOC (= NC \* A)                                                      | 3500               |
-| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)                   | 350                |
-| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro)                                    | €10500             |
+|                                                                                                        |      Estimate      |                                                       Comments                                                        |
+| :----------------------------------------------------------------------------------------------------: | :----------------: | :-------------------------------------------------------------------------------------------------------------------: |
+|                            NC = Estimated number of classes to be developed                            |         7          | In addition to the four classes of `v1`, we will need to add classes for the WishList, the Payment Service and Review |
+|                              A = Estimated average size per class, in LOC                              |        500         |
+|                           S = Estimated size of project, in LOC (= NC \* A)                            |        3500        |
+|          E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)          |        350         |
+|                  C = Estimated cost, in euro (here use 1 person hour cost = 30 euro)                   |       €10500       |
 | Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week) | 2.2 calendar weeks |
 
 # Estimate by product decomposition
@@ -68,9 +68,11 @@ Compared to `v1`, we have added some activities that we consider necessary to ex
 
 With a total estimated effort of $\sum{\sum_{i=a}^g i} = 724$ person hours, we can calculate that it will take $\approx 4.5$ calendar weeks to complete the project, given a team of 4 people working 8 hours a day, 5 days a week.
 
-### TODO! GANTT
+### Gantt Chart
 
-Insert here Gantt chart with above activities
+Hatched areas represent calendar time.
+
+![Gantt Chart](figures/v2/gantt-chart.drawio.svg)
 
 # Summary
 
