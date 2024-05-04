@@ -12,18 +12,14 @@ Consider the EZElectronics project in FUTURE version (as proposed by your team i
 
 We believe in `v2` we'll be able to improve the project without increasing the code base too much, additional time and review processes lead to effective refactoring and smaller average class footprint.
 
-## TODO! WHAT ARE THE CLASSES?
-
-## TODO! DESCRIPTIONS
-
 |                                                                                                        |      Estimate      |                                                       Comments                                                        |
 | :----------------------------------------------------------------------------------------------------: | :----------------: | :-------------------------------------------------------------------------------------------------------------------: |
-|                            NC = Estimated number of classes to be developed                            |         7          | In addition to the four classes of `v1`, we will need to add classes for the WishList, the Payment Service and Review |
-|                              A = Estimated average size per class, in LOC                              |        500         |
-|                           S = Estimated size of project, in LOC (= NC \* A)                            |        3500        |
-|          E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)          |        350         |
-|                  C = Estimated cost, in euro (here use 1 person hour cost = 30 euro)                   |       €10500       |
-| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week) | 2.2 calendar weeks |
+|                            NC = Estimated number of classes to be developed                            |         7          | In addition to the four classes of `v1`, we will need to add classes for the Wishlist, the Payment Service and Review |
+|                              A = Estimated average size per class, in LOC                              |        500         |                                                                                                                       |
+|                           S = Estimated size of project, in LOC (= NC \* A)                            |        3500        |                                                                                                                       |
+|          E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)          |        350         |                                                                                                                       |
+|                  C = Estimated cost, in euro (here use 1 person hour cost = 30 euro)                   |       €10500       |                                                                                                                       |
+| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week) | 2.2 calendar weeks |                                                                                                                       |
 
 # Estimate by product decomposition
 

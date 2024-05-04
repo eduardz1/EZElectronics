@@ -8,55 +8,58 @@ Date: 2024-05-01
 
 ## Contents
 
-- [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
-  - [Contents](#contents)
-  - [Informal description](#informal-description)
-  - [Stakeholders](#stakeholders)
-  - [Context Diagram and interfaces](#context-diagram-and-interfaces)
-    - [Context Diagram](#context-diagram)
-    - [Interfaces](#interfaces)
-  - [Stories and personas](#stories-and-personas)
-  - [Functional and non-functional requirements](#functional-and-non-functional-requirements)
-    - [Functional Requirements + Access Rights](#functional-requirements--access-rights)
-    - [Non-Functional Requirements](#non-functional-requirements)
-  - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-    - [Use case diagram](#use-case-diagram)
-    - [UC1 - Log In](#uc1---log-in)
-      - [Scenario 1.1 | User logs in into his account as Customer |](#scenario-11--user-logs-in-into-his-account-as-customer-)
-        - [Exception 1.1.2.a | Credential Error |](#exception-112a--credential-error-)
-      - [Scenario 1.2 | User logs in into his account as Manager |](#scenario-12--user-logs-in-into-his-account-as-manager-)
-        - [Exception 1.2.2.a | Credential Error |](#exception-122a--credential-error-)
-    - [UC2 - Log Out](#uc2---log-out)
-    - [UC3 - Sign Up](#uc3---sign-up)
-    - [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
-      - [Variant 4.1a | User Chooses a Category |](#variant-41a--user-chooses-a-category-)
-      - [Variant 4.1b | User Chooses a Brand |](#variant-41b--user-chooses-a-brand-)
-      - [Variant 4.1c | User Chooses a Price Range |](#variant-41c--user-chooses-a-price-range-)
-      - [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
-      - [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
-      - [Variant 4.5a | Customer views the wishlist |](#variant-45a--customer-views-the-wishlist-)
-      - [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
-      - [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
-      - [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
-      - [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
-    - [Exception 4.3a | User not logged in as Customer](#exception-43a--user-not-logged-in-as-customer)
-      - [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
-      - [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
-    - [Exception 4.9a | Payment unsuccessful](#exception-49a--payment-unsuccessful)
-    - [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
-      - [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
-        - [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
-      - [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
-        - [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
-    - [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
-    - [UC 7 - Manager edit information of existing product](#uc-7---manager-edit-information-of-existing-product)
-    - [UC 8 - DB Admin Deletes a User](#uc-8---db-admin-deletes-a-user)
-      - [Variant 8.1a | Filter by Role |](#variant-81a--filter-by-role-)
-      - [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
-    - [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
-    - [UC 10 - Community Moderator Deletes a Review](#uc-10---community-moderator-deletes-a-review)
-  - [Glossary](#glossary)
-  - [Deployment Diagram](#deployment-diagram)
+-   [Requirements Document - future EZElectronics](#requirements-document---future-ezelectronics)
+    -   [Contents](#contents)
+    -   [Informal description](#informal-description)
+    -   [Stakeholders](#stakeholders)
+    -   [Context Diagram and interfaces](#context-diagram-and-interfaces)
+        -   [Context Diagram](#context-diagram)
+        -   [Interfaces](#interfaces)
+    -   [Stories and personas](#stories-and-personas)
+    -   [Functional and non-functional requirements](#functional-and-non-functional-requirements)
+        -   [Functional Requirements](#functional-requirements)
+        -   [Non-Functional Requirements](#non-functional-requirements)
+    -   [Use case diagram and use cases](#use-case-diagram-and-use-cases)
+        -   [Use case diagram](#use-case-diagram)
+        -   [UC1 - Log In](#uc1---log-in)
+            -   [Scenario 1a | User logs in into his account as Customer |](#scenario-1a--user-logs-in-into-his-account-as-customer-)
+                -   [Exception 1a.2a | Credential Error |](#exception-1a2a--credential-error-)
+            -   [Scenario 1b | User logs in into his account as Manager |](#scenario-1b--user-logs-in-into-his-account-as-manager-)
+                -   [Exception 1b.2a | Credential Error |](#exception-1b2a--credential-error-)
+            -   [Variant 1.1a | User Clicks on Reset Password |](#variant-11a--user-clicks-on-reset-password-)
+            -   [Variant 1.1b | User clicks on "You don't have an account" prompt |](#variant-11b--user-clicks-on-you-dont-have-an-account-prompt-)
+        -   [UC2 - Log Out](#uc2---log-out)
+        -   [UC3 - Sign Up](#uc3---sign-up)
+        -   [UC 4 - Customer Buys a Product](#uc-4---customer-buys-a-product)
+            -   [Variant 4.1a | User Chooses a Category |](#variant-41a--user-chooses-a-category-)
+            -   [Variant 4.1b | User Chooses a Brand |](#variant-41b--user-chooses-a-brand-)
+            -   [Variant 4.1c | User Chooses a Price Range |](#variant-41c--user-chooses-a-price-range-)
+            -   [Variant 4.3a | Customer adds product to wishlist |](#variant-43a--customer-adds-product-to-wishlist-)
+            -   [Variant 4.3b | Customer views the product page |](#variant-43b--customer-views-the-product-page-)
+            -   [Variant 4.5a | Customer views the wishlist |](#variant-45a--customer-views-the-wishlist-)
+            -   [Variant 4.7a | Empty Cart |](#variant-47a--empty-cart-)
+            -   [Variant 4.7b | Remove Item from Cart |](#variant-47b--remove-item-from-cart-)
+            -   [Variant 4.7c | Delete the Entire Cart |](#variant-47c--delete-the-entire-cart-)
+            -   [Variant 4.7d | Show Cart History |](#variant-47d--show-cart-history-)
+            -   [Variant 4.7e | Customer Selects a Different Manager |](#variant-47e--customer-selects-a-different-manager-)
+        -   [Exception 4.3a | User not logged in as Customer](#exception-43a--user-not-logged-in-as-customer)
+            -   [Exception 4.4a | Item Already in a Cart |](#exception-44a--item-already-in-a-cart-)
+            -   [Exception 4.8a | Product Already Sold |](#exception-48a--product-already-sold-)
+        -   [Exception 4.9a | Payment unsuccessful](#exception-49a--payment-unsuccessful)
+        -   [UC 5 - Manager Adds a Product](#uc-5---manager-adds-a-product)
+            -   [Scenario 5a | Manager adds a new product to the store |](#scenario-5a--manager-adds-a-new-product-to-the-store-)
+                -   [Exception 5a.3a | Arrival Date cannot be in the Future |](#exception-5a3a--arrival-date-cannot-be-in-the-future-)
+            -   [Scenario 5b | Manager adds a new set of products to the store |](#scenario-5b--manager-adds-a-new-set-of-products-to-the-store-)
+                -   [Exception 5b.3a | Arrival Date cannot be in the Future |](#exception-5b3a--arrival-date-cannot-be-in-the-future-)
+        -   [UC 6 - Manager Marks a Product as Sold](#uc-6---manager-marks-a-product-as-sold)
+        -   [UC 7 - Manager edit information of existing product](#uc-7---manager-edit-information-of-existing-product)
+        -   [UC 8 - DB Admin Deletes a User](#uc-8---db-admin-deletes-a-user)
+            -   [Variant 8.1a | Filter by Role |](#variant-81a--filter-by-role-)
+            -   [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
+        -   [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
+        -   [UC 10 - Community Moderator Deletes a Review](#uc-10---community-moderator-deletes-a-review)
+    -   [Glossary](#glossary)
+    -   [Deployment Diagram](#deployment-diagram)
 
 ## Informal description
 
@@ -103,8 +106,7 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ## Functional and non-functional requirements
 
-### Functional Requirements + Access Rights
-
+### Functional Requirements
 
 |   ID    |                                                      Description                                                      |
 | :-----: | :-------------------------------------------------------------------------------------------------------------------: |
@@ -156,7 +158,6 @@ EZElectronics (read EaSy Electronics) is a software application designed to help
 
 ### Non-Functional Requirements
 
-
 |    ID    |      Type       |                                                            Description                                                             |                                     Refers to                                     |
 | :------: | :-------------: | :--------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
 | **NFR1** | **performance** |                                                                                                                                    |                                                                                   |
@@ -196,17 +197,17 @@ occurs, and a is a letter that identifies the exception/variant.
 
 ![Use Case Diagram](figures/v2/use-case-diagram.drawio.svg)
 
-
 ### UC1 - Log In
 
 -   **Actors involved**: User
 -   **Informal Description**: User logs in into his account
 -   **Pre-condition**: User has an account either as a Customer or as a Manager
 -   **Post-condition**: User is logged in his account
--   **Nominal Scenarios**: [1.1, 1.2]
--   **Exceptions**: [1.1.2.a, 1.2.2.a]
+-   **Nominal Scenarios**: [1a, 1b]
+-   **Exceptions**: [1a.2a, 1b.2a]
+-   **Variants**: [1.1a]
 
-#### Scenario 1.1 | User logs in into his account as Customer |
+#### Scenario 1a | User logs in into his account as Customer |
 
 -   **Precondition**: User has an account as Customer
 -   **Post condition**: User is logged into his account as Customer
@@ -216,14 +217,14 @@ occurs, and a is a letter that identifies the exception/variant.
 |   1   | Customer inserts username and password |                                                      |
 |   2   |                                        | Found matching username and password in the Database |
 
-##### Exception 1.1.2.a | Credential Error |
+##### Exception 1a.2a | Credential Error |
 
 |    Step#     | Actor |                         System                          |
 | :----------: | :---: | :-----------------------------------------------------: |
-|     2.a      |       | Matching username or password not found in the Database |
+|      2a      |       | Matching username or password not found in the Database |
 | Go to step 1 |       |                                                         |
 
-#### Scenario 1.2 | User logs in into his account as Manager |
+#### Scenario 1b | User logs in into his account as Manager |
 
 -   **Precondition**: User has an account as Manager
 -   **Post condition**: User is logged into his account as Manager
@@ -234,12 +235,27 @@ occurs, and a is a letter that identifies the exception/variant.
 |   2   |                                       | Find matching username and password in the Database |
 |   3   |                                       |          User is authenticated as Manager           |
 
-##### Exception 1.2.2.a | Credential Error |
+##### Exception 1b.2a | Credential Error |
 
 |    Step#     | Actor |                         System                          |
 | :----------: | :---: | :-----------------------------------------------------: |
-|     2.a      |       | Matching username or password not found in the Database |
+|      2a      |       | Matching username or password not found in the Database |
 | Go to step 1 |       |                                                         |
+
+#### Variant 1.1a | User Clicks on Reset Password |
+
+| Step# |                 Actor                  |                      System                      |
+| :---: | :------------------------------------: | :----------------------------------------------: |
+|  1a   | User clicks on `reset password` button |                                                  |
+|  2a   |        User writes their email         |                                                  |
+|  3a   |                                        | Sends an email with a link to reset the password |
+
+#### Variant 1.1b | User clicks on "You don't have an account" prompt |
+
+|   Step#    |              Actor              | System |
+| :--------: | :-----------------------------: | :----: |
+|     1b     | User clicks on `sign up` button |        |
+| Go to UC 3 |                                 |        |
 
 ### UC2 - Log Out
 
@@ -258,48 +274,46 @@ occurs, and a is a letter that identifies the exception/variant.
 -   **Actors involved**: User
 -   **Informal Description**: User registers a new account
 -   **Post-condition**: User is registered
--   **Variants**:
 -   **Exceptions**: [3.2, 3.3, 3.4]
 
-| Step# |                           Actor                            |                           System                           |
-| :---: | :--------------------------------------------------------: | :--------------------------------------------------------: |
-|   1   |               User clicks on sign-up button                |                                                            |
-|   2   | User fills in: Name, Surname, email, username and password |                                                            |
-|   3   |                                                            | Ensures that the nickname and email are not already taken  |
-|   4   |                                                            |         Ensures that chosen password matches rules         |
-|   5   |                                                            | Ensures that confirmation password matches chosen password |
-|   6   |                                                            |             Sends e-mail with verification key             |
-|   7   |    Pastes verification key into the corresponding field    |                                                            |
-|   8   |                                                            |         Ensures that verification key corresponds          |
-|   9   |                                                            |                       Displays EULA                        |
-|  10   |                     User accepts EULA                      |                                                            |
-|  11   |                                                            | Log-in the newly created account and refresh page to home  |
-
+| Step# |                                            Actor                                            |                           System                           |
+| :---: | :-----------------------------------------------------------------------------------------: | :--------------------------------------------------------: |
+|   1   |                                User clicks on sign-up button                                |                                                            |
+|   2   | User fills in: Name, Surname, email, username, phone, address and password and selects role |                                                            |
+|   3   |                                                                                             | Ensures that the nickname and email are not already taken  |
+|   4   |                                                                                             |         Ensures that chosen password matches rules         |
+|   5   |                                                                                             | Ensures that confirmation password matches chosen password |
+|   6   |                                                                                             |             Sends e-mail with verification key             |
+|   7   |                    Pastes verification key into the corresponding field                     |                                                            |
+|   8   |                                                                                             |         Ensures that verification key corresponds          |
+|   9   |                                                                                             |                       Displays EULA                        |
+|  10   |                                      User accepts EULA                                      |                                                            |
+|  11   |                                                                                             | Log-in the newly created account and refresh page to home  |
 
 ### UC 4 - Customer Buys a Product
 
 -   **Actors involved**: User, Customer, Manager
 -   **Informal Description**: User browses the website to buy a product, adds the item to the cart and clicks on the purchase button
 -   **Post-condition**: Customer has bought the product
--   **Variants**: [4.1a, 4.3a, 4.3b, 4.5a, 4.7a, 4.7b, 4.7c]
+-   **Variants**: [4.1a, 4.3a, 4.3b, 4.5a, 4.7a, 4.7b, 4.7c, 4.7d, 4.7e]
 -   **Exceptions**: [4.3a, 4.4a, 4.8a, 4.9a]
 
-|                 Step#                  |                             Actor                              |                       System                        |
-| :------------------------------------: | :------------------------------------------------------------: | :-------------------------------------------------: |
-|                   1                    |   User searches for a `product model` using the `search bar`   |                                                     |
-|                   2                    |                                                                |   Displays all the products that match the query    |
-|      Optionally go back to step 1      |                                                                |                                                     |
-|                   3                    |   User clicks on `add to cart` button for a specific product   |                                                     |
-|                   4                    |                                                                |       Adds the product to the customer's cart       |
-|      Optionally go back to step 1      |                                                                |                                                     |
-|                   5                    |               Customer clicks on the `cart` icon               |                                                     |
-|                   6                    |                                                                |    Displays the cart with all the current items     |
-|      Optionally go back to step 1      |                                                                |                                                     |
-|                   7                    | Customer clicks on the `purchase` button in the cart interface |                                                     |
-|                   8                    |                                                                | Item is purchased, and updates product availability |
-|                   9                    |                                                                |       Notifies successful payment transaction       |
-|                   10                   |                                                                |           Notify manager of the purchase            |
-| Optionally go back to step 1 or end UC |                                                                |                                                     |
+|                 Step#                  |                             Actor                              |                                System                                |
+| :------------------------------------: | :------------------------------------------------------------: | :------------------------------------------------------------------: |
+|                   1                    |   User searches for a `product model` using the `search bar`   |                                                                      |
+|                   2                    |                                                                |            Displays all the products that match the query            |
+|      Optionally go back to step 1      |                                                                |                                                                      |
+|                   3                    |   User clicks on `add to cart` button for a specific product   |                                                                      |
+|                   4                    |                                                                |               Adds the product to the customer's cart                |
+|      Optionally go back to step 1      |                                                                |                                                                      |
+|                   5                    |               Customer clicks on the `cart` icon               |                                                                      |
+|                   6                    |                                                                |             Displays the cart with all the current items             |
+|      Optionally go back to step 1      |                                                                |                                                                      |
+|                   7                    | Customer clicks on the `purchase` button in the cart interface |                                                                      |
+|                   8                    |                                                                |         Item is purchased, and updates product availability          |
+|                   9                    |                                                                |               Notifies successful payment transaction                |
+|                   10                   |                                                                | Notify manager of the purchase and whether availability reached zero |
+| Optionally go back to step 1 or end UC |                                                                |                                                                      |
 
 #### Variant 4.1a | User Chooses a Category |
 
@@ -332,12 +346,13 @@ occurs, and a is a letter that identifies the exception/variant.
 
 #### Variant 4.3b | Customer views the product page |
 
-|       Step#       |                           Actor                           |                     System                      |
-| :---------------: | :-------------------------------------------------------: | :---------------------------------------------: |
-|        3b         | Customer clicks on `product` panel for a specific product |                                                 |
-|        4b         |                                                           | Shows product page with reviews and description |
-| Go back to step 3 |                                                           |                                                 |
-
+|       Step#       |                             Actor                              |                                            System                                            |
+| :---------------: | :------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
+|        3b         |   Customer clicks on `product` panel for a specific product    |                                                                                              |
+|        4b         |                                                                |                       Shows product page with reviews and description                        |
+|        5b         | Optionally selects a different Manager from the drop-down menu |                                                                                              |
+|        6b         |                                                                | If the order is completed the availability will be decreased from the newly selected manager |
+| Go back to step 3 |                                                                |                                                                                              |
 
 #### Variant 4.5a | Customer views the wishlist |
 
@@ -372,13 +387,20 @@ occurs, and a is a letter that identifies the exception/variant.
 
 #### Variant 4.7d | Show Cart History |
 
-
 |    Step#     |                     Actor                     |                  System                   |
 | :----------: | :-------------------------------------------: | :---------------------------------------: |
 |      7d      | Customer clicks on `show cart history` button |                                           |
 |      8d      |                                               | Displays list of all past + current carts |
 |      9d      |        Clicks on a cart from the list         |                                           |
 | Go to step 6 |                                               |                                           |
+
+#### Variant 4.7e | Customer Selects a Different Manager |
+
+|       Step#       |                            Actor                             |                                            System                                            |
+| :---------------: | :----------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
+|        7e         | Customer selects a different Manager from the drop-down menu |                                                                                              |
+|        8e         |                                                              | If the order is completed the availability will be decreased from the newly selected manager |
+| Go back to step 6 |                                                              |                                                                                              |
 
 ### Exception 4.3a | User not logged in as Customer
 
@@ -388,7 +410,6 @@ occurs, and a is a letter that identifies the exception/variant.
 | UC goes back to UC1 |       |                                               |
 
 #### Exception 4.4a | Item Already in a Cart |
-
 
 |    Step#    | Actor |                         System                          |
 | :---------: | :---: | :-----------------------------------------------------: |
@@ -492,7 +513,6 @@ If occurs an error in payment after verification on availability this exception 
 -   **Pre-condition**: Operation is performed from the company PC by an authorized DB Admin
 -   **Post-condition**: User is deleted from the Database
 -   **Variants**: [8.1a, 8.1b]
-
 
 | Step# |                      Actor                      |                  System                  |
 | :---: | :---------------------------------------------: | :--------------------------------------: |

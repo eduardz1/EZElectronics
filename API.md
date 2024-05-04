@@ -235,9 +235,6 @@ Marks a product as sold
 
 #### GET `ezelectronics/products`
 
-<!-- TODO: optional query parameters: sold, implies that we must have a button to filter and see all the sold items (just like eBay does)
-this should be available for all pages, also in model/:models this optional query parameter shows up -->
-
 Returns all products present in the database.
 
 -   Request Parameters: None
