@@ -58,6 +58,15 @@ Date: 2024-05-01
             -   [Variant 8.1b | Filter by Username |](#variant-81b--filter-by-username-)
         -   [UC 9 - Customer submits rating and review](#uc-9---customer-submits-rating-and-review)
         -   [UC 10 - Community Moderator Deletes a Review](#uc-10---community-moderator-deletes-a-review)
+        -   [UC 11 - Users Edits Personal information](#uc-11---users-edits-personal-information)
+            -   [Scenario 11a | Customer Edits Personal information |](#scenario-11a--customer-edits-personal-information-)
+            -   [Variant 11a.1a | Customer Edits the Payment Method |](#variant-11a1a--customer-edits-the-payment-method-)
+            -   [Variant 11a.1b | Customer looks at Cart History |](#variant-11a1b--customer-looks-at-cart-history-)
+            -   [Scenario 11b | Manager Edits Personal information |](#scenario-11b--manager-edits-personal-information-)
+            -   [Variant 11b.1a | Manager looks at inventory|](#variant-11b1a--manager-looks-at-inventory)
+                -   [Exception 11.5a | Wrong OTP code |](#exception-115a--wrong-otp-code-)
+            -   [Variant 11.1a | User Edits email field |](#variant-111a--user-edits-email-field-)
+            -   [Variant 11.1b | User Edits phone number field |](#variant-111b--user-edits-phone-number-field-)
     -   [Glossary](#glossary)
     -   [Deployment Diagram](#deployment-diagram)
 
@@ -562,6 +571,92 @@ If occurs an error in payment after verification on availability this exception 
 | :---: | :----------------------------------------------------: | :----------------------------------: |
 |   1   | Moderator clicks on `delete` button on the review page |                                      |
 |   2   |                                                        | Deletes the review from the Database |
+
+### UC 11 - Users Edits Personal information
+
+-   **Actors involved**: User
+-   **Informal Description**: Users Edits Personal information
+-   **Pre-condition**: User is logged in
+-   **Post-condition**: User's personal information are modified
+-   **Nominal Scenarios**: [11a, 11b]
+-   **Exceptions**: [11.5a]
+-   **Variants**: [11.1a, 11.1b, 11.5a, 11a.1a, 11a.1b, 11b.1a]
+-
+
+#### Scenario 11a | Customer Edits Personal information |
+
+-   **Precondition**: Customer is logged in
+-   **Post-condition**: Customer's personal information are modified
+
+| Step# |                              Actor                              |         System          |
+| :---: | :-------------------------------------------------------------: | :---------------------: |
+|   1   | Customer clicks on `edit` button of a field in his profile page |                         |
+|   2   |          Customer edits the information of his profile          |                         |
+|   3   |                                                                 | Updates Database status |
+
+#### Variant 11a.1a | Customer Edits the Payment Method |
+
+|    Step#    |                Actor                |            System             |
+| :---------: | :---------------------------------: | :---------------------------: |
+|     1a      | Customer clicks on `connect` button |                               |
+|     2a      |                                     | Links User to Payment Service |
+| Continue UC |                                     |                               |
+
+#### Variant 11a.1b | Customer looks at Cart History |
+
+| Step#  |                  Actor                   |           System            |
+| :----: | :--------------------------------------: | :-------------------------: |
+|   1a   | Customer clicks on `Cart History` button |                             |
+|   2a   |                                          | Display `cart-history` page |
+| end UC |                                          |                             |
+
+#### Scenario 11b | Manager Edits Personal information |
+
+-   **Precondition**: Manager is logged in
+-   **Post-condition**: Manager's personal information are modified
+
+| Step# |                             Actor                              |         System          |
+| :---: | :------------------------------------------------------------: | :---------------------: |
+|   1   | Manager clicks on `edit` button of a field in his profile page |                         |
+|   2   |          Manager edits the information of his profile          |                         |
+|   6   |                                                                | Updates Database status |
+
+#### Variant 11b.1a | Manager looks at inventory|
+
+| Step# |               Actor               |          System          |
+| :---: | :-------------------------------: | :----------------------: |
+|  1a   | User clicks on `Inventory` button |                          |
+|  2a   |                                   | Display `inventory` page |
+
+##### Exception 11.5a | Wrong OTP code |
+
+|    Step#     | Actor |                 System                  |
+| :----------: | :---: | :-------------------------------------: |
+|      5a      |       |          OTP validation failed          |
+|      6a      |       | Discard changes and send a new OTP code |
+| Go to step 4 |       |                                         |
+
+#### Variant 11.1a | User Edits email field |
+
+|    Step#    |                    Actor                     |                             System                              |
+| :---------: | :------------------------------------------: | :-------------------------------------------------------------: |
+|     1a      |         User clicks on `edit` email          |                                                                 |
+|     2a      |  User edits the information of his profile   |                                                                 |
+|     3a      |                                              | Sends a mail to the new email with OTP to confirm modifications |
+|     4a      | Insert OTP code to confirm the modifications |                                                                 |
+|     5a      |                                              |                     Checks validity of OTP                      |
+| Continue UC |                                              |                                                                 |
+
+#### Variant 11.1b | User Edits phone number field |
+
+|    Step#    |                    Actor                     |                                  System                                   |
+| :---------: | :------------------------------------------: | :-----------------------------------------------------------------------: |
+|     1a      |      User clicks on `edit` phone number      |                                                                           |
+|     2a      |  User edits the information of his profile   |                                                                           |
+|     3a      |                                              | Sends a message to the new phone number with OTP to confirm modifications |
+|     4a      | Insert OTP code to confirm the modifications |                                                                           |
+|     5a      |                                              |                          Checks validity of OTP                           |
+| Continue UC |                                              |                                                                           |
 
 ## Glossary
 
