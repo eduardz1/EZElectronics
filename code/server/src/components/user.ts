@@ -2,10 +2,10 @@
  * Represents a user in the system.
  */
 class User {
-    username: string
-    name: string
-    surname: string
-    role: Role
+    username: string;
+    name: string;
+    surname: string;
+    role: Role;
 
     /**
      * Creates a new instance of the User class.
@@ -15,10 +15,10 @@ class User {
      * @param role - The role of the user. This can be "Manager" or "Customer".
      */
     constructor(username: string, name: string, surname: string, role: Role) {
-        this.username = username
-        this.name = name
-        this.surname = surname
-        this.role = role
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.role = role;
     }
 }
 
@@ -28,7 +28,7 @@ class User {
  */
 enum Role {
     MANAGER = "Manager",
-    CUSTOMER = "Customer"
+    CUSTOMER = "Customer",
 }
 
-export { User, Role }
+export { User, Role };

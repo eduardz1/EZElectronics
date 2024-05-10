@@ -8,10 +8,10 @@ import CartDAO from "../dao/cartDAO";
  * All methods of this class must interact with the corresponding DAO class to retrieve or store data.
  */
 class CartController {
-    private dao: CartDAO
+    private dao: CartDAO;
 
     constructor() {
-        this.dao = new CartDAO
+        this.dao = new CartDAO();
     }
 
     /**
@@ -19,8 +19,7 @@ class CartController {
      * @param user - The user for whom to retrieve the cart.
      * @returns A Promise that resolves to the user's cart or `false` if the cart doesn't exist.
      */
-    async getCart(user: User) {
-    }
+    async getCart(user: User) {}
 
     /**
      * Adds a product to the user's cart.
@@ -28,7 +27,7 @@ class CartController {
      * @param productId - The ID of the product to add.
      * @returns A Promise that resolves to `true` if the product was successfully added.
      */
-    async addToCart(user: User, productId: string) { }
+    async addToCart(user: User, productId: string) {}
 
     /**
      * Checks out the user's cart.
@@ -36,7 +35,7 @@ class CartController {
      * @returns A Promise that resolves to `true` if the cart was successfully checked out.
      * All products that are in the cart must have their selling date set to the current date (in format YYYY-MM-DD).
      */
-    async checkoutCart(user: User) { }
+    async checkoutCart(user: User) {}
 
     /**
      * Retrieves all carts for a specific customer.
@@ -44,7 +43,7 @@ class CartController {
      * @returns A Promise that resolves to an array of carts belonging to the customer.
      * Only the carts that have been checked out should be returned, the current cart should not be included in the result.
      */
-    async getCustomerCarts(user: User) { }
+    async getCustomerCarts(user: User) {}
 
     /**
      * Removes a product from the user's cart.
@@ -53,8 +52,7 @@ class CartController {
      * @param cartId - The ID of the cart from which to remove the product.
      * @returns A Promise that resolves to `true` if the product was successfully removed.
      */
-    async removeFromCart(user: User, productId: string, cartId: number) { }
-
+    async removeFromCart(user: User, productId: string, cartId: number) {}
 
     /**
      * Deletes a specific cart.
@@ -62,13 +60,13 @@ class CartController {
      * @param cartId - The ID of the cart to delete.
      * @returns A Promise that resolves to `true` if the cart was successfully deleted.
      */
-    async deleteCart(user: User, cartId: number) { }
+    async deleteCart(user: User, cartId: number) {}
 
     /**
      * Deletes all carts.
      * @returns A Promise that resolves to `true` if all carts were successfully deleted.
      */
-    async deleteAllCarts() { }
+    async deleteAllCarts() {}
 }
 
-export default CartController
+export default CartController;

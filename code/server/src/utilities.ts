@@ -1,4 +1,4 @@
-import { User, Role } from "./components/user"
+import { User, Role } from "./components/user";
 
 /**
  * Represents a utility class.
@@ -10,9 +10,8 @@ class Utility {
      * @returns True if the user is a manager, false otherwise.
      */
     static isManager(user: User): boolean {
-        return user.role === Role.MANAGER
+        return user.role === Role.MANAGER;
     }
-
 
     /**
      * Checks if a user is a customer.
@@ -20,8 +19,8 @@ class Utility {
      * @returns True if the user is a customer, false otherwise.
      */
     static isCustomer(user: User): boolean {
-        return user.role === Role.CUSTOMER
+        return user.role === Role.CUSTOMER;
     }
 }
 
-export default Utility
+export default Utility;
