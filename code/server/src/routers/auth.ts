@@ -1,10 +1,10 @@
-import express from "express";
-import { User } from "../components/user";
-import UserDAO from "../dao/userDAO";
-import Utility from "../utilities";
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+import express from "express"
+import { User } from "../components/user"
+import UserDAO from "../dao/userDAO"
+import { Utility } from "../utilities"
+const session = require('express-session')
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 /**
  * Represents a class that defines the routes for handling authentication.
@@ -179,6 +179,17 @@ class Authenticator {
             .status(401)
             .json({ error: "User is not a manager", status: 401 });
     }
+
+    isAdmin(req: any, res: any, next: any) {
+        if (req.isAuthenticated() && Utility.isAdmin(req.user)) return next()
+        return res.status(401).json({ error: "User is not an admin", status: 401 })
+    }
+
+    isAdminOrManager(req: any, res: any, next: any) {
+        if (req.isAuthenticated() && (Utility.isAdmin(req.user) || Utility.isManager(req.user))) return next()
+        return res.status(401).json({ error: "User is not an admin or manager", status: 401 })
+    }
+
 }
 
 export default Authenticator;
