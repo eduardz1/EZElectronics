@@ -1,29 +1,29 @@
-import express, { Router } from "express";
-import ErrorHandler from "../helper";
-import { body, param, query } from "express-validator";
-import ProductController from "../controllers/productController";
-import Authenticator from "./auth";
-import { Product } from "../components/product";
+import express, { Router } from "express"
+import ErrorHandler from "../helper"
+import { body, param, query } from "express-validator"
+import ProductController from "../controllers/productController"
+import Authenticator from "./auth"
+import { Product } from "../components/product"
 
 /**
  * Represents a class that defines the routes for handling proposals.
  */
 class ProductRoutes {
-    private controller: ProductController;
-    private router: Router;
-    private errorHandler: ErrorHandler;
-    private authenticator: Authenticator;
+    private controller: ProductController
+    private router: Router
+    private errorHandler: ErrorHandler
+    private authenticator: Authenticator
 
     /**
      * Constructs a new instance of the ProductRoutes class.
      * @param {Authenticator} authenticator - The authenticator object used for authentication.
      */
     constructor(authenticator: Authenticator) {
-        this.authenticator = authenticator;
-        this.controller = new ProductController();
-        this.router = express.Router();
-        this.errorHandler = new ErrorHandler();
-        this.initRoutes();
+        this.authenticator = authenticator
+        this.controller = new ProductController()
+        this.router = express.Router()
+        this.errorHandler = new ErrorHandler()
+        this.initRoutes()
     }
 
     /**
@@ -31,18 +31,19 @@ class ProductRoutes {
      * @returns The router instance.
      */
     getRouter(): Router {
-        return this.router;
+        return this.router
     }
 
     /**
      * Initializes the routes for the product router.
-     *
+     * 
      * @remarks
      * This method sets up the HTTP routes for handling product-related operations such as registering products, registering arrivals, selling products, retrieving products, and deleting products.
      * It can (and should!) apply authentication, authorization, and validation middlewares to protect the routes.
-     *
+     * 
      */
     initRoutes() {
+
         /**
          * Route for registering the arrival of a set of products.
          * It requires the user to be logged in and to be a manager.
@@ -59,8 +60,8 @@ class ProductRoutes {
             "/",
             (req: any, res: any, next: any) => this.controller.registerProducts(req.body.model, req.body.category, req.body.quantity, req.body.details, req.body.sellingPrice, req.body.arrivalDate)
                 .then(() => res.status(200).end())
-                .catch((err) => next(err)),
-        );
+                .catch((err) => next(err))
+        )
 
         /**
          * Route for registering the increase in quantity of a product.
@@ -137,12 +138,12 @@ class ProductRoutes {
          * It requires the user to be logged in and to be either an admin or a manager.
          * It returns a 200 status code.
          */
-        this.router.delete("/", (req: any, res: any, next: any) =>
-            this.controller
-                .deleteAllProducts()
+        this.router.delete(
+            "/",
+            (req: any, res: any, next: any) => this.controller.deleteAllProducts()
                 .then(() => res.status(200).end())
-                .catch((err: any) => next(err)),
-        );
+                .catch((err: any) => next(err))
+        )
 
         /**
          * Route for deleting a product.
@@ -161,4 +162,4 @@ class ProductRoutes {
     }
 }
 
-export default ProductRoutes;
+export default ProductRoutes

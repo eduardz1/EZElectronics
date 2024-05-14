@@ -1,6 +1,6 @@
-import db from "../db/db";
-import { User } from "../components/user";
-import crypto from "crypto";
+import db from "../db/db"
+import { User } from "../components/user"
+import crypto from "crypto"
 import { UserAlreadyExistsError, UserNotFoundError } from "../errors/userError";
 
 /**
@@ -8,6 +8,7 @@ import { UserAlreadyExistsError, UserNotFoundError } from "../errors/userError";
  * You are free to implement any method you need here, as long as the requirements are satisfied.
  */
 class UserDAO {
+
     /**
      * Checks whether the information provided during login (username and password) is correct.
      * @param username The username of the user.
@@ -21,13 +22,12 @@ class UserDAO {
                  * Example of how to retrieve user information from a table that stores username, encrypted password and salt (encrypted set of 16 random bytes that ensures additional protection against dictionary attacks).
                  * Using the salt is not mandatory (while it is a good practice for security), however passwords MUST be hashed using a secure algorithm (e.g. scrypt, bcrypt, argon2).
                  */
-                const sql =
-                    "SELECT username, password, salt FROM users WHERE username = ?";
+                const sql = "SELECT username, password, salt FROM users WHERE username = ?"
                 db.get(sql, [username], (err: Error | null, row: any) => {
-                    if (err) reject(err);
+                    if (err) reject(err)
                     //If there is no user with the given username, or the user salt is not saved in the database, the user is not authenticated.
                     if (!row || row.username !== username || !row.salt) {
-                        resolve(false);
+                        resolve(false)
                     } else {
                         //Hashes the plain password using the salt and then compares it with the hashed password stored in the database
                         const hashedPassword = crypto.scryptSync(plainPassword, row.salt, 16)
@@ -35,10 +35,12 @@ class UserDAO {
                         if (!crypto.timingSafeEqual(passwordHex, hashedPassword)) resolve(false)
                         resolve(true)
                     }
-                });
+
+                })
             } catch (error) {
-                reject(error);
+                reject(error)
             }
+
         });
     }
 
@@ -79,24 +81,24 @@ class UserDAO {
     getUserByUsername(username: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
             try {
-                const sql = "SELECT * FROM users WHERE username = ?";
+                const sql = "SELECT * FROM users WHERE username = ?"
                 db.get(sql, [username], (err: Error | null, row: any) => {
                     if (err) {
-                        reject(err);
-                        return;
+                        reject(err)
+                        return
                     }
                     if (!row) {
-                        reject(new UserNotFoundError());
-                        return;
+                        reject(new UserNotFoundError())
+                        return
                     }
                     const user: User = new User(row.username, row.name, row.surname, row.role, row.address, row.birthdate)
                     resolve(user)
                 })
             } catch (error) {
-                reject(error);
+                reject(error)
             }
 
         })
     }
 }
-export default UserDAO;
+export default UserDAO

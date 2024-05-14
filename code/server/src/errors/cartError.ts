@@ -8,13 +8,13 @@ const EMPTY_CART = "Cart is empty"
  * Represents an error that occurs when a cart is not found.
  */
 class CartNotFoundError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = CART_NOT_FOUND;
-        this.customCode = 404;
+        super()
+        this.customMessage = CART_NOT_FOUND
+        this.customCode = 404
     }
 }
 
@@ -22,13 +22,13 @@ class CartNotFoundError extends Error {
  * Represents an error that occurs when a product is already in a cart.
  */
 class ProductInCartError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = PRODUCT_IN_CART;
-        this.customCode = 409;
+        super()
+        this.customMessage = PRODUCT_IN_CART
+        this.customCode = 409
     }
 }
 
@@ -36,13 +36,13 @@ class ProductInCartError extends Error {
  * Represents an error that occurs when a product is not in a cart.
  */
 class ProductNotInCartError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = PRODUCT_NOT_IN_CART;
-        this.customCode = 404;
+        super()
+        this.customMessage = PRODUCT_NOT_IN_CART
+        this.customCode = 404
     }
 }
 
@@ -50,13 +50,13 @@ class ProductNotInCartError extends Error {
  * Represents an error that occurs when a cart belongs to another user.
  */
 class WrongUserCartError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = WRONG_USER_CART;
-        this.customCode = 403;
+        super()
+        this.customMessage = WRONG_USER_CART
+        this.customCode = 403
     }
 }
 

@@ -7,4 +7,4 @@ class ProductDAO {
 
 }
 
-export default ProductDAO;
+export default ProductDAO

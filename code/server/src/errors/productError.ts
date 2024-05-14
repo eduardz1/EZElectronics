@@ -8,27 +8,27 @@ const LOW_PRODUCT_STOCK = "Product stock cannot satisfy the requested quantity"
  * Represents an error that occurs when a product is not found.
  */
 class ProductNotFoundError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = PRODUCT_NOT_FOUND;
-        this.customCode = 404;
+        super()
+        this.customMessage = PRODUCT_NOT_FOUND
+        this.customCode = 404
     }
 }
 
-/** // TODO: clarify, are ids automatically generated? If so, this error cannot occur
+/**
  * Represents an error that occurs when a product id already exists.
  */
 class ProductAlreadyExistsError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = PRODUCT_ALREADY_EXISTS;
-        this.customCode = 409;
+        super()
+        this.customMessage = PRODUCT_ALREADY_EXISTS
+        this.customCode = 409
     }
 }
 
@@ -36,13 +36,13 @@ class ProductAlreadyExistsError extends Error {
  * Represents an error that occurs when a product is already sold.
  */
 class ProductSoldError extends Error {
-    customMessage: string;
-    customCode: number;
+    customMessage: string
+    customCode: number
 
     constructor() {
-        super();
-        this.customMessage = PRODUCT_SOLD;
-        this.customCode = 409;
+        super()
+        this.customMessage = PRODUCT_SOLD
+        this.customCode = 409
     }
 }
 

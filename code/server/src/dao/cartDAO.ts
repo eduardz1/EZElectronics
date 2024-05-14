@@ -7,4 +7,4 @@ class CartDAO {
 
 }
 
-export default CartDAO;
+export default CartDAO
