@@ -5,10 +5,10 @@ import ProductDAO from "../dao/productDAO";
  * All methods of this class must interact with the corresponding DAO class to retrieve or store data.
  */
 class ProductController {
-    private dao: ProductDAO;
+    private dao: ProductDAO
 
     constructor() {
-        this.dao = new ProductDAO();
+        this.dao = new ProductDAO
     }
 
     /**

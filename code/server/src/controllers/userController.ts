@@ -1,15 +1,15 @@
-import { User } from "../components/user";
-import UserDAO from "../dao/userDAO";
+import { User } from "../components/user"
+import UserDAO from "../dao/userDAO"
 
 /**
  * Represents a controller for managing users.
  * All methods of this class must interact with the corresponding DAO class to retrieve or store data.
  */
 class UserController {
-    private dao: UserDAO;
+    private dao: UserDAO
 
     constructor() {
-        this.dao = new UserDAO();
+        this.dao = new UserDAO
     }
 
     /**
@@ -77,4 +77,4 @@ class UserController {
     async updateUserInfo(user: User, name: string, surname: string, address: string, birthdate: string, username: string) /**:Promise<User> */ { }
 }
 
-export default UserController;
+export default UserController

@@ -9,21 +9,21 @@ import { Cart } from "../components/cart"
  * Represents a class that defines the routes for handling carts.
  */
 class CartRoutes {
-    private controller: CartController;
-    private router: Router;
-    private errorHandler: ErrorHandler;
-    private authenticator: Authenticator;
+    private controller: CartController
+    private router: Router
+    private errorHandler: ErrorHandler
+    private authenticator: Authenticator
 
     /**
      * Constructs a new instance of the CartRoutes class.
      * @param {Authenticator} authenticator - The authenticator object used for authentication.
      */
     constructor(authenticator: Authenticator) {
-        this.authenticator = authenticator;
-        this.controller = new CartController();
-        this.router = express.Router();
-        this.errorHandler = new ErrorHandler();
-        this.initRoutes();
+        this.authenticator = authenticator
+        this.controller = new CartController()
+        this.router = express.Router()
+        this.errorHandler = new ErrorHandler()
+        this.initRoutes()
     }
 
     /**
@@ -31,17 +31,18 @@ class CartRoutes {
      * @returns The router instance.
      */
     getRouter(): Router {
-        return this.router;
+        return this.router
     }
 
     /**
      * Initializes the routes for the cart router.
-     *
+     * 
      * @remarks
      * This method sets up the HTTP routes for creating, retrieving, updating, and deleting cart data.
      * It can (and should!) apply authentication, authorization, and validation middlewares to protect the routes.
      */
     initRoutes() {
+
         /**
          * Route for getting the cart of the logged in customer.
          * It requires the user to be logged in and to be a customer.
@@ -54,9 +55,9 @@ class CartRoutes {
                     res.status(200).json(cart)
                 })
                 .catch((err) => {
-                    next(err);
-                }),
-        );
+                    next(err)
+                })
+        )
 
         /**
          * Route for adding a product unit to the cart of the logged in customer.
@@ -80,14 +81,14 @@ class CartRoutes {
          * It returns a 200 status code if the cart was checked out.
          * It fails if the cart is empty, there is no current cart in the database, or at least one of the products in the cart is not available in the required quantity.
          */
-        this.router.patch("/", (req: any, res: any, next: any) =>
-            this.controller
-                .checkoutCart(req.user)
+        this.router.patch(
+            "/",
+            (req: any, res: any, next: any) => this.controller.checkoutCart(req.user)
                 .then(() => res.status(200).end())
                 .catch((err) => {
-                    next(err);
-                }),
-        );
+                    next(err)
+                })
+        )
 
         /**
          * Route for getting the history of the logged in customer's carts.
@@ -126,17 +127,17 @@ class CartRoutes {
             "/current",
             (req: any, res: any, next: any) => this.controller.clearCart(req.user)
                 .then(() => res.status(200).end())
-                .catch((err) => next(err)),
-        );
+                .catch((err) => next(err))
+        )
 
         /**
          * Route for deleting all carts.
          * It requires the user to be authenticated and to be either an admin or a manager.
          * It returns a 200 status code.
          */
-        this.router.delete("/", (req: any, res: any, next: any) =>
-            this.controller
-                .deleteAllCarts()
+        this.router.delete(
+            "/",
+            (req: any, res: any, next: any) => this.controller.deleteAllCarts()
                 .then(() => res.status(200).end())
                 .catch((err: any) => next(err))
         )
@@ -155,4 +156,4 @@ class CartRoutes {
     }
 }
 
-export default CartRoutes;
+export default CartRoutes

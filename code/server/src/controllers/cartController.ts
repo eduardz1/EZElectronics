@@ -6,10 +6,10 @@ import CartDAO from "../dao/cartDAO";
  * All methods of this class must interact with the corresponding DAO class to retrieve or store data.
  */
 class CartController {
-    private dao: CartDAO;
+    private dao: CartDAO
 
     constructor() {
-        this.dao = new CartDAO();
+        this.dao = new CartDAO
     }
 
     /**
@@ -75,4 +75,4 @@ class CartController {
     async getAllCarts() /*:Promise<Cart[]> */ { }
 }
 
-export default CartController;
+export default CartController
