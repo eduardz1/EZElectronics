@@ -107,7 +107,7 @@ class Authenticator {
      * If the user is logged in, the user is serialized to the session.
      * If the user is not logged in, an error message is returned.
      */
-    login(req: any, res: any, next: any) {
+    login(req: any, res: any, next: any): Promise<User> {
         return new Promise((resolve, reject) => {
             passport.authenticate("local", (err: any, user: any, info: any) => {
                 if (err) return reject(err);
