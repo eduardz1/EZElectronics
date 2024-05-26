@@ -1,14 +1,14 @@
-import { Category } from "./product"
+import { Category } from "./product";
 
 /**
  * Represents a shopping cart.
  */
 class Cart {
-    customer: string
-    paid: boolean
-    paymentDate: string
-    total: number
-    products: ProductInCart[]
+    customer: string;
+    paid: boolean;
+    paymentDate: string | null;
+    total: number;
+    products: ProductInCart[];
 
     /**
      * Creates a new instance of the Cart class.
@@ -18,12 +18,18 @@ class Cart {
      * @param total - The total amount of the cart. It corresponds to the sum of the prices of all the products in the cart, computed as price * quantity.
      * @param products - The products in the cart.
      */
-    constructor(customer: string, paid: boolean, paymentDate: string, total: number, products: ProductInCart[]) {
-        this.customer = customer
-        this.paid = paid
-        this.paymentDate = paymentDate
-        this.total = total
-        this.products = products
+    constructor(
+        customer: string,
+        paid: boolean,
+        paymentDate: string | null,
+        total: number,
+        products: ProductInCart[],
+    ) {
+        this.customer = customer;
+        this.paid = paid;
+        this.paymentDate = paymentDate;
+        this.total = total;
+        this.products = products;
     }
 }
 
@@ -31,10 +37,10 @@ class Cart {
  * Represents a product in a shopping cart.
  */
 class ProductInCart {
-    model: string
-    quantity: number
-    category: Category
-    price: number
+    model: string;
+    quantity: number;
+    category: Category;
+    price: number;
 
     /**
      * Creates a new instance of the ProductInCart class.
@@ -43,12 +49,17 @@ class ProductInCart {
      * @param category - The category of the product.
      * @param price - The price of a single product unit.
      */
-    constructor(model: string, quantity: number, category: Category, price: number) {
-        this.model = model
-        this.quantity = quantity
-        this.category = category
-        this.price = price
+    constructor(
+        model: string,
+        quantity: number,
+        category: Category,
+        price: number,
+    ) {
+        this.model = model;
+        this.quantity = quantity;
+        this.category = category;
+        this.price = price;
     }
 }
 
-export { Cart, ProductInCart }
+export { Cart, ProductInCart };

@@ -1,3 +1,7 @@
+import dayjs from "dayjs";
+import { Cart, ProductInCart } from "../components/cart";
+import { User } from "../components/user";
+import db from "../db/db";
 
 /**
  * A class that implements the interaction with the database for all cart-related operations.
@@ -11,61 +15,143 @@ class CartDAO {
      * @param productId The ID of the product to add to the cart.
      * @returns A Promise that resolves to true if the operation was successful.
      */
-    async addToCart(user: User, productId: string): Promise<boolean> { 
-        try {
-            // Retrieve the active cart for the user or create a new one if it doesn't exist
-            let cart = await Database.findOne(Cart, {
-                where: { user: user, status: 'active' }
-            });
+    async addToCart(user: User, productId: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            try {
+                const sql =
+                    "SELECT * FROM products_in_cart WHERE customer = ? AND model = ? AND paymentDate = NULL";
+                db.get(
+                    sql,
+                    [user.username, productId],
+                    (err: Error | null, row: any) => {
+                        if (err) {
+                            reject(err);
+                        }
 
-            if (!cart) {
-                cart = new Cart();
-                cart.user = user;
-                cart.status = 'active';
-                cart.items = [];
-                await Database.save(Cart, cart);
+                        if (row) {
+                            const updateSql =
+                                "UPDATE products_in_cart SET quantity = ? WHERE customer = ? AND model = ? AND paymentDate = NULL";
+                            db.run(
+                                updateSql,
+                                [row.quantity + 1, user.username, productId],
+                                (err: Error | null) => {
+                                    if (err) {
+                                        reject(err);
+                                    }
+
+                                    resolve(true);
+                                },
+                            );
+                        } else {
+                            const insertSql =
+                                "INSERT INTO products_in_cart(model, quantity, category, price, customer, paymentDate) VALUES(?, ?, 1, ?, ?, NULL)";
+                            db.run(
+                                insertSql,
+                                [
+                                    productId,
+                                    row.category,
+                                    row.price,
+                                    user.username,
+                                ],
+                                (err: Error | null) => {
+                                    if (err) {
+                                        reject(err);
+                                    }
+
+                                    resolve(true);
+                                },
+                            );
+                        }
+                    },
+                );
+
+                const updateCart =
+                    "UPDATE carts WHERE customer = ? AND paymentDate = NULL SET total = total + (SELECT price FROM products WHERE model = ?)";
+                db.run(
+                    updateCart,
+                    [user.username, productId],
+                    (err: Error | null) => {
+                        if (err) {
+                            reject(err);
+                        }
+
+                        resolve(true);
+                    },
+                );
+            } catch (error) {
+                reject(error);
             }
-
-            // Check if the product is already in the cart
-            let cartItem = cart.items.find(item => item.product.id === productId);
-
-            if (cartItem) {
-                // If product is already in the cart, increase the quantity
-                cartItem.quantity += 1;
-            } else {
-                // If not, add the new product to the cart with quantity 1 
-                const product = await Database.findOne(Product, { where: { id: productId } });
-                if (!product) {
-                    throw new Error('Product not found');
-                }
-
-                cartItem = new CartItem();
-                cartItem.product = product;
-                cartItem.quantity = 1;
-                cart.items.push(cartItem);
-            }
-
-            // Save changes to the database
-            await Database.save(Cart, cart);
-            return true;
-        } catch (error) {
-            console.error('Failed to add to cart:', error);
-            return false;
-        }
+        });
     }
 
-
     async getCart(user: User): Promise<Cart | null> {
-        try {
-            // Retrieve the active cart for the user
-            const cart = await Database.findOne(Cart, {
-                where: { user: user, status: 'active' }
-            });
-            return cart || null; // Return the cart or null if not found
-        } catch (error) {
-            console.error('Failed to retrieve cart:', error);
-            return null; // Return null in case of an error
-        }
+        return new Promise<Cart | null>((resolve, reject) => {
+            try {
+                const sql =
+                    "SELECT * FROM cart WHERE customer = ? AND paymentDate = NULL";
+                db.get(sql, [user], (err: Error | null, row: any) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    if (row) {
+                        this.getProductsInCart(user, row.paymentDate)
+                            .then((products) => {
+                                const cart = new Cart(
+                                    row.user,
+                                    row.paid,
+                                    row.paymentDate,
+                                    row.total,
+                                    products,
+                                );
+                                resolve(cart);
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
+                    } else {
+                        resolve(null);
+                    }
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getProductsInCart(
+        customer: User,
+        paymentDate: string | null,
+    ): Promise<ProductInCart[]> {
+        return new Promise<ProductInCart[]>((resolve, reject) => {
+            try {
+                const sql =
+                    "SELECT * FROM products_in_cart WHERE customer = ? AND paymentDate = ?";
+                db.all(
+                    sql,
+                    [customer, paymentDate],
+                    (err: Error | null, row: any[]) => {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+
+                        const products: ProductInCart[] = row.map(
+                            (row) =>
+                                new ProductInCart(
+                                    row.model,
+                                    row.quantity,
+                                    row.category,
+                                    row.price,
+                                ),
+                        );
+                        resolve(products);
+                    },
+                );
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
     /**
@@ -75,51 +161,74 @@ class CartDAO {
      * @returns A Promise that resolves to true if the cart was successfully checked out, false otherwise.
      */
     async checkoutCart(user: User): Promise<boolean> {
-        try {
-            // Retrieve the active cart for the user
-            const cart = await Database.findOne(Cart, {
-                where: { user: user, status: 'active' }
-            });
+        return new Promise<boolean>((resolve, reject) => {
+            try {
+                const sql =
+                    "UPDATE carts SET paid = 1, paymentDate = ? WHERE customer = ? AND paid = 0";
+                db.run(
+                    sql,
+                    [dayjs().toISOString().slice(0, 9), user.username],
+                    (err: Error | null) => {
+                        if (err) {
+                            reject(err);
+                        }
 
-            if (!cart) {
-                console.error('No active cart to check out.');
-                return false; // Return false if no active cart exists
+                        resolve(true);
+                    },
+                );
+            } catch (error) {
+                reject(error);
             }
-
-            // Update the cart status to 'checked-out'
-            cart.status = 'checked-out';
-            cart.checkedOutAt = new Date(); // Assuming there's a checkedOutAt field for timestamping
-            await Database.save(Cart, cart);
-
-            return true; // Return true when the cart status is updated successfully
-        } catch (error) {
-            console.error('Failed to check out cart:', error);
-            return false; // Return false in case of an error during checkout
-        }
+        });
     }
 
-    
-
     /**
-     * Retrieves all paid (checked-out) carts for a specific customer. 
+     * Retrieves all paid (checked-out) carts for a specific customer.
      * Excludes the current active cart.
      * @param user The user for whom to retrieve the paid carts.
      * @returns A Promise that resolves to an array of carts belonging to the customer.
      */
     async getCustomerCarts(user: User): Promise<Cart[]> {
-        try {
-            // Retrieve all carts for the user that are marked as 'checked-out'
-            const carts = await Database.find(Cart, {
-                where: { user: user, status: 'checked-out' }
-            });
-            return carts;
-        } catch (error) {
-            console.error('Failed to retrieve customer carts:', error);
-            throw error; // Rethrow the error or handle it as per your application's error handling policy
-        }
-    }
+        return new Promise<Cart[]>((resolve, reject) => {
+            try {
+                const sql =
+                    "SELECT * FROM cart WHERE customer = ? AND paid = 1";
+                db.all(
+                    sql,
+                    [user.username],
+                    (err: Error | null, rows: any[]) => {
+                        if (err) {
+                            reject(err);
+                        }
 
-    
+                        const carts = rows.map(async (row) => {
+                            return new Cart(
+                                row.user,
+                                row.paid,
+                                row.paymentDate,
+                                row.total,
+                                await this.getProductsInCart(
+                                    user,
+                                    row.paymentDate,
+                                ),
+                            );
+                        });
+
+                        // FIXME: I think this is horrible
+                        Promise.all(carts)
+                            .then((resolvedCarts) => {
+                                resolve(resolvedCarts);
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
+                    },
+                );
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 
     /**
      * Removes one unit of a product from the user's cart. If only one unit is present, the product is removed from the cart.
@@ -127,110 +236,170 @@ class CartDAO {
      * @param productId The ID of the product to remove.
      * @returns A Promise that resolves to true if the product was successfully removed or quantity was decreased, false otherwise.
      */
-    async removeProductFromCart(user: User, productId: string): Promise<boolean> {
-        try {
-            // Retrieve the active cart for the user
-            const cart = await Database.findOne(Cart, {
-                where: { user: user, status: 'active' }
-            });
+    async removeProductFromCart(
+        user: User,
+        productId: string,
+    ): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            try {
+                const sql =
+                    "SELECT * FROM products_in_cart WHERE customer = ? AND model = ? AND paid = 0";
+                db.get(
+                    sql,
+                    [user.username, productId],
+                    (err: Error | null, row: any) => {
+                        if (err) {
+                            reject(err);
+                        }
 
-            if (!cart) {
-                console.error('No active cart available for the user.');
-                return false; // Return false if no active cart is found
+                        if (row) {
+                            if (row.quantity > 1) {
+                                const updateSql =
+                                    "UPDATE products_in_cart SET quantity = ? WHERE customer = ? AND model = ? AND paid = 0";
+                                db.run(
+                                    updateSql,
+                                    [
+                                        row.quantity - 1,
+                                        user.username,
+                                        productId,
+                                    ],
+                                    (err: Error | null) => {
+                                        if (err) {
+                                            reject(err);
+                                        }
+
+                                        resolve(true);
+                                    },
+                                );
+                            } else {
+                                const deleteSql =
+                                    "DELETE FROM products_in_cart WHERE customer = ? AND model = ? AND paid = 0";
+                                db.run(
+                                    deleteSql,
+                                    [user.username, productId],
+                                    (err: Error | null) => {
+                                        if (err) {
+                                            reject(err);
+                                        }
+
+                                        resolve(true);
+                                    },
+                                );
+                            }
+                        } else {
+                            resolve(false);
+                        }
+                    },
+                );
+
+                const updateCart =
+                    "UPDATE carts SET total = ? WHERE customer = ?, paid = 0";
+                db.run(updateCart, [user.username], (err: Error | null) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    resolve(true);
+                });
+            } catch (error) {
+                reject(error);
             }
-
-            // Find the cart item matching the product ID
-            const cartItem = cart.items.find(item => item.product.id === productId);
-
-            if (cartItem) {
-                if (cartItem.quantity > 1) {
-                    // If more than one unit exists, decrease the quantity
-                    cartItem.quantity -= 1;
-                } else {
-                    // If only one unit exists, remove the item from the cart
-                    const itemIndex = cart.items.indexOf(cartItem);
-                    cart.items.splice(itemIndex, 1);
-                }
-
-                // Save changes to the database
-                await Database.save(Cart, cart);
-                return true;
-            } else {
-                console.error('Product not found in the cart.');
-                return false; // Return false if the product is not found in the cart
-            }
-        } catch (error) {
-            console.error('Failed to remove product from cart:', error);
-            return false; // Return false in case of an error during the removal process
-        }
+        });
     }
 
-
-
-
- /**
+    /**
      * Clears all products from the user's active cart.
      * @param user The user who owns the cart.
      * @returns A Promise that resolves to true if the cart was successfully cleared, false otherwise.
      */
- async clearCart(user: User): Promise<boolean> {
-    try {
-        // Retrieve the active cart for the user
-        const cart = await Database.findOne(Cart, {
-            where: { user: user, status: 'active' }
+    async clearCart(user: User): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            try {
+                const sql =
+                    "DELETE FROM products_in_cart WHERE customer = ? AND paid = 0";
+                db.run(sql, [user.username], (err: Error | null) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    resolve(true);
+                });
+            } catch (error) {
+                reject(error);
+            }
         });
-
-        if (!cart) {
-            console.error('No active cart available for the user.');
-            return false; // Return false if no active cart is found
-        }
-
-        // Clear all items from the cart
-        cart.items = []; // Assuming that cart items are stored in an array
-
-        // Save the cleared cart to the database
-        await Database.save(Cart, cart);
-        return true;
-    } catch (error) {
-        console.error('Failed to clear cart:', error);
-        return false; // Return false in case of an error during the clearing process
     }
-}
 
-
-
-/**
+    /**
      * Deletes all carts in the database. This operation is irreversible.
      * @returns A Promise that resolves to true if all carts were successfully deleted, false otherwise.
      */
-async deleteAllCarts(): Promise<boolean> {
-    try {
-        // Delete all carts from the database
-        await Database.deleteAll(Cart);
-        return true;
-    } catch (error) {
-        console.error('Failed to delete all carts:', error);
-        return false; // Return false in case of an error during the deletion process
+    async deleteAllCarts(): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            try {
+                const sql = "DELETE FROM cart";
+                db.run(sql, [], (err: Error | null) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    resolve(true);
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
-}
 
-
-
-/**
+    /**
      * Retrieves all carts from the database.
      * @returns A Promise that resolves to an array of all carts.
      */
-async getAllCarts(): Promise<Cart[]> {
-    try {
-        // Retrieve all carts from the database
-        const carts = await Database.findAll(Cart);
-        return carts;
-    } catch (error) {
-        console.error('Failed to retrieve all carts:', error);
-        throw error; // You might want to handle this error more gracefully depending on your application needs
+    async getAllCarts(): Promise<Cart[]> {
+        return new Promise<Cart[]>((resolve, reject) => {
+            try {
+                const sql = "SELECT * FROM cart";
+                db.all(sql, [], (err: Error | null, rows: any[]) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    const carts = rows.map(async (row) => {
+                        return new Cart(
+                            row.user,
+                            row.paid,
+                            row.paymentDate,
+                            row.total,
+                            await this.getProductsInCart(
+                                row.user,
+                                row.paymentDate,
+                            ),
+                        );
+                    });
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async createCart(user: User): Promise<Cart> {
+        return new Promise<Cart>((resolve, reject) => {
+            try {
+                const sql =
+                    "INSERT INTO cart(customer, paid, paymentDate, total) VALUES(?, 0, NULL, 0)";
+                db.run(sql, [user], (err: Error | null) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    resolve(new Cart(user.username, false, null, 0, []));
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 }
 
-}
-
-export default CartDAO
+export default CartDAO;
