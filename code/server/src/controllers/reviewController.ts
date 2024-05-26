@@ -2,15 +2,20 @@ import { ProductReview } from "../components/review";
 import { User } from "../components/user";
 import ProductDAO from "../dao/productDAO";
 import ReviewDAO from "../dao/reviewDAO";
-import { NoReviewProductError } from "../errors/reviewError";
+import { ProductNotFoundError } from "../errors/productError";
+import {
+    ExistingReviewError,
+    NoReviewProductError,
+} from "../errors/reviewError";
 import { UserNotCustomerError } from "../errors/userError";
 
 class ReviewController {
-    private dao: ReviewDAO
-    //private productDao: ProductDAO
+    private dao: ReviewDAO;
+    private productDao: ProductDAO;
 
     constructor() {
-        this.dao = new ReviewDAO
+        this.dao = new ReviewDAO();
+        this.productDao = new ProductDAO();
     }
 
     /**
@@ -21,12 +26,21 @@ class ReviewController {
      * @param comment The comment made by the user
      * @returns A Promise that resolves to nothing
      */
-    async addReview(model: string, user: User, score: number, comment: string):Promise<void>{
-        if(user.role !== "Customer") {
-            throw new UserNotCustomerError();
+    async addReview(
+        model: string,
+        user: User,
+        score: number,
+        comment: string,
+    ): Promise<void> {
+        if (!(await this.productDao.getProductByModel(model))) {
+            throw new ProductNotFoundError();
         }
+        if (await this.dao.checkExistsReview(model, user)) {
+            throw new ExistingReviewError();
+        }
+
         return this.dao.addReview(model, user, score, comment);
-     }
+    }
 
     /**
      * Returns all reviews for a product
@@ -35,7 +49,7 @@ class ReviewController {
      */
     async getProductReviews(model: string): Promise<ProductReview[]> {
         return this.dao.getProductReviews(model);
-     }
+    }
 
     /**
      * Deletes the review made by a user for a product
@@ -44,14 +58,15 @@ class ReviewController {
      * @returns A Promise that resolves to nothing
      */
     async deleteReview(model: string, user: User): Promise<void> {
-       /* if(await productDao.getProducts().isnotempty()) {
-            return new NoReviewProductError()
-        }*/
-        if(user.role !== "Customer") {
-            throw new UserNotCustomerError();
+        if (!(await this.productDao.getProductByModel(model))) {
+            throw new ProductNotFoundError();
         }
-        return this.dao.deleteReview(model, user)
-     }
+        if (!(await this.dao.checkExistsReview(model, user))) {
+            throw new NoReviewProductError();
+        }
+
+        return this.dao.deleteReview(model, user);
+    }
 
     /**
      * Deletes all reviews for a product
@@ -59,24 +74,20 @@ class ReviewController {
      * @returns A Promise that resolves to nothing
      */
     async deleteReviewsOfProduct(model: string): Promise<void> {
-        //TODO in api this method is only accessable by admin or manager, but no check on user is possible
+        if (!(await this.productDao.getProductByModel(model))) {
+            throw new ProductNotFoundError();
+        }
 
-        /* if(await productDao.getProducts().isnotempty()) {
-            return new NoReviewProductError()
-        }*/
-        
-        return this.dao.deleteReviewsOfProduct(model)
-     }
+        return this.dao.deleteReviewsOfProduct(model);
+    }
 
     /**
      * Deletes all reviews of all products
      * @returns A Promise that resolves to nothing
      */
     async deleteAllReviews(): Promise<void> {
-        //TODO in api this method is only accessable by admin or manager, but no check on user is possible
-
-        return this.dao.deleteAllReviews()
-     }
+        return this.dao.deleteAllReviews();
+    }
 }
 
 export default ReviewController;
