@@ -51,7 +51,7 @@ class CartRoutes {
         this.router.get(
             "/",
             (req: any, res: any, next: any) => this.controller.getCart(req.user)
-                .then((cart: any /**Cart */) => {
+                .then((cart:Cart) => {
                     res.status(200).json(cart)
                 })
                 .catch((err) => {
@@ -98,7 +98,7 @@ class CartRoutes {
         this.router.get(
             "/history",
             (req: any, res: any, next: any) => this.controller.getCustomerCarts(req.user)
-                .then((carts: any /**Cart[] */) => res.status(200).json(carts))
+                .then((carts: any Cart[] ) => res.status(200).json(carts))
                 .catch((err) => next(err))
         )
 
@@ -150,7 +150,7 @@ class CartRoutes {
         this.router.get(
             "/all",
             (req: any, res: any, next: any) => this.controller.getAllCarts()
-                .then((carts: any/**Cart[] */) => res.status(200).json(carts))
+                .then((carts: anyCart[] ) => res.status(200).json(carts))
                 .catch((err: any) => next(err))
         )
     }
