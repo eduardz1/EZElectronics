@@ -31,20 +31,23 @@ class UserDAO {
                     //If there is no user with the given username, or the user salt is not saved in the database, the user is not authenticated.
                     if (!row || row.username !== username || !row.salt) {
                         resolve(false);
-                    } else {
-                        //Hashes the plain password using the salt and then compares it with the hashed password stored in the database
-                        const hashedPassword = crypto.scryptSync(
-                            plainPassword,
-                            row.salt,
-                            16,
-                        );
-                        const passwordHex = Buffer.from(row.password, "hex");
-                        if (
-                            !crypto.timingSafeEqual(passwordHex, hashedPassword)
-                        )
-                            resolve(false);
-                        resolve(true);
+                        return;
                     }
+
+                    //Hashes the plain password using the salt and then compares it with the hashed password stored in the database
+                    const hashedPassword = crypto.scryptSync(
+                        plainPassword,
+                        row.salt,
+                        16,
+                    );
+
+                    const passwordHex = Buffer.from(row.password, "hex");
+                    if (!crypto.timingSafeEqual(passwordHex, hashedPassword)) {
+                        resolve(false);
+                        return;
+                    }
+
+                    resolve(true);
                 });
             } catch (error) {
                 reject(error);
@@ -84,9 +87,12 @@ class UserDAO {
                                     "UNIQUE constraint failed: users.username",
                                 )
                             )
+                                // FIXME: Why do we check here?
                                 reject(new UserAlreadyExistsError());
                             reject(err);
+                            return;
                         }
+
                         resolve(true);
                     },
                 );
@@ -109,6 +115,7 @@ class UserDAO {
                         reject(err);
                         return;
                     }
+
                     const users: User[] = rows.map(
                         (row) =>
                             new User(
@@ -120,6 +127,7 @@ class UserDAO {
                                 row.birthdate,
                             ),
                     );
+
                     resolve(users);
                 });
             } catch (error) {
@@ -142,6 +150,7 @@ class UserDAO {
                         reject(err);
                         return;
                     }
+
                     const users: User[] = rows.map(
                         (row) =>
                             new User(
@@ -153,6 +162,7 @@ class UserDAO {
                                 row.birthdate,
                             ),
                     );
+
                     resolve(users);
                 });
             } catch (err) {
@@ -175,6 +185,7 @@ class UserDAO {
                         reject(err);
                         return;
                     }
+
                     resolve(true);
                 });
             } catch (error) {
@@ -192,6 +203,7 @@ class UserDAO {
                         reject(err);
                         return;
                     }
+
                     resolve(true);
                 });
             } catch (error) {
@@ -214,10 +226,12 @@ class UserDAO {
                         reject(err);
                         return;
                     }
+
                     if (!row) {
                         reject(new UserNotFoundError());
                         return;
                     }
+
                     const user: User = new User(
                         row.username,
                         row.name,
@@ -226,6 +240,7 @@ class UserDAO {
                         row.address,
                         row.birthdate,
                     );
+
                     resolve(user);
                 });
             } catch (error) {
@@ -244,6 +259,7 @@ class UserDAO {
                         reject(err);
                         return;
                     }
+
                     resolve(row.count > 0);
                 });
             } catch (error) {
@@ -271,6 +287,7 @@ class UserDAO {
                             reject(err);
                             return;
                         }
+
                         this.getUserByUsername(username)
                             .then((user) => resolve(user))
                             .catch((err) => reject(err));

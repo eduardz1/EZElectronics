@@ -29,14 +29,10 @@ class ReviewDAO {
                     [model, user, score, comment],
                     (err: Error | null) => {
                         if (err) {
-                            if (
-                                err.message.includes(
-                                    "/*TODO: add error message */",
-                                )
-                            )
-                                reject(new ExistingReviewError());
                             reject(err);
+                            return;
                         }
+
                         resolve();
                     },
                 );
@@ -54,7 +50,9 @@ class ReviewDAO {
                 db.get(sql, [model, user], (err: Error | null, row: any) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
+
                     resolve(row !== undefined);
                 });
             } catch (error) {
@@ -72,6 +70,7 @@ class ReviewDAO {
                         reject(err);
                         return;
                     }
+
                     const productReviews: ProductReview[] = rows.map(
                         (row) =>
                             new ProductReview(
@@ -82,6 +81,7 @@ class ReviewDAO {
                                 row.comment,
                             ),
                     );
+
                     resolve(productReviews);
                 });
             } catch (error) {
@@ -97,7 +97,9 @@ class ReviewDAO {
                 db.run(sql, [model, user], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
+
                     resolve();
                 });
             } catch (error) {
@@ -113,7 +115,9 @@ class ReviewDAO {
                 db.run(sql, [model], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
+
                     resolve();
                 });
             } catch (error) {
@@ -129,7 +133,9 @@ class ReviewDAO {
                 db.run(sql, [], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
+
                     resolve();
                 });
             } catch (error) {

@@ -223,6 +223,7 @@ class AuthRoutes {
          * It returns the logged in user.
          */
         this.router.get("/current", (req: any, res: any) =>
+            // FIXME: doesn't work for managers
             res.status(200).json(req.user),
         );
     }

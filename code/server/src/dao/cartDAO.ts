@@ -26,6 +26,7 @@ class CartDAO {
                     (err: Error | null, row: any) => {
                         if (err) {
                             reject(err);
+                            return;
                         }
 
                         if (row) {
@@ -37,9 +38,8 @@ class CartDAO {
                                 (err: Error | null) => {
                                     if (err) {
                                         reject(err);
+                                        return;
                                     }
-
-                                    resolve(true);
                                 },
                             );
                         } else {
@@ -56,9 +56,8 @@ class CartDAO {
                                 (err: Error | null) => {
                                     if (err) {
                                         reject(err);
+                                        return;
                                     }
-
-                                    resolve(true);
                                 },
                             );
                         }
@@ -73,6 +72,7 @@ class CartDAO {
                     (err: Error | null) => {
                         if (err) {
                             reject(err);
+                            return;
                         }
 
                         resolve(true);
@@ -92,26 +92,28 @@ class CartDAO {
                 db.get(sql, [user], (err: Error | null, row: any) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
 
-                    if (row) {
-                        this.getProductsInCart(user, row.paymentDate)
-                            .then((products) => {
-                                const cart = new Cart(
-                                    row.user,
-                                    row.paid,
-                                    row.paymentDate,
-                                    row.total,
-                                    products,
-                                );
-                                resolve(cart);
-                            })
-                            .catch((error) => {
-                                reject(error);
-                            });
-                    } else {
+                    if (!row) {
                         resolve(null);
+                        return;
                     }
+
+                    this.getProductsInCart(user, row.paymentDate)
+                        .then((products) => {
+                            const cart = new Cart(
+                                row.user,
+                                row.paid,
+                                row.paymentDate,
+                                row.total,
+                                products,
+                            );
+                            resolve(cart);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        });
                 });
             } catch (error) {
                 reject(error);
@@ -171,6 +173,7 @@ class CartDAO {
                     (err: Error | null) => {
                         if (err) {
                             reject(err);
+                            return;
                         }
 
                         resolve(true);
@@ -199,6 +202,7 @@ class CartDAO {
                     (err: Error | null, rows: any[]) => {
                         if (err) {
                             reject(err);
+                            return;
                         }
 
                         const carts = rows.map(async (row) => {
@@ -250,6 +254,7 @@ class CartDAO {
                     (err: Error | null, row: any) => {
                         if (err) {
                             reject(err);
+                            return;
                         }
 
                         if (row) {
@@ -266,6 +271,7 @@ class CartDAO {
                                     (err: Error | null) => {
                                         if (err) {
                                             reject(err);
+                                            return;
                                         }
 
                                         resolve(true);
@@ -280,6 +286,7 @@ class CartDAO {
                                     (err: Error | null) => {
                                         if (err) {
                                             reject(err);
+                                            return;
                                         }
 
                                         resolve(true);
@@ -297,6 +304,7 @@ class CartDAO {
                 db.run(updateCart, [user.username], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
 
                     resolve(true);
@@ -320,6 +328,7 @@ class CartDAO {
                 db.run(sql, [user.username], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
 
                     resolve(true);
@@ -341,6 +350,7 @@ class CartDAO {
                 db.run(sql, [], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
 
                     resolve(true);
@@ -362,6 +372,12 @@ class CartDAO {
                 db.all(sql, [], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
+                        return;
+                    }
+
+                    if (!rows) {
+                        resolve([]);
+                        return;
                     }
 
                     const carts = rows.map(async (row) => {
@@ -376,6 +392,8 @@ class CartDAO {
                             ),
                         );
                     });
+
+                    resolve(Promise.all(carts));
                 });
             } catch (error) {
                 reject(error);
@@ -391,6 +409,7 @@ class CartDAO {
                 db.run(sql, [user], (err: Error | null) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
 
                     resolve(new Cart(user.username, false, null, 0, []));

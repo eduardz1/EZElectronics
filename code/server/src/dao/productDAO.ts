@@ -36,9 +36,10 @@ class ProductDAO {
                     (err: Error | null) => {
                         if (err) {
                             reject(err);
-                        } else {
-                            resolve(true);
+                            return;
                         }
+
+                        resolve(true);
                     },
                 );
             } catch (err) {
@@ -54,7 +55,10 @@ class ProductDAO {
                 db.get(sql, [model], (err: Error | null, row: any) => {
                     if (err) {
                         reject(err);
-                    } else if (row) {
+                        return;
+                    }
+
+                    if (row) {
                         const product: Product = {
                             model: row.model,
                             category: row.category,
@@ -94,9 +98,10 @@ class ProductDAO {
                     (err: Error | null) => {
                         if (err) {
                             reject(err);
-                        } else {
-                            resolve(newQuantity);
+                            return;
                         }
+
+                        resolve(newQuantity);
                     },
                 );
             } catch (err) {
@@ -121,9 +126,10 @@ class ProductDAO {
                     (err: Error | null) => {
                         if (err) {
                             reject(err);
-                        } else {
-                            resolve(quantity);
+                            return;
                         }
+
+                        resolve(quantity);
                     },
                 );
             } catch (err) {
@@ -139,17 +145,19 @@ class ProductDAO {
                 db.all(sql, [category], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        const products: Product[] = rows.map((row) => ({
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        }));
-                        resolve(products);
+                        return;
                     }
+
+                    const products: Product[] = rows.map((row) => ({
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    }));
+
+                    resolve(products);
                 });
             } catch (err) {
                 reject(err);
@@ -164,17 +172,19 @@ class ProductDAO {
                 db.all(sql, [model], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        const products: Product[] = rows.map((row) => ({
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        }));
-                        resolve(products);
+                        return;
                     }
+
+                    const products: Product[] = rows.map((row) => ({
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    }));
+
+                    resolve(products);
                 });
             } catch (err) {
                 reject(err);
@@ -189,17 +199,19 @@ class ProductDAO {
                 db.all(sql, [], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        const products: Product[] = rows.map((row) => ({
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        }));
-                        resolve(products);
+                        return;
                     }
+
+                    const products: Product[] = rows.map((row) => ({
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    }));
+
+                    resolve(products);
                 });
             } catch (err) {
                 reject(err);
@@ -215,17 +227,19 @@ class ProductDAO {
                 db.all(sql, [category], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        const products: Product[] = rows.map((row) => ({
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        }));
-                        resolve(products);
+                        return;
                     }
+
+                    const products: Product[] = rows.map((row) => ({
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    }));
+
+                    resolve(products);
                 });
             } catch (err) {
                 reject(err);
@@ -241,17 +255,19 @@ class ProductDAO {
                 db.all(sql, [model], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        const products: Product[] = rows.map((row) => ({
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        }));
-                        resolve(products);
+                        return;
                     }
+
+                    const products: Product[] = rows.map((row) => ({
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    }));
+
+                    resolve(products);
                 });
             } catch (err) {
                 reject(err);
@@ -266,17 +282,19 @@ class ProductDAO {
                 db.all(sql, [], (err: Error | null, rows: any[]) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        const products: Product[] = rows.map((row) => ({
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        }));
-                        resolve(products);
+                        return;
                     }
+
+                    const products: Product[] = rows.map((row) => ({
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    }));
+
+                    resolve(products);
                 });
             } catch (err) {
                 reject(err);
@@ -291,9 +309,10 @@ class ProductDAO {
                 db.run(sql, [], (err: Error | null) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        resolve(true);
+                        return;
                     }
+
+                    resolve(true);
                 });
             } catch (err) {
                 reject(err);
@@ -308,9 +327,10 @@ class ProductDAO {
                 db.run(sql, [model], (err: Error | null) => {
                     if (err) {
                         reject(err);
-                    } else {
-                        resolve(true);
+                        return;
                     }
+
+                    resolve(true);
                 });
             } catch (err) {
                 reject(err);
