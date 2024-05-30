@@ -1,10 +1,5 @@
 import { Product } from "../components/product";
 import db from "../db/db";
-import {
-    ProductNotFoundError,
-    LowProductStockError,
-    EmptyProductStockError,
-} from "../errors/productError";
 
 /**
  * A class that implements the interaction with the database for all product-related operations.
@@ -22,19 +17,27 @@ class ProductDAO {
         return new Promise<boolean>((resolve, reject) => {
             try {
                 const sql =
-                    "INSERT INTO products(model, category, quantity, details, sellingPrice, arrivalDate) VALUES(?, ?, ?, ?, ?, ?)";
+                    "INSERT INTO products(model, category, quantity, details, sellingPrice" +
+                    (arrivalDate ? " , arrivalDate" : "") +
+                    ") VALUES(?, ?, ?, ?, ?" +
+                    (arrivalDate ? ", ?" : "") +
+                    ")";
+
                 db.run(
                     sql,
-                    [
-                        model,
-                        category,
-                        quantity,
-                        details,
-                        sellingPrice,
-                        arrivalDate,
-                    ],
+                    arrivalDate
+                        ? [
+                              model,
+                              category,
+                              quantity,
+                              details,
+                              sellingPrice,
+                              arrivalDate,
+                          ]
+                        : [model, category, quantity, details, sellingPrice],
                     (err: Error | null) => {
                         if (err) {
+                            console.log(err);
                             reject(err);
                             return;
                         }
@@ -326,6 +329,7 @@ class ProductDAO {
                 const sql = "DELETE FROM products WHERE model = ?";
                 db.run(sql, [model], (err: Error | null) => {
                     if (err) {
+                        console.log(err);
                         reject(err);
                         return;
                     }
