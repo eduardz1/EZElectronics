@@ -19,13 +19,14 @@ class ProductDAO {
                 const sql =
                     "INSERT INTO products(model, category, quantity, details, sellingPrice" +
                     (arrivalDate ? " , arrivalDate" : "") +
+                    (details ? " , details" : "") +
                     ") VALUES(?, ?, ?, ?, ?" +
                     (arrivalDate ? ", ?" : "") +
+                    (details ? ", ?" : "") +
                     ")";
 
-                db.run(
-                    sql,
-                    arrivalDate
+                const params =
+                    arrivalDate && details
                         ? [
                               model,
                               category,
@@ -33,18 +34,43 @@ class ProductDAO {
                               details,
                               sellingPrice,
                               arrivalDate,
+                              details,
                           ]
-                        : [model, category, quantity, details, sellingPrice],
-                    (err: Error | null) => {
-                        if (err) {
-                            console.log(err);
-                            reject(err);
-                            return;
-                        }
+                        : arrivalDate
+                          ? [
+                                model,
+                                category,
+                                quantity,
+                                details,
+                                sellingPrice,
+                                arrivalDate,
+                            ]
+                          : details
+                            ? [
+                                  model,
+                                  category,
+                                  quantity,
+                                  details,
+                                  sellingPrice,
+                                  details,
+                              ]
+                            : [
+                                  model,
+                                  category,
+                                  quantity,
+                                  details,
+                                  sellingPrice,
+                              ];
 
-                        resolve(true);
-                    },
-                );
+                db.run(sql, params, (err: Error | null) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(true);
+                });
             } catch (err) {
                 reject(err);
             }
