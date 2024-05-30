@@ -6,6 +6,9 @@
     "scripts": {
         "start": "nodemon index.ts",
         "test": "SET NODE_ENV=test && jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose",
+        "test_unit": "jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --testPathPattern=test_unit",
+        "test_integration": "jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --testPathPattern=test_integration",
+        "test_official": "jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --testPathPattern=test_official",
         "lint": "eslint . --fix"
     },
     "keywords": [],
