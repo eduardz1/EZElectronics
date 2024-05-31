@@ -7,8 +7,13 @@ import {
     EmptyProductStockError,
     ProductAlreadyExistsError,
     IncorrectGroupingError,
-    NullCategoryGroupingError,
-    NullModelGroupingError,
+    IncorrectCategoryGroupingError,
+    IncorrectModelGroupingError,
+    ArrivalDateInTheFutureError,
+    ChangeDateInTheFutureError,
+    ChangeDateBeforeArrivalDateError,
+    SellingDateInTheFutureError,
+    SellingDateBeforeArrivalDateError,
 } from "../errors/productError";
 
 /**
@@ -44,7 +49,7 @@ class ProductController {
             throw new ProductAlreadyExistsError();
         }
         if (dayjs(arrivalDate).isAfter(dayjs())) {
-            throw new Error("Arrival date cannot be in the future");
+            throw new ArrivalDateInTheFutureError();
         }
 
         return this.dao.registerProducts(
@@ -66,17 +71,17 @@ class ProductController {
      */
     async changeProductQuantity(
         model: string,
-        newQuantity: number,
+        newQuantity: number, // TODO: assert positive
         changeDate: string | null,
     ): Promise<number> {
         const product = await this.dao.getProductByModel(model);
 
         if (!product) throw new ProductNotFoundError();
         if (dayjs(changeDate).isAfter(dayjs())) {
-            throw new Error("Change date cannot be in the future");
+            throw new ChangeDateInTheFutureError();
         }
         if (dayjs(changeDate).isBefore(dayjs(product.arrivalDate))) {
-            throw new Error("Change date cannot be before arrival date");
+            throw new ChangeDateBeforeArrivalDateError();
         }
 
         return this.dao.changeProductQuantity(
@@ -95,17 +100,17 @@ class ProductController {
      */
     async sellProduct(
         model: string,
-        quantity: number,
+        quantity: number, // TODO: assert positive
         sellingDate: string | null,
     ): Promise<number> {
         const product = await this.dao.getProductByModel(model);
 
         if (!product) throw new ProductNotFoundError();
         if (dayjs(sellingDate).isAfter(dayjs())) {
-            throw new Error("Selling date cannot be in the future");
+            throw new SellingDateInTheFutureError();
         }
         if (dayjs(sellingDate).isBefore(dayjs(product.arrivalDate))) {
-            throw new Error("Selling date cannot be before arrival date");
+            throw new SellingDateBeforeArrivalDateError();
         }
         if (product.quantity === 0) throw new EmptyProductStockError();
         if (product.quantity < quantity) throw new LowProductStockError();
@@ -131,10 +136,11 @@ class ProductController {
     ): Promise<Product[]> {
         switch (grouping) {
             case "category":
-                if (!category) throw new NullCategoryGroupingError();
+                if (!category || model)
+                    throw new IncorrectCategoryGroupingError();
                 return this.dao.getProductsByCategory(category);
             case "model":
-                if (!model) throw new NullModelGroupingError();
+                if (!model || category) throw new IncorrectModelGroupingError();
                 if (!(await this.dao.getProductByModel(model))) {
                     throw new ProductNotFoundError();
                 }
@@ -159,10 +165,10 @@ class ProductController {
     ): Promise<Product[]> {
         switch (grouping) {
             case "category":
-                if (!category) throw new NullCategoryGroupingError();
+                if (!category) throw new IncorrectCategoryGroupingError();
                 return this.dao.getAvailableProductsByCategory(category);
             case "model":
-                if (!model) throw new NullModelGroupingError();
+                if (!model) throw new IncorrectModelGroupingError();
                 if (!(await this.dao.getProductByModel(model))) {
                     throw new ProductNotFoundError();
                 }
