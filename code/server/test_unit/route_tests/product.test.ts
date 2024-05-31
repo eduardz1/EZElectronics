@@ -13,10 +13,11 @@ import {
     ProductNotFoundError,
 } from "../../src/errors/productError";
 import { Category } from "../../src/components/product";
-const baseURL = "/ezelectronics/products";
 import { app } from "../../index";
 import Authenticator from "../../src/routers/auth";
 import ProductController from "../../src/controllers/productController";
+
+const baseURL = "/ezelectronics/products";
 
 jest.mock("../../src/routers/auth");
 jest.mock("../../src/controllers/productController");
@@ -30,7 +31,7 @@ describe("Product routes", () => {
         test("Returns 200 if successful", async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -71,7 +72,7 @@ describe("Product routes", () => {
         test(`Returns 422 if model is not a string`, async () => {
             const testProduct = {
                 model: 1,
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -98,7 +99,7 @@ describe("Product routes", () => {
         test(`Returns 422 if model is empty`, async () => {
             const testProduct = {
                 model: "",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -176,10 +177,37 @@ describe("Product routes", () => {
             ).toHaveBeenCalledTimes(0);
         });
 
+        test(`Returns 422 if category is not one of the allowed types`, async () => {
+            const testProduct = {
+                model: "model",
+                category: "invalid",
+                quantity: 1,
+                details: "details",
+                sellingPrice: 1,
+                arrivalDate: "2022-01-01",
+            };
+            jest.spyOn(
+                Authenticator.prototype,
+                "isAdminOrManager",
+            ).mockImplementation((_req, _res, next) => next());
+
+            const response = await request(app)
+                .post(`${baseURL}/`)
+                .send(testProduct);
+
+            expect(response.status).toBe(422);
+            expect(
+                ProductController.prototype.registerProducts,
+            ).toHaveBeenCalledTimes(0);
+            expect(
+                Authenticator.prototype.isAdminOrManager,
+            ).toHaveBeenCalledTimes(0);
+        });
+
         test(`Returns 422 if quantity is not a number`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.APPLIANCE,
                 quantity: "aa",
                 details: "details",
                 sellingPrice: 1,
@@ -206,7 +234,7 @@ describe("Product routes", () => {
         test(`Returns 422 if quantity is empty`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: "",
                 details: "details",
                 sellingPrice: 1,
@@ -233,7 +261,7 @@ describe("Product routes", () => {
         test(`Returns 422 if details is not a string`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.LAPTOP,
                 quantity: 1,
                 details: 1,
                 sellingPrice: 1,
@@ -260,7 +288,7 @@ describe("Product routes", () => {
         test(`Returns 422 if sellingPrice is not a number`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: "aa",
@@ -287,7 +315,7 @@ describe("Product routes", () => {
         test(`Returns 422 if sellingPrice is empty`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: "",
@@ -314,7 +342,7 @@ describe("Product routes", () => {
         test(`Returns 422 if arrivalDate is not a string`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -341,7 +369,7 @@ describe("Product routes", () => {
         test(`Returns 401 if user is not an admin or manager`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -373,7 +401,7 @@ describe("Product routes", () => {
         test(`Returns 409 if model represents an already existing set of products in the database`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -414,7 +442,7 @@ describe("Product routes", () => {
         test(`Returns 400 if arrivalDate is in the future`, async () => {
             const testProduct = {
                 model: "model",
-                category: "category",
+                category: Category.SMARTPHONE,
                 quantity: 1,
                 details: "details",
                 sellingPrice: 1,
@@ -515,10 +543,6 @@ describe("Product routes", () => {
             expect(
                 Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
-        });
-
-        test(`Returns 422 if model is not a string`, async () => {
-            // given that it's inside an URL it's always true
         });
 
         test(`Returns 404 (cannot patch) if model is empty`, async () => {

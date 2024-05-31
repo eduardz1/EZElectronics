@@ -1,19 +1,10 @@
-import {
-    describe,
-    test,
-    expect,
-    beforeAll,
-    afterAll,
-    afterEach,
-    jest,
-} from "@jest/globals";
+import { describe, test, expect, afterEach, jest } from "@jest/globals";
 import ProductDAO from "../../src/dao/productDAO";
 import db from "../../src/db/db";
 
 import { Database } from "sqlite3";
 import { Category } from "../../src/components/product";
 
-jest.mock("crypto");
 jest.mock("../../src/db/db.ts");
 
 afterEach(() => {

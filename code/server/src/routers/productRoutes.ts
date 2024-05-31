@@ -3,7 +3,7 @@ import ErrorHandler from "../helper";
 import { body, param, query } from "express-validator";
 import ProductController from "../controllers/productController";
 import Authenticator from "./auth";
-import { Product } from "../components/product";
+import { Category, Product } from "../components/product";
 
 /**
  * Represents a class that defines the routes for handling proposals.
@@ -58,7 +58,7 @@ class ProductRoutes {
         this.router.post(
             "/",
             body("model").isString().notEmpty(),
-            body("category").isString().notEmpty(),
+            body("category").isString().isIn(Object.values(Category)),
             body("quantity").isNumeric().notEmpty(),
             body("details").isString(),
             body("sellingPrice").isNumeric().notEmpty(),
