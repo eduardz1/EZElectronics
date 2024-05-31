@@ -2,6 +2,9 @@
  * Represents a user in the system.
  */
 class User {
+    password(username: string, name: string, surname: string, password: any, role: Role) {
+        throw new Error("Method not implemented.")
+    }
     username: string
     name: string
     surname: string
