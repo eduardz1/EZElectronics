@@ -6,7 +6,7 @@
 
 import { Database } from "sqlite3";
 
-const sqlite = require("sqlite3");
+import sqlite from "sqlite3";
 
 // The environment variable is used to determine which database to use.
 // If the environment variable is not set, the development database is used.

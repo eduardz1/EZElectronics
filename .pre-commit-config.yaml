@@ -24,6 +24,15 @@ repos:
             always_run: true
             language: system
 
+    - repo: local
+      hooks:
+          - id: test
+            name: test
+            entry: npm run --prefix code/server test
+            files: ^code\/server\/.ts[x]?$/
+            always_run: true
+            language: system
+
     - repo: https://github.com/compilerla/conventional-pre-commit
       rev: v3.2.0
       hooks:

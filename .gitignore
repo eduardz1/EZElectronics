@@ -1,3 +1,6 @@
+# Prevent changes to the database
+*.db
+
 # Documents
 *.pdf
 

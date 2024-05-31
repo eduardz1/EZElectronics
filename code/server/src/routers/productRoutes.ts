@@ -1,29 +1,29 @@
-import express, { Router } from "express"
-import ErrorHandler from "../helper"
-import { body, param, query } from "express-validator"
-import ProductController from "../controllers/productController"
-import Authenticator from "./auth"
-import { Product } from "../components/product"
+import express, { Router } from "express";
+import ErrorHandler from "../helper";
+import { body, param, query } from "express-validator";
+import ProductController from "../controllers/productController";
+import Authenticator from "./auth";
+import { Category, Product } from "../components/product";
 
 /**
  * Represents a class that defines the routes for handling proposals.
  */
 class ProductRoutes {
-    private controller: ProductController
-    private router: Router
-    private errorHandler: ErrorHandler
-    private authenticator: Authenticator
+    private controller: ProductController;
+    private router: Router;
+    private errorHandler: ErrorHandler;
+    private authenticator: Authenticator;
 
     /**
      * Constructs a new instance of the ProductRoutes class.
      * @param {Authenticator} authenticator - The authenticator object used for authentication.
      */
     constructor(authenticator: Authenticator) {
-        this.authenticator = authenticator
-        this.controller = new ProductController()
-        this.router = express.Router()
-        this.errorHandler = new ErrorHandler()
-        this.initRoutes()
+        this.authenticator = authenticator;
+        this.controller = new ProductController();
+        this.router = express.Router();
+        this.errorHandler = new ErrorHandler();
+        this.initRoutes();
     }
 
     /**
@@ -31,19 +31,18 @@ class ProductRoutes {
      * @returns The router instance.
      */
     getRouter(): Router {
-        return this.router
+        return this.router;
     }
 
     /**
      * Initializes the routes for the product router.
-     * 
+     *
      * @remarks
      * This method sets up the HTTP routes for handling product-related operations such as registering products, registering arrivals, selling products, retrieving products, and deleting products.
      * It can (and should!) apply authentication, authorization, and validation middlewares to protect the routes.
-     * 
+     *
      */
     initRoutes() {
-
         /**
          * Route for registering the arrival of a set of products.
          * It requires the user to be logged in and to be either an admin or a manager.
@@ -58,10 +57,27 @@ class ProductRoutes {
          */
         this.router.post(
             "/",
-            (req: any, res: any, next: any) => this.controller.registerProducts(req.body.model, req.body.category, req.body.quantity, req.body.details, req.body.sellingPrice, req.body.arrivalDate)
-                .then(() => res.status(200).end())
-                .catch((err) => next(err))
-        )
+            body("model").isString().notEmpty(),
+            body("category").isString().isIn(Object.values(Category)),
+            body("quantity").isNumeric().notEmpty(),
+            body("details").isString(),
+            body("sellingPrice").isNumeric().notEmpty(),
+            body("arrivalDate").isString(),
+            this.errorHandler.validateRequest,
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .registerProducts(
+                        req.body.model,
+                        req.body.category,
+                        req.body.quantity,
+                        req.body.details,
+                        req.body.sellingPrice,
+                        req.body.arrivalDate,
+                    )
+                    .then(() => res.status(200).end())
+                    .catch((err) => next(err)),
+        );
 
         /**
          * Route for registering the increase in quantity of a product.
@@ -74,10 +90,23 @@ class ProductRoutes {
          */
         this.router.patch(
             "/:model",
-            (req: any, res: any, next: any) => this.controller.changeProductQuantity(req.params.model, req.body.quantity, req.body.changeDate)
-                .then((quantity: any /**number */) => res.status(200).json({ quantity: quantity }))
-                .catch((err) => next(err))
-        )
+            param("model").isString().notEmpty(),
+            body("quantity").isNumeric().notEmpty(),
+            body("changeDate").isString(),
+            this.errorHandler.validateRequest,
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .changeProductQuantity(
+                        req.params.model,
+                        req.body.quantity,
+                        req.body.changeDate,
+                    )
+                    .then((quantity: number) =>
+                        res.status(200).json({ quantity: quantity }),
+                    )
+                    .catch((err) => next(err)),
+        );
 
         /**
          * Route for selling a product.
@@ -90,13 +119,26 @@ class ProductRoutes {
          */
         this.router.patch(
             "/:model/sell",
-            (req: any, res: any, next: any) => this.controller.sellProduct(req.params.model, req.body.quantity, req.body.sellingDate)
-                .then((quantity: any /**number */) => res.status(200).json({ quantity: quantity }))
-                .catch((err) => {
-                    console.log(err)
-                    next(err)
-                })
-        )
+            param("model").isString().notEmpty(),
+            body("quantity").isNumeric().notEmpty(),
+            body("sellingDate").isString(),
+            this.errorHandler.validateRequest,
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .sellProduct(
+                        req.params.model,
+                        req.body.quantity,
+                        req.body.sellingDate,
+                    )
+                    .then((quantity: number) =>
+                        res.status(200).json({ quantity: quantity }),
+                    )
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
+        );
 
         /**
          * Route for retrieving all products.
@@ -109,13 +151,22 @@ class ProductRoutes {
          */
         this.router.get(
             "/",
-            (req: any, res: any, next: any) => this.controller.getProducts(req.query.grouping, req.query.category, req.query.model)
-                .then((products: any /*Product[]*/) => res.status(200).json(products))
-                .catch((err) => {
-                    console.log(err)
-                    next(err)
-                })
-        )
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getProducts(
+                        req.query.grouping,
+                        req.query.category,
+                        req.query.model,
+                    )
+                    .then((products: Product[]) =>
+                        res.status(200).json(products),
+                    )
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
+        );
 
         /**
          * Route for retrieving all available products.
@@ -128,10 +179,20 @@ class ProductRoutes {
          */
         this.router.get(
             "/available",
-            (req: any, res: any, next: any) => this.controller.getAvailableProducts(req.query.grouping, req.query.category, req.query.model)
-                .then((products: any/*Product[]*/) => res.status(200).json(products))
-                .catch((err) => next(err))
-        )
+            // TODO: should we validate the query parameters? They are not strings
+            this.authenticator.isLoggedIn,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getAvailableProducts(
+                        req.query.grouping,
+                        req.query.category,
+                        req.query.model,
+                    )
+                    .then((products: Product[]) =>
+                        res.status(200).json(products),
+                    )
+                    .catch((err) => next(err)),
+        );
 
         /**
          * Route for deleting all products.
@@ -140,10 +201,13 @@ class ProductRoutes {
          */
         this.router.delete(
             "/",
-            (req: any, res: any, next: any) => this.controller.deleteAllProducts()
-                .then(() => res.status(200).end())
-                .catch((err: any) => next(err))
-        )
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteAllProducts()
+                    .then(() => res.status(200).end())
+                    .catch((err: any) => next(err)),
+        );
 
         /**
          * Route for deleting a product.
@@ -153,13 +217,14 @@ class ProductRoutes {
          */
         this.router.delete(
             "/:model",
-            (req: any, res: any, next: any) => this.controller.deleteProduct(req.params.model)
-                .then(() => res.status(200).end())
-                .catch((err: any) => next(err))
-        )
-
-
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteProduct(req.params.model)
+                    .then(() => res.status(200).end())
+                    .catch((err: any) => next(err)),
+        );
     }
 }
 
-export default ProductRoutes
+export default ProductRoutes;
