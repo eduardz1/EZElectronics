@@ -1,10 +1,5 @@
 import { Product } from "../components/product";
 import db from "../db/db";
-import {
-    ProductNotFoundError,
-    LowProductStockError,
-    EmptyProductStockError,
-} from "../errors/productError";
 
 /**
  * A class that implements the interaction with the database for all product-related operations.
@@ -22,26 +17,60 @@ class ProductDAO {
         return new Promise<boolean>((resolve, reject) => {
             try {
                 const sql =
-                    "INSERT INTO products(model, category, quantity, details, sellingPrice, arrivalDate) VALUES(?, ?, ?, ?, ?, ?)";
-                db.run(
-                    sql,
-                    [
-                        model,
-                        category,
-                        quantity,
-                        details,
-                        sellingPrice,
-                        arrivalDate,
-                    ],
-                    (err: Error | null) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
+                    "INSERT INTO products(model, category, quantity, details, sellingPrice" +
+                    (arrivalDate ? " , arrivalDate" : "") +
+                    (details ? " , details" : "") +
+                    ") VALUES(?, ?, ?, ?, ?" +
+                    (arrivalDate ? ", ?" : "") +
+                    (details ? ", ?" : "") +
+                    ")";
 
-                        resolve(true);
-                    },
-                );
+                const params =
+                    arrivalDate && details
+                        ? [
+                              model,
+                              category,
+                              quantity,
+                              details,
+                              sellingPrice,
+                              arrivalDate,
+                              details,
+                          ]
+                        : arrivalDate
+                          ? [
+                                model,
+                                category,
+                                quantity,
+                                details,
+                                sellingPrice,
+                                arrivalDate,
+                            ]
+                          : details
+                            ? [
+                                  model,
+                                  category,
+                                  quantity,
+                                  details,
+                                  sellingPrice,
+                                  details,
+                              ]
+                            : [
+                                  model,
+                                  category,
+                                  quantity,
+                                  details,
+                                  sellingPrice,
+                              ];
+
+                db.run(sql, params, (err: Error | null) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+
+                    resolve(true);
+                });
             } catch (err) {
                 reject(err);
             }
@@ -326,6 +355,7 @@ class ProductDAO {
                 const sql = "DELETE FROM products WHERE model = ?";
                 db.run(sql, [model], (err: Error | null) => {
                     if (err) {
+                        console.log(err);
                         reject(err);
                         return;
                     }

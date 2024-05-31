@@ -5,10 +5,17 @@ const EMPTY_PRODUCT_STOCK = "Product stock is empty";
 const LOW_PRODUCT_STOCK = "Product stock cannot satisfy the requested quantity";
 const INCORRECT_GROUPING =
     "Grouping cannot be `null` when specifying a `category` or `model`";
-const NULL_CATEGORY_GROUPING =
-    "`category` cannot be `null` when specifying a `category` as a grouping";
-const NULL_MODEL_GROUPING =
-    "`model` cannot be `null` when specifying a `model` as a grouping";
+const INCORRECT_CATEGORY_GROUPING =
+    "`category` cannot be `null` when specifying a `category` as a grouping and `model` should be `null`";
+const INCORRECT_MODEL_GROUPING =
+    "`model` cannot be `null` when specifying a `model` as a grouping and `category` should be `null`";
+const ARRIVAL_DATE_IN_THE_FUTURE = "Arrival date cannot be in the future";
+const CHANGE_DATE_IN_THE_FUTURE = "Change date cannot be in the future";
+const CHANGE_DATE_BEFORE_ARRIVAL_DATE =
+    "Change date cannot be before arrival date";
+const SELLING_DATE_IN_THE_FUTURE = "Selling date cannot be in the future";
+const SELLING_DATE_BEFORE_ARRIVAL_DATE =
+    "Selling date cannot be before arrival date";
 
 /**
  * Represents an error that occurs when a product is not found.
@@ -85,25 +92,80 @@ class IncorrectGroupingError extends Error {
     }
 }
 
-class NullCategoryGroupingError extends Error {
+class IncorrectCategoryGroupingError extends Error {
     customMessage: string;
     customCode: number;
 
     constructor() {
         super();
-        this.customMessage = NULL_CATEGORY_GROUPING;
+        this.customMessage = INCORRECT_CATEGORY_GROUPING;
         this.customCode = 422;
     }
 }
 
-class NullModelGroupingError extends Error {
+class IncorrectModelGroupingError extends Error {
     customMessage: string;
     customCode: number;
 
     constructor() {
         super();
-        this.customMessage = NULL_MODEL_GROUPING;
+        this.customMessage = INCORRECT_MODEL_GROUPING;
         this.customCode = 422;
+    }
+}
+
+class ArrivalDateInTheFutureError extends Error {
+    customMessage: string;
+    customCode: number;
+
+    constructor() {
+        super();
+        this.customMessage = ARRIVAL_DATE_IN_THE_FUTURE;
+        this.customCode = 400;
+    }
+}
+
+class ChangeDateInTheFutureError extends Error {
+    customMessage: string;
+    customCode: number;
+
+    constructor() {
+        super();
+        this.customMessage = CHANGE_DATE_IN_THE_FUTURE;
+        this.customCode = 400;
+    }
+}
+
+class ChangeDateBeforeArrivalDateError extends Error {
+    customMessage: string;
+    customCode: number;
+
+    constructor() {
+        super();
+        this.customMessage = CHANGE_DATE_BEFORE_ARRIVAL_DATE;
+        this.customCode = 400;
+    }
+}
+
+class SellingDateInTheFutureError extends Error {
+    customMessage: string;
+    customCode: number;
+
+    constructor() {
+        super();
+        this.customMessage = SELLING_DATE_IN_THE_FUTURE;
+        this.customCode = 400;
+    }
+}
+
+class SellingDateBeforeArrivalDateError extends Error {
+    customMessage: string;
+    customCode: number;
+
+    constructor() {
+        super();
+        this.customMessage = SELLING_DATE_BEFORE_ARRIVAL_DATE;
+        this.customCode = 400;
     }
 }
 
@@ -114,6 +176,11 @@ export {
     EmptyProductStockError,
     LowProductStockError,
     IncorrectGroupingError,
-    NullCategoryGroupingError,
-    NullModelGroupingError,
+    IncorrectCategoryGroupingError,
+    IncorrectModelGroupingError,
+    ArrivalDateInTheFutureError,
+    ChangeDateInTheFutureError,
+    ChangeDateBeforeArrivalDateError,
+    SellingDateInTheFutureError,
+    SellingDateBeforeArrivalDateError,
 };
