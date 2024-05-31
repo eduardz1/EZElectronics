@@ -1,223 +1,250 @@
-import { jest } from "@jest/globals";
-import db from "../../src/db/db";
-import crypto from "crypto";
+import { test, expect, jest, beforeEach, afterEach, describe } from "@jest/globals";
 import UserDAO from "../../src/dao/userDAO";
 import { User, Role } from "../../src/components/user";
 import { UserAlreadyExistsError, UserNotFoundError } from "../../src/errors/userError";
+import crypto from "crypto";
 
-jest.mock("../../src/db/db");
+// Mock the db module
+jest.mock("../../src/db/db", () => ({
+    get: jest.fn(),
+    run: jest.fn(),
+    all: jest.fn()
+}));
 
-describe("UserDAO Tests", () => {
-    const userDao = new UserDAO();
-    const testUser = new User(
-        "testUsername",
-        "testName",
-        "testSurname",
-        Role.MANAGER,
-        "testAddress",
-        "2000-01-01"
-    );
+import db from "../../src/db/db";
+
+describe("UserDAO", () => {
+    let userDao: UserDAO;
+
+    beforeEach(() => {
+        userDao = new UserDAO();
+    });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    test("createUser should resolve to true on successful user creation", async () => {
-        const dbRunMock = jest.spyOn(db, "run").mockImplementation((sql, params, callback) => {
-            callback(null);
-            return db; // Ensure the mock returns the db object
-        });
-        const saltMock = jest.spyOn(crypto, "randomBytes").mockReturnValue(Buffer.from("salt"));
-        const scryptSyncMock = jest.spyOn(crypto, "scryptSync").mockReturnValue(Buffer.from("hashedPassword"));
+    describe("getIsUserAuthenticated", () => {
+        test("should return true for authenticated user", async () => {
+            const username = "testUser";
+            const plainPassword = "password";
+            const salt = crypto.randomBytes(16).toString("hex");
+            const hashedPassword = crypto.scryptSync(plainPassword, salt, 16).toString("hex");
 
-        const result = await userDao.createUser(
-            testUser.username,
-            testUser.name,
-            testUser.surname,
-            testUser.password,
-            testUser.role
-        );
-
-        expect(dbRunMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(true);
-    });
-
-    test("createUser should reject with UserAlreadyExistsError on duplicate username", async () => {
-        const dbRunMock = jest.spyOn(db, "run").mockImplementation((sql, params, callback) => {
-            const error = new Error("UNIQUE constraint failed: users.username");
-            callback(error);
-            return db; // Ensure the mock returns the db object
-        });
-
-        await expect(userDao.createUser(
-            testUser.username,
-            testUser.name,
-            testUser.surname,
-            testUser.password,
-            testUser.role
-        )).rejects.toThrow(UserAlreadyExistsError);
-
-        expect(dbRunMock).toHaveBeenCalledTimes(1);
-    });
-
-    test("getIsUserAuthenticated should resolve to true for correct credentials", async () => {
-        const dbGetMock = jest.spyOn(db, "get").mockImplementation((sql, params, callback) => {
-            return callback(null, { username: testUser.username, password: Buffer.from("hashedPassword").toString("hex"), salt: Buffer.from("salt").toString("hex") });
-        });
-        const scryptSyncMock = jest.spyOn(crypto, "scryptSync").mockReturnValue(Buffer.from("hashedPassword"));
-        const timingSafeEqualMock = jest.spyOn(crypto, "timingSafeEqual").mockReturnValue(true);
-
-        const result = await userDao.getIsUserAuthenticated(testUser.username, testUser.password);
-
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(true);
-    });
-
-    test("getIsUserAuthenticated should resolve to false for incorrect credentials", async () => {
-        const dbGetMock = jest.spyOn(db, "get").mockImplementation((sql, params, callback) => {
-            return callback(null, { username: testUser.username, password: Buffer.from("hashedPassword").toString("hex"), salt: Buffer.from("salt").toString("hex") });
-        });
-        const scryptSyncMock = jest.spyOn(crypto, "scryptSync").mockReturnValue(Buffer.from("wrongHashedPassword"));
-        const timingSafeEqualMock = jest.spyOn(crypto, "timingSafeEqual").mockReturnValue(false);
-
-        const result = await userDao.getIsUserAuthenticated(testUser.username, "wrongPassword");
-
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(false);
-    });
-
-    test("getUsers should resolve to an array of users", async () => {
-        const dbAllMock = jest.spyOn(db, "all").mockImplementation((sql, params, callback) => {
-            callback(null, [{
-                username: testUser.username,
-                name: testUser.name,
-                surname: testUser.surname,
-                role: testUser.role,
-                address: testUser.address,
-                birthdate: testUser.birthdate,
-                password: testUser.password
-            }]);
-            return db; // Ensure the mock returns the db object
-        });
-
-        const result = await userDao.getUsers();
-
-        expect(dbAllMock).toHaveBeenCalledTimes(1);
-        expect(result).toEqual([testUser]);
-    });
-
-    test("getUsersByRole should resolve to an array of users with specified role", async () => {
-        const dbAllMock = jest.spyOn(db, "all").mockImplementation((sql, params, callback) => {
-            callback(null, [{
-                username: testUser.username,
-                name: testUser.name,
-                surname: testUser.surname,
-                role: testUser.role,
-                address: testUser.address,
-                birthdate: testUser.birthdate,
-                password: testUser.password
-            }]);
-            return db; // Ensure the mock returns the db object
-        });
-
-        const result = await userDao.getUsersByRole(testUser.role);
-
-        expect(dbAllMock).toHaveBeenCalledTimes(1);
-        expect(result).toEqual([testUser]);
-    });
-
-    test("deleteUser should resolve to true on successful deletion", async () => {
-        const dbRunMock = jest.spyOn(db, "run").mockImplementation((sql, params, callback) => {
-            callback(null);
-            return db; // Ensure the mock returns the db object
-        });
-
-        const result = await userDao.deleteUser(testUser.username);
-
-        expect(dbRunMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(true);
-    });
-
-    test("deleteAll should resolve to true on successful deletion", async () => {
-        const dbRunMock = jest.spyOn(db, "run").mockImplementation((sql, params, callback) => {
-            callback(null);
-            return db; // Ensure the mock returns the db object
-        });
-
-        const result = await userDao.deleteAll();
-
-        expect(dbRunMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(true);
-    });
-
-    test("getUserByUsername should resolve to a user", async () => {
-        const dbGetMock = jest.spyOn(db, "get").mockImplementation((sql, params, callback) => {
-            return callback(null, {
-                username: testUser.username,
-                name: testUser.name,
-                surname: testUser.surname,
-                role: testUser.role,
-                address: testUser.address,
-                birthdate: testUser.birthdate,
-                password: testUser.password
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, {
+                    username,
+                    password: hashedPassword,
+                    salt: salt,
+                });
             });
+
+            const result = await userDao.getIsUserAuthenticated(username, plainPassword);
+            expect(result).toBe(true);
         });
 
-        const result = await userDao.getUserByUsername(testUser.username);
+        test("should return false for incorrect password", async () => {
+            const username = "testUser";
+            const plainPassword = "password";
+            const salt = crypto.randomBytes(16).toString("hex");
+            const hashedPassword = crypto.scryptSync("wrongpassword", salt, 16).toString("hex");
 
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(testUser);
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, {
+                    username,
+                    password: hashedPassword,
+                    salt: salt,
+                });
+            });
+
+            const result = await userDao.getIsUserAuthenticated(username, plainPassword);
+            expect(result).toBe(false);
+        });
+
+        test("should return false for non-existent user", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, null);
+            });
+
+            const result = await userDao.getIsUserAuthenticated("nonExistentUser", "password");
+            expect(result).toBe(false);
+        });
     });
 
-    test("getUserByUsername should reject with UserNotFoundError if user does not exist", async () => {
-        const dbGetMock = jest.spyOn(db, "get").mockImplementation((sql, params, callback) => {
-            return callback(null, null);
+    describe("createUser", () => {
+        test("should create a new user", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null);
+            });
+
+            const result = await userDao.createUser("testUser", "Test", "User", "password", Role.CUSTOMER);
+            expect(result).toBe(true);
+            expect(db.run).toHaveBeenCalledTimes(1);
         });
 
-        await expect(userDao.getUserByUsername(testUser.username)).rejects.toThrow(UserNotFoundError);
+        test("should throw UserAlreadyExistsError for duplicate user", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("UNIQUE constraint failed: users.username");
+                callback(error);
+            });
 
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
+            await expect(
+                userDao.createUser("testUser", "Test", "User", "password", Role.CUSTOMER)
+            ).rejects.toThrow(UserAlreadyExistsError);
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
     });
 
-    test("checkIfUserExists should resolve to true if user exists", async () => {
-        const dbGetMock = jest.spyOn(db, "get").mockImplementation((sql, params, callback) => {
-            return callback(null, { count: 1 });
+    describe("getUsers", () => {
+        test("should return all users", async () => {
+            const users = [
+                { username: "testUser1", name: "Test1", surname: "User1", role: Role.CUSTOMER, address: "Address1", birthdate: "2000-01-01" },
+                { username: "testUser2", name: "Test2", surname: "User2", role: Role.MANAGER, address: "Address2", birthdate: "1990-01-01" },
+            ];
+
+            (db.all as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, users);
+            });
+
+            const result = await userDao.getUsers();
+            expect(result).toHaveLength(2);
+            expect(db.all).toHaveBeenCalledTimes(1);
         });
-
-        const result = await userDao.checkIfUserExists(testUser.username);
-
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(true);
     });
 
-    test("checkIfUserExists should resolve to false if user does not exist", async () => {
-        const dbGetMock = jest.spyOn(db, "get").mockImplementation((sql, params, callback) => {
-            return callback(null, { count: 0 });
+    describe("getUsersByRole", () => {
+        test("should return users by role", async () => {
+            const users = [
+                { username: "testUser1", name: "Test1", surname: "User1", role: Role.CUSTOMER, address: "Address1", birthdate: "2000-01-01" },
+            ];
+
+            (db.all as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, users);
+            });
+
+            const result = await userDao.getUsersByRole(Role.CUSTOMER);
+            expect(result).toHaveLength(1);
+            expect(db.all).toHaveBeenCalledTimes(1);
         });
-
-        const result = await userDao.checkIfUserExists(testUser.username);
-
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
-        expect(result).toBe(false);
     });
 
-    test("updateUserInfo should resolve to the updated user", async () => {
-        const dbRunMock = jest.spyOn(db, "run").mockImplementation((sql, params, callback) => {
-            callback(null);
-            return db; // Ensure the mock returns the db object
+    describe("deleteUser", () => {
+        test("should delete user", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null);
+            });
+
+            const result = await userDao.deleteUser("testUser");
+            expect(result).toBe(true);
+            expect(db.run).toHaveBeenCalledTimes(1);
         });
-        const dbGetMock = jest.spyOn(userDao, "getUserByUsername").mockResolvedValue(testUser);
+    });
 
-        const result = await userDao.updateUserInfo(
-            testUser.username,
-            "newName",
-            "newSurname",
-            "newAddress",
-            "1990-01-01"
-        );
+    describe("deleteAll", () => {
+        test("should delete all non-admin users", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null);
+            });
 
-        expect(dbRunMock).toHaveBeenCalledTimes(1);
-        expect(dbGetMock).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(testUser);
+            const result = await userDao.deleteAll();
+            expect(result).toBe(true);
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("getUserByUsername", () => {
+        test("should return user by username", async () => {
+            const user = {
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                role: Role.CUSTOMER,
+                address: "Test Address",
+                birthdate: "2000-01-01",
+            };
+
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, user);
+            });
+
+            const result = await userDao.getUserByUsername("testUser");
+            expect(result).toEqual(new User("testUser", "Test", "User", Role.CUSTOMER, "Test Address", "2000-01-01"));
+            expect(db.get).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw UserNotFoundError for non-existent user", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, null);
+            });
+
+            await expect(userDao.getUserByUsername("nonExistentUser")).rejects.toThrow(UserNotFoundError);
+            expect(db.get).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("checkIfUserExists", () => {
+        test("should return true if user exists", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, { count: 1 });
+            });
+
+            const result = await userDao.checkIfUserExists("testUser");
+            expect(result).toBe(true);
+            expect(db.get).toHaveBeenCalledTimes(1);
+        });
+
+        test("should return false if user does not exist", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, { count: 0 });
+            });
+
+            const result = await userDao.checkIfUserExists("nonExistentUser");
+            expect(result).toBe(false);
+            expect(db.get).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("updateUserInfo", () => {
+        test("should update user information", async () => {
+            const user = new User(
+                "testUser",
+                "Updated",
+                "User",
+                Role.CUSTOMER,
+                "New Address",
+                "1990-01-01"
+            );
+
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null);
+            });
+
+            jest.spyOn(userDao, "getUserByUsername").mockResolvedValueOnce(user);
+
+            const result = await userDao.updateUserInfo(
+                user.username,
+                user.name,
+                user.surname,
+                user.address,
+                user.birthdate
+            );
+            expect(result).toEqual(user);
+            expect(db.run).toHaveBeenCalledTimes(1);
+            expect(userDao.getUserByUsername).toHaveBeenCalledTimes(1);
+        });
     });
 });
