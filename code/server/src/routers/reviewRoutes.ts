@@ -33,19 +33,26 @@ class ReviewRoutes {
          * - comment: string. It cannot be empty.
          * It returns a 200 status code.
          */
-        this.router.post("/:model", (req: any, res: any, next: any) =>
-            this.controller
-                .addReview(
-                    req.params.model,
-                    req.user,
-                    req.body.score,
-                    req.body.comment,
-                )
-                .then(() => res.status(200).send())
-                .catch((err: Error) => {
-                    console.log(err);
-                    next(err);
-                }),
+        this.router.post(
+            "/:model",
+            body("model").isString().notEmpty(),
+            body("score").isInt({ min: 1, max: 5 }),
+            body("comment").isString().notEmpty(),
+            this.authenticator.isCustomer,
+            this.errorHandler.validateRequest,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .addReview(
+                        req.params.model,
+                        req.user,
+                        req.body.score,
+                        req.body.comment,
+                    )
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -54,13 +61,17 @@ class ReviewRoutes {
          * It expects a product model as a route parameter. This parameter must be a non-empty string and the product must exist.
          * It returns an array of reviews
          */
-        this.router.get("/:model", (req: any, res: any, next: any) =>
-            this.controller
-                .getProductReviews(req.params.model)
-                .then((reviews: ProductReview[]) =>
-                    res.status(200).json(reviews),
-                )
-                .catch((err: Error) => next(err)),
+        this.router.get(
+            "/:model",
+            body("model").isString().notEmpty(),
+            this.authenticator.isLoggedIn,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getProductReviews(req.params.model)
+                    .then((reviews: ProductReview[]) =>
+                        res.status(200).json(reviews),
+                    )
+                    .catch((err: Error) => next(err)),
         );
 
         /**
@@ -69,14 +80,17 @@ class ReviewRoutes {
          * It expects a product model as a route parameter. This parameter must be a non-empty string and the product must exist. The user must also have made a review for the product
          * It returns a 200 status code.
          */
-        this.router.delete("/:model", (req: any, res: any, next: any) =>
-            this.controller
-                .deleteReview(req.params.model, req.user)
-                .then(() => res.status(200).send())
-                .catch((err: Error) => {
-                    console.log(err);
-                    next(err);
-                }),
+        this.router.delete(
+            "/:model",
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteReview(req.params.model, req.user)
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -85,11 +99,14 @@ class ReviewRoutes {
          * It expects a product model as a route parameter. This parameter must be a non-empty string and the product must exist.
          * It returns a 200 status code.
          */
-        this.router.delete("/:model/all", (req: any, res: any, next: any) =>
-            this.controller
-                .deleteReviewsOfProduct(req.params.model)
-                .then(() => res.status(200).send())
-                .catch((err: Error) => next(err)),
+        this.router.delete(
+            "/:model/all",
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteReviewsOfProduct(req.params.model)
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => next(err)),
         );
 
         /**
@@ -97,11 +114,14 @@ class ReviewRoutes {
          * It requires the user to be authenticated and to be either an admin or a manager
          * It returns a 200 status code.
          */
-        this.router.delete("/", (req: any, res: any, next: any) =>
-            this.controller
-                .deleteAllReviews()
-                .then(() => res.status(200).send())
-                .catch((err: Error) => next(err)),
+        this.router.delete(
+            "/",
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteAllReviews()
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => next(err)),
         );
     }
 }
