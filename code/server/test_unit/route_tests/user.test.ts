@@ -1,14 +1,22 @@
-import { test, expect, jest, beforeEach, afterEach, describe } from "@jest/globals";
+import {
+    test,
+    expect,
+    jest,
+    beforeEach,
+    afterEach,
+    describe,
+} from "@jest/globals";
 import request from "supertest";
 import express from "express";
-import { UserRoutes, AuthRoutes } from "../../src/routers/userRoutes";
+import UserRoutes from "../../src/routers/userRoutes";
+import AuthRoutes from "../../src/routers/auth"; // Correct import
 import Authenticator from "../../src/routers/auth";
 import UserController from "../../src/controllers/userController";
 import ErrorHandler from "../../src/helper";
 import { User, Role } from "../../src/components/user";
 
 // Mock the dependencies
-jest.mock("../../src/routes/auth");
+jest.mock("../../src/routers/auth");
 jest.mock("../../src/controllers/userController");
 jest.mock("../../src/helper");
 
@@ -35,15 +43,13 @@ describe("UserRoutes", () => {
         test("should create a new user", async () => {
             userController.createUser.mockResolvedValue(true);
 
-            const response = await request(app)
-                .post("/users")
-                .send({
-                    username: "testUser",
-                    name: "Test",
-                    surname: "User",
-                    password: "password",
-                    role: Role.CUSTOMER,
-                });
+            const response = await request(app).post("/users").send({
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                password: "password",
+                role: Role.CUSTOMER,
+            });
 
             expect(response.status).toBe(200);
             expect(userController.createUser).toHaveBeenCalledWith(
@@ -51,7 +57,7 @@ describe("UserRoutes", () => {
                 "Test",
                 "User",
                 "password",
-                Role.CUSTOMER
+                Role.CUSTOMER,
             );
         });
     });
@@ -59,8 +65,22 @@ describe("UserRoutes", () => {
     describe("GET /users", () => {
         test("should retrieve all users", async () => {
             const users: User[] = [
-                new User("testUser1", "Test1", "User1", Role.CUSTOMER, "Address1", "2000-01-01"),
-                new User("testUser2", "Test2", "User2", Role.MANAGER, "Address2", "1990-01-01"),
+                new User(
+                    "testUser1",
+                    "Test1",
+                    "User1",
+                    Role.CUSTOMER,
+                    "Address1",
+                    "2000-01-01",
+                ),
+                new User(
+                    "testUser2",
+                    "Test2",
+                    "User2",
+                    Role.MANAGER,
+                    "Address2",
+                    "1990-01-01",
+                ),
             ];
             userController.getUsers.mockResolvedValue(users);
 
@@ -75,28 +95,51 @@ describe("UserRoutes", () => {
     describe("GET /users/roles/:role", () => {
         test("should retrieve users by role", async () => {
             const users: User[] = [
-                new User("testUser1", "Test1", "User1", Role.CUSTOMER, "Address1", "2000-01-01"),
+                new User(
+                    "testUser1",
+                    "Test1",
+                    "User1",
+                    Role.CUSTOMER,
+                    "Address1",
+                    "2000-01-01",
+                ),
             ];
             userController.getUsersByRole.mockResolvedValue(users);
 
-            const response = await request(app).get(`/users/roles/${Role.CUSTOMER}`);
+            const response = await request(app).get(
+                `/users/roles/${Role.CUSTOMER}`,
+            );
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(users);
-            expect(userController.getUsersByRole).toHaveBeenCalledWith(Role.CUSTOMER);
+            expect(userController.getUsersByRole).toHaveBeenCalledWith(
+                Role.CUSTOMER,
+            );
         });
     });
 
     describe("GET /users/:username", () => {
         test("should retrieve a user by username", async () => {
-            const user = new User("testUser", "Test", "User", Role.CUSTOMER, "Address", "2000-01-01");
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
             userController.getUserByUsername.mockResolvedValue(user);
 
-            const response = await request(app).get("/users/testUser").set("user", JSON.stringify(user));
+            const response = await request(app)
+                .get("/users/testUser")
+                .set("user", JSON.stringify(user));
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(user);
-            expect(userController.getUserByUsername).toHaveBeenCalledWith(user, "testUser");
+            expect(userController.getUserByUsername).toHaveBeenCalledWith(
+                user,
+                "testUser",
+            );
         });
     });
 
@@ -104,12 +147,24 @@ describe("UserRoutes", () => {
         test("should delete a user", async () => {
             userController.deleteUser.mockResolvedValue(true);
 
-            const user = new User("admin", "Admin", "User", Role.ADMIN, "Admin Address", "1990-01-01");
+            const user = new User(
+                "admin",
+                "Admin",
+                "User",
+                Role.ADMIN,
+                "Admin Address",
+                "1990-01-01",
+            );
 
-            const response = await request(app).delete("/users/testUser").set("user", JSON.stringify(user));
+            const response = await request(app)
+                .delete("/users/testUser")
+                .set("user", JSON.stringify(user));
 
             expect(response.status).toBe(200);
-            expect(userController.deleteUser).toHaveBeenCalledWith(user, "testUser");
+            expect(userController.deleteUser).toHaveBeenCalledWith(
+                user,
+                "testUser",
+            );
         });
     });
 
@@ -117,9 +172,18 @@ describe("UserRoutes", () => {
         test("should delete all users", async () => {
             userController.deleteAll.mockResolvedValue(true);
 
-            const user = new User("admin", "Admin", "User", Role.ADMIN, "Admin Address", "1990-01-01");
+            const user = new User(
+                "admin",
+                "Admin",
+                "User",
+                Role.ADMIN,
+                "Admin Address",
+                "1990-01-01",
+            );
 
-            const response = await request(app).delete("/users").set("user", JSON.stringify(user));
+            const response = await request(app)
+                .delete("/users")
+                .set("user", JSON.stringify(user));
 
             expect(response.status).toBe(200);
             expect(userController.deleteAll).toHaveBeenCalled();
@@ -128,8 +192,22 @@ describe("UserRoutes", () => {
 
     describe("PATCH /users/:username", () => {
         test("should update user information", async () => {
-            const user = new User("testUser", "Test", "User", Role.CUSTOMER, "Address", "2000-01-01");
-            const updatedUser = new User("testUser", "Updated", "User", Role.CUSTOMER, "New Address", "2000-01-01");
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            const updatedUser = new User(
+                "testUser",
+                "Updated",
+                "User",
+                Role.CUSTOMER,
+                "New Address",
+                "2000-01-01",
+            );
             userController.updateUserInfo.mockResolvedValue(updatedUser);
 
             const response = await request(app)
@@ -150,7 +228,7 @@ describe("UserRoutes", () => {
                 "User",
                 "New Address",
                 "2000-01-01",
-                "testUser"
+                "testUser",
             );
         });
     });
@@ -164,7 +242,7 @@ describe("AuthRoutes", () => {
         app = express(); // Provide the Express app instance
         authService = new Authenticator(app) as jest.Mocked<Authenticator>;
 
-        const authRoutes = new AuthRoutes(authService);
+        const authRoutes = new AuthRoutes(authService as any); // Ensure this is the correct name and type assertion
         app.use(express.json());
         app.use("/auth", authRoutes.getRouter());
     });
@@ -175,7 +253,14 @@ describe("AuthRoutes", () => {
 
     describe("POST /auth", () => {
         test("should log in a user", async () => {
-            const user = new User("testUser", "Test", "User", Role.CUSTOMER, "Address", "2000-01-01");
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
             authService.login.mockResolvedValue(user);
 
             const response = await request(app).post("/auth").send({
@@ -185,7 +270,11 @@ describe("AuthRoutes", () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(user);
-            expect(authService.login).toHaveBeenCalled();
+            expect(authService.login).toHaveBeenCalledWith(
+                expect.any(Object),
+                expect.any(Object),
+                expect.any(Function),
+            );
         });
     });
 
@@ -196,15 +285,28 @@ describe("AuthRoutes", () => {
             const response = await request(app).delete("/auth/current");
 
             expect(response.status).toBe(200);
-            expect(authService.logout).toHaveBeenCalled();
+            expect(authService.logout).toHaveBeenCalledWith(
+                expect.any(Object),
+                expect.any(Object),
+                expect.any(Function),
+            );
         });
     });
 
     describe("GET /auth/current", () => {
         test("should return the currently logged-in user", async () => {
-            const user = new User("testUser", "Test", "User", Role.CUSTOMER, "Address", "2000-01-01");
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
 
-            const response = await request(app).get("/auth/current").set("user", JSON.stringify(user));
+            const response = await request(app)
+                .get("/auth/current")
+                .set("user", JSON.stringify(user));
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(user);

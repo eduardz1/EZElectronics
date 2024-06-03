@@ -10,6 +10,15 @@ const LocalStrategy = require("passport-local").Strategy;
  * Represents a class that defines the routes for handling authentication.
  */
 class Authenticator {
+    getRouter(): import("express-serve-static-core").RequestHandler<
+        {},
+        any,
+        any,
+        import("qs").ParsedQs,
+        Record<string, any>
+    > {
+        throw new Error("Method not implemented.");
+    }
     private app: express.Application;
     private dao: UserDAO;
 

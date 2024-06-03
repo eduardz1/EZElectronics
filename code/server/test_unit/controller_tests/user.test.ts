@@ -8,7 +8,10 @@ import {
 } from "@jest/globals";
 import UserController from "../../src/controllers/userController";
 import UserDAO from "../../src/dao/userDAO";
-import { UserNotAdminError, UserNotFoundError } from "../../src/errors/userError";
+import {
+    UserNotAdminError,
+    UserNotFoundError,
+} from "../../src/errors/userError";
 import { User, Role } from "../../src/components/user";
 
 beforeEach(() => {
@@ -28,9 +31,11 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "createUser").mockResolvedValueOnce(true);
+            jest.spyOn(UserDAO.prototype, "createUser").mockResolvedValueOnce(
+                true,
+            );
             const controller = new UserController();
             const response = await controller.createUser(
                 testUser.username,
@@ -60,9 +65,11 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "getUsers").mockResolvedValueOnce([testUser]);
+            jest.spyOn(UserDAO.prototype, "getUsers").mockResolvedValueOnce([
+                testUser,
+            ]);
             const controller = new UserController();
             const response = await controller.getUsers();
 
@@ -79,14 +86,19 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "getUsersByRole").mockResolvedValueOnce([testUser]);
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUsersByRole",
+            ).mockResolvedValueOnce([testUser]);
             const controller = new UserController();
             const response = await controller.getUsersByRole(Role.CUSTOMER);
 
             expect(UserDAO.prototype.getUsersByRole).toHaveBeenCalledTimes(1);
-            expect(UserDAO.prototype.getUsersByRole).toHaveBeenCalledWith(Role.CUSTOMER);
+            expect(UserDAO.prototype.getUsersByRole).toHaveBeenCalledWith(
+                Role.CUSTOMER,
+            );
             expect(response).toEqual([testUser]);
         });
     });
@@ -99,7 +111,7 @@ describe("UserController", () => {
                 "User",
                 Role.ADMIN,
                 "Admin Address",
-                "1990-01-01"
+                "1990-01-01",
             );
             const targetUser = new User(
                 "targetUser",
@@ -107,14 +119,24 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Target Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "getUserByUsername").mockResolvedValueOnce(targetUser);
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(targetUser);
             const controller = new UserController();
-            const response = await controller.getUserByUsername(adminUser, "targetUser");
+            const response = await controller.getUserByUsername(
+                adminUser,
+                "targetUser",
+            );
 
-            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledTimes(1);
-            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledWith("targetUser");
+            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledTimes(
+                1,
+            );
+            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledWith(
+                "targetUser",
+            );
             expect(response).toEqual(targetUser);
         });
 
@@ -125,14 +147,24 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "getUserByUsername").mockResolvedValueOnce(testUser);
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(testUser);
             const controller = new UserController();
-            const response = await controller.getUserByUsername(testUser, "testUser");
+            const response = await controller.getUserByUsername(
+                testUser,
+                "testUser",
+            );
 
-            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledTimes(1);
-            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledWith("testUser");
+            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledTimes(
+                1,
+            );
+            expect(UserDAO.prototype.getUserByUsername).toHaveBeenCalledWith(
+                "testUser",
+            );
             expect(response).toEqual(testUser);
         });
 
@@ -143,10 +175,19 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
             const controller = new UserController();
-            await expect(controller.getUserByUsername(testUser, "targetUser")).rejects.toThrow(UserNotAdminError);
+
+            // Mock checkIfUserExists to return true
+            jest.spyOn(
+                UserDAO.prototype,
+                "checkIfUserExists",
+            ).mockResolvedValueOnce(true);
+
+            await expect(
+                controller.getUserByUsername(testUser, "targetUser"),
+            ).rejects.toThrow(UserNotAdminError);
         });
     });
 
@@ -158,14 +199,18 @@ describe("UserController", () => {
                 "User",
                 Role.ADMIN,
                 "Admin Address",
-                "1990-01-01"
+                "1990-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "deleteUser").mockResolvedValueOnce(true);
+            jest.spyOn(UserDAO.prototype, "deleteUser").mockResolvedValueOnce(
+                true,
+            );
             const controller = new UserController();
             const response = await controller.deleteUser(adminUser, "testUser");
 
             expect(UserDAO.prototype.deleteUser).toHaveBeenCalledTimes(1);
-            expect(UserDAO.prototype.deleteUser).toHaveBeenCalledWith("testUser");
+            expect(UserDAO.prototype.deleteUser).toHaveBeenCalledWith(
+                "testUser",
+            );
             expect(response).toBe(true);
         });
 
@@ -176,14 +221,18 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "deleteUser").mockResolvedValueOnce(true);
+            jest.spyOn(UserDAO.prototype, "deleteUser").mockResolvedValueOnce(
+                true,
+            );
             const controller = new UserController();
             const response = await controller.deleteUser(testUser, "testUser");
 
             expect(UserDAO.prototype.deleteUser).toHaveBeenCalledTimes(1);
-            expect(UserDAO.prototype.deleteUser).toHaveBeenCalledWith("testUser");
+            expect(UserDAO.prototype.deleteUser).toHaveBeenCalledWith(
+                "testUser",
+            );
             expect(response).toBe(true);
         });
 
@@ -194,16 +243,20 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
             const controller = new UserController();
-            await expect(controller.deleteUser(testUser, "targetUser")).rejects.toThrow(UserNotAdminError);
+            await expect(
+                controller.deleteUser(testUser, "targetUser"),
+            ).rejects.toThrow(UserNotAdminError);
         });
     });
 
     describe("deleteAll", () => {
         test("Admin deletes all non-admin users", async () => {
-            jest.spyOn(UserDAO.prototype, "deleteAll").mockResolvedValueOnce(true);
+            jest.spyOn(UserDAO.prototype, "deleteAll").mockResolvedValueOnce(
+                true,
+            );
             const controller = new UserController();
             const response = await controller.deleteAll();
 
@@ -220,7 +273,7 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
             const updatedUser = new User(
                 "testUser",
@@ -228,10 +281,16 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "New Address",
-                "2000-01-01"
+                "2000-01-01",
             );
-            jest.spyOn(UserDAO.prototype, "checkIfUserExists").mockResolvedValueOnce(true);
-            jest.spyOn(UserDAO.prototype, "updateUserInfo").mockResolvedValueOnce(updatedUser);
+            jest.spyOn(
+                UserDAO.prototype,
+                "checkIfUserExists",
+            ).mockResolvedValueOnce(true);
+            jest.spyOn(
+                UserDAO.prototype,
+                "updateUserInfo",
+            ).mockResolvedValueOnce(updatedUser);
             const controller = new UserController();
             const response = await controller.updateUserInfo(
                 testUser,
@@ -242,14 +301,16 @@ describe("UserController", () => {
                 testUser.username,
             );
 
-            expect(UserDAO.prototype.checkIfUserExists).toHaveBeenCalledTimes(1);
+            expect(UserDAO.prototype.checkIfUserExists).toHaveBeenCalledTimes(
+                1,
+            );
             expect(UserDAO.prototype.updateUserInfo).toHaveBeenCalledTimes(1);
             expect(UserDAO.prototype.updateUserInfo).toHaveBeenCalledWith(
                 testUser.username,
                 updatedUser.name,
                 updatedUser.surname,
                 updatedUser.address,
-                updatedUser.birthdate
+                updatedUser.birthdate,
             );
             expect(response).toEqual(updatedUser);
         });
@@ -261,9 +322,16 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
             const controller = new UserController();
+
+            // Mock checkIfUserExists to return true
+            jest.spyOn(
+                UserDAO.prototype,
+                "checkIfUserExists",
+            ).mockResolvedValueOnce(true);
+
             await expect(
                 controller.updateUserInfo(
                     testUser,
@@ -283,9 +351,16 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
             const controller = new UserController();
+
+            // Mock checkIfUserExists to return true
+            jest.spyOn(
+                UserDAO.prototype,
+                "checkIfUserExists",
+            ).mockResolvedValueOnce(true);
+
             await expect(
                 controller.updateUserInfo(
                     testUser,
@@ -305,10 +380,13 @@ describe("UserController", () => {
                 "User",
                 Role.CUSTOMER,
                 "Test Address",
-                "2000-01-01"
+                "2000-01-01",
             );
 
-            jest.spyOn(UserDAO.prototype, "checkIfUserExists").mockResolvedValueOnce(false);
+            jest.spyOn(
+                UserDAO.prototype,
+                "checkIfUserExists",
+            ).mockResolvedValueOnce(false);
 
             const controller = new UserController();
             await expect(
@@ -318,8 +396,8 @@ describe("UserController", () => {
                     "User",
                     "New Address",
                     "1990-01-01",
-                    testUser.username
-                )
+                    testUser.username,
+                ),
             ).rejects.toThrow(UserNotFoundError);
         });
     });
