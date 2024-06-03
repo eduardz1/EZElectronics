@@ -9,6 +9,7 @@ import { Role, User } from "../../src/components/user";
 import ReviewController from "../../src/controllers/reviewController";
 import { ExistingReviewError } from "../../src/errors/reviewError";
 import { ProductNotFoundError } from "../../src/errors/productError";
+import { ProductReview } from "../../src/components/review";
 
 jest.mock("../../src/routers/auth");
 jest.mock("../../src/controllers/productController");
@@ -51,7 +52,6 @@ describe("Review routes", () => {
             );
             expect(ReviewController.prototype.addReview).toHaveBeenCalledWith(
                 testReview.model,
-                testReview.user,
                 testReview.score,
                 testReview.comment,
             );
@@ -77,7 +77,7 @@ describe("Review routes", () => {
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app)
-                .post(`${baseURL}/`)
+                .post(`${baseURL}/model`)
                 .send(testReview);
 
             expect(response.status).toBe(422);
@@ -106,7 +106,7 @@ describe("Review routes", () => {
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app)
-                .post(`${baseURL}/`)
+                .post(`${baseURL}/model`)
                 .send(testReview);
 
             expect(response.status).toBe(401);
@@ -139,7 +139,7 @@ describe("Review routes", () => {
             ).mockRejectedValueOnce(new ExistingReviewError());
 
             const response = await request(app)
-                .post(`${baseURL}/`)
+                .post(`${baseURL}/model`)
                 .send(testReview);
 
             expect(response.status).toBe(409);
@@ -174,7 +174,7 @@ describe("Review routes", () => {
             ).mockRejectedValueOnce(new ProductNotFoundError());
 
             const response = await request(app)
-                .post(`${baseURL}/`)
+                .post(`${baseURL}/model`)
                 .send(testReview);
 
             expect(response.status).toBe(404);
@@ -187,26 +187,60 @@ describe("Review routes", () => {
 
     describe(`GET ${baseURL}/:model`, () => {
         test(`Returns 200 if successful`, async () => {
-            const testUser = new User(
-                "username",
-                "name",
-                "surname",
-                Role.CUSTOMER,
-                "address",
-                "1998-04-09",
-            );
+            const testUsers: User[] = [
+                new User(
+                    "username1",
+                    "name",
+                    "surname",
+                    Role.CUSTOMER,
+                    "address",
+                    "1998-04-09",
+                ),
+                new User(
+                    "username2",
+                    "name",
+                    "surname",
+                    Role.CUSTOMER,
+                    "address",
+                    "1998-04-09",
+                ),
+                new User(
+                    "username3",
+                    "name",
+                    "surname",
+                    Role.CUSTOMER,
+                    "address",
+                    "1998-04-09",
+                ),
+            ];
 
-            const testReview = {
-                model: "model",
-                user: testUser.username,
-                score: 5,
-                date: "",
-                comment: "Great product!",
-            };
+            const testReviews: ProductReview[] = [
+                {
+                    model: "model1",
+                    user: testUsers[0].username,
+                    score: 5,
+                    date: "",
+                    comment: "Great product!",
+                },
+                {
+                    model: "model1",
+                    user: testUsers[1].username,
+                    score: 4,
+                    date: "",
+                    comment: "Good product!",
+                },
+                {
+                    model: "model1",
+                    user: testUsers[2].username,
+                    score: 3,
+                    date: "",
+                    comment: "Average product!",
+                },
+            ];
             jest.spyOn(
                 ReviewController.prototype,
                 "getProductReviews",
-            ).mockResolvedValueOnce([testReview]);
+            ).mockResolvedValueOnce(testReviews);
             jest.spyOn(
                 Authenticator.prototype,
                 "isLoggedIn",
@@ -215,7 +249,7 @@ describe("Review routes", () => {
             const response = await request(app).get(`${baseURL}/`);
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual([testReview]);
+            expect(response.body).toEqual(testReviews);
             expect(
                 ReviewController.prototype.getProductReviews,
             ).toHaveBeenCalledTimes(1);
@@ -297,7 +331,7 @@ describe("Review routes", () => {
         });
     });
 
-    describe(`DELETE ${baseURL}/`, () => {
+    describe(`DELETE ${baseURL}/:model/all`, () => {
         test(`Returns 200 if successful`, async () => {
             jest.spyOn(
                 ReviewController.prototype,
@@ -330,7 +364,7 @@ describe("Review routes", () => {
                 }),
             );
 
-            const response = await request(app).delete(`${baseURL}/`);
+            const response = await request(app).delete(`${baseURL}/model/all`);
 
             expect(response.status).toBe(401);
             expect(

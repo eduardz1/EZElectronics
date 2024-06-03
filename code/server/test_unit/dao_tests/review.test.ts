@@ -22,19 +22,18 @@ afterEach(() => {
     jest.resetAllMocks();
 });
 
-const address = "123 Main St";
-const testUser = {
-    username: "username",
-    name: "name",
-    surname: "surname",
-    role: Role.CUSTOMER,
-    address: address,
-    birthdate: "1965-10-10",
-};
-
 describe("ReviewDAO", () => {
     describe("addReview", () => {
         test("Add a review", async () => {
+            const testUser = {
+                username: "username",
+                name: "name",
+                surname: "surname",
+                role: Role.CUSTOMER,
+                address: "123 Main St",
+                birthdate: "1965-10-10",
+            };
+
             const reviewDAO = new ReviewDAO();
             jest.spyOn(db, "run").mockImplementation(
                 (_sql, _params, callback) => {
@@ -53,6 +52,15 @@ describe("ReviewDAO", () => {
         });
 
         test("Fails to add a review", async () => {
+            const testUser = {
+                username: "username",
+                name: "name",
+                surname: "surname",
+                role: Role.CUSTOMER,
+                address: "123 Main St",
+                birthdate: "1965-10-10",
+            };
+
             const reviewDAO = new ReviewDAO();
             jest.spyOn(db, "run").mockImplementation(
                 (_sql, _params, callback) => {
@@ -67,12 +75,28 @@ describe("ReviewDAO", () => {
                 });
         });
 
-        describe("getProductReviews", () => {
+        describe("checkExistsReview", () => {
             test("Check for an existing review for a spefic product and user", async () => {
+                const testUser = {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                };
+
+                const testReview = {
+                    model: "model",
+                    user: testUser,
+                    score: 3,
+                    comment: "details",
+                };
+
                 const reviewDAO = new ReviewDAO();
                 jest.spyOn(db, "run").mockImplementation(
                     (_sql, _params, callback) => {
-                        callback(null);
+                        callback(null, testReview);
                         return {} as Database;
                     },
                 );
@@ -86,6 +110,15 @@ describe("ReviewDAO", () => {
 
         describe("getProductReviews", () => {
             test("Gets all the review for a specific model", async () => {
+                const testUser = {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                };
+
                 const testReview = {
                     model: "model",
                     user: testUser,
@@ -107,7 +140,7 @@ describe("ReviewDAO", () => {
                 const reviewDAO = new ReviewDAO();
                 jest.spyOn(db, "get").mockImplementation(
                     (_sql, _params, callback) => {
-                        callback(null, undefined);
+                        callback(null, null);
                         return {} as Database;
                     },
                 );
@@ -131,18 +164,43 @@ describe("ReviewDAO", () => {
 
         describe("deleteReview", () => {
             test("Deletes a review from the database", async () => {
+                const testUser = {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                };
+
+                const testReview = {
+                    model: "model",
+                    user: testUser,
+                    score: 3,
+                    comment: "details",
+                };
+
                 const reviewDAO = new ReviewDAO();
                 jest.spyOn(db, "run").mockImplementation(
                     (_sql, _params, callback) => {
-                        callback(null);
+                        callback(null, testReview);
                         return {} as Database;
                     },
                 );
                 const result = await reviewDAO.deleteReview("model", testUser);
-                expect(result).toBe(true);
+                expect(result).toBe(undefined);
             });
 
             test("Fails to delete a review from the database", async () => {
+                const testUser = {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                };
+
                 const reviewDAO = new ReviewDAO();
                 jest.spyOn(db, "run").mockImplementation(
                     (_sql, _params, callback) => {
@@ -166,7 +224,7 @@ describe("ReviewDAO", () => {
                     },
                 );
                 const result = await reviewDAO.deleteReviewsOfProduct("model");
-                expect(result).toBe(true);
+                expect(result).toBe(undefined);
             });
             test("Fails to delete reviews of a specific product", async () => {
                 const reviewDAO = new ReviewDAO();
@@ -184,15 +242,30 @@ describe("ReviewDAO", () => {
 
         describe("deleteAllReviews", () => {
             test("Deletes all reviews from the database", async () => {
+                const testUser = {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                };
+
+                const testReview = {
+                    model: "model",
+                    user: testUser,
+                    score: 3,
+                    comment: "details",
+                };
                 const reviewDAO = new ReviewDAO();
                 jest.spyOn(db, "run").mockImplementation(
                     (_sql, _params, callback) => {
-                        callback(null);
+                        callback(null, testReview);
                         return {} as Database;
                     },
                 );
                 const result = await reviewDAO.deleteAllReviews();
-                expect(result).toBe(true);
+                expect(result).toBe(undefined);
             });
 
             test("Fails to delete all reviews from the database", async () => {
