@@ -8,6 +8,12 @@ import db from "../db/db";
  * You are free to implement any method you need here, as long as the requirements are satisfied.
  */
 class CartDAO {
+    addProductToCart(addProductToCart: any) {
+        throw new Error("Method not implemented.");
+    }
+    getCartItems(getCartItems: any) {
+        throw new Error("Method not implemented.");
+    }
     /**
      * Adds a product to the user's cart. Increases the quantity by 1 if the product is already in the cart.
      * If no active cart exists, it creates a new one.

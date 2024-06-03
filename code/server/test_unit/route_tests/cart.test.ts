@@ -2,7 +2,8 @@ import { test, expect, jest, describe, afterEach } from "@jest/globals";
 import cartController from "../../src/controllers/cartController";
 import CartDAO from "../../src/dao/cartDAO";
 import db from "../../src/db/db";
-import { User } from "../../src/components/user";
+import { Role, User } from "../../src/components/user";
+import { beforeEach } from "node:test";
 
 jest.mock("../../src/db/db");
 
@@ -12,7 +13,14 @@ describe("CartDAO", () => {
 
     beforeEach(() => {
         cartDao = new CartDAO();
-        mockUser = new User("testuser", "User");
+        mockUser = new User(
+            "testuser",
+            "User",
+            "User",
+            Role.CUSTOMER,
+            "User",
+            "User",
+        );
         jest.clearAllMocks();
     });
 

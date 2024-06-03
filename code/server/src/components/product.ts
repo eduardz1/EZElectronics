@@ -7,8 +7,7 @@ class Product {
     category: Category;
     arrivalDate: string | null;
     details: string | null;
-    quantity: number
-
+    quantity: number;
 
     /**
      * Creates a new instance of the Product class.
@@ -19,7 +18,14 @@ class Product {
      * @param details The optional details of the product
      * @param quantity The available quantity of the product (number of units). If it is 0, the product is out of stock.
      */
-    constructor(sellingPrice: number, model: string, category: Category, arrivalDate: string | null, details: string | null, quantity: number) {
+    constructor(
+        sellingPrice: number,
+        model: string,
+        category: Category,
+        arrivalDate: string | null,
+        details: string | null,
+        quantity: number,
+    ) {
         this.sellingPrice = sellingPrice;
         this.model = model;
         this.category = category;
@@ -36,6 +42,7 @@ enum Category {
     SMARTPHONE = "Smartphone",
     LAPTOP = "Laptop",
     APPLIANCE = "Appliance",
+    Electronics = "Electronics",
 }
 
-export { Product, Category }
+export { Product, Category };
