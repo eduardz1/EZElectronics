@@ -7,7 +7,6 @@ import {
     ExistingReviewError,
     NoReviewProductError,
 } from "../errors/reviewError";
-import { UserNotCustomerError } from "../errors/userError";
 
 class ReviewController {
     private dao: ReviewDAO;

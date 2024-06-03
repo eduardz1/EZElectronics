@@ -5,6 +5,7 @@ const USER_NOT_CUSTOMER = "This operation can be performed only by a customer";
 const USER_NOT_ADMIN = "This operation can be performed only by an admin";
 const USER_IS_ADMIN = "Admins cannot be deleted";
 const UNAUTHORIZED_USER = "You cannot access the information of other users";
+const BIRTHDATE_ERROR = "The birthdate cannot be after the current date";
 
 /**
  * Represents an error that occurs when a user is not found.
@@ -95,6 +96,17 @@ class UnauthorizedUserError extends Error {
     }
 }
 
+class BirthdateError extends Error {
+    customMessage: string;
+    customCode: number;
+
+    constructor() {
+        super();
+        this.customMessage = BIRTHDATE_ERROR;
+        this.customCode = 400;
+    }
+}
+
 export {
     UserNotFoundError,
     UserNotManagerError,
@@ -103,4 +115,5 @@ export {
     UserNotAdminError,
     UserIsAdminError,
     UnauthorizedUserError,
+    BirthdateError,
 };

@@ -1,6 +1,11 @@
 import { User } from "../components/user";
 import UserDAO from "../dao/userDAO";
-import { UserNotAdminError, UserNotFoundError } from "../errors/userError";
+import {
+    BirthdateError,
+    UserIsAdminError,
+    UserNotAdminError,
+    UserNotFoundError,
+} from "../errors/userError";
 import dayjs from "dayjs";
 
 /**
@@ -63,7 +68,13 @@ class UserController {
             throw new UserNotAdminError();
         }
 
-        return this.dao.getUserByUsername(username);
+        const res = await this.dao.getUserByUsername(username);
+
+        if (res.role === "Admin" && user.username !== username) {
+            throw new UserIsAdminError();
+        }
+
+        return res;
     }
 
     /**
@@ -108,7 +119,7 @@ class UserController {
         birthdate: string,
         username: string,
     ): Promise<User> {
-        if ((await this.dao.checkIfUserExists(username)) === false) {
+        if (!(await this.dao.checkIfUserExists(username))) {
             throw new UserNotFoundError();
         }
 
@@ -117,16 +128,15 @@ class UserController {
         }
 
         if (dayjs(birthdate).isAfter(dayjs())) {
-            // TODO: check if it defaults to 400
-            throw new Error("The birthdate cannot be after the current date");
+            throw new BirthdateError();
         }
 
         return this.dao.updateUserInfo(
+            username,
             name,
             surname,
             address,
             birthdate,
-            username,
         );
     }
 }

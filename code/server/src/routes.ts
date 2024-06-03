@@ -6,6 +6,7 @@ import ProductRoutes from "./routers/productRoutes";
 import CartRoutes from "./routers/cartRoutes";
 import ReviewRoutes from "./routers/reviewRoutes";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const morgan = require("morgan");
 const prefix = "/ezelectronics";
 
