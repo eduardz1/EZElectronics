@@ -1165,14 +1165,6 @@ describe("Product routes", () => {
         });
 
         test(`Returns 422 if grouping is null and any of category or model are specified`, async () => {
-            const testProduct = {
-                model: "model",
-                category: Category.APPLIANCE,
-                quantity: 1,
-                details: "details",
-                sellingPrice: 1,
-                arrivalDate: "2022-01-01",
-            };
             jest.spyOn(
                 ProductController.prototype,
                 "getProducts",
@@ -1194,14 +1186,6 @@ describe("Product routes", () => {
         });
 
         test(`Returns 422 if grouping is "category" and category is null`, async () => {
-            const testProduct = {
-                model: "model",
-                category: Category.APPLIANCE,
-                quantity: 1,
-                details: "details",
-                sellingPrice: 1,
-                arrivalDate: "2022-01-01",
-            };
             jest.spyOn(
                 Authenticator.prototype,
                 "isAdminOrManager",
@@ -1225,14 +1209,6 @@ describe("Product routes", () => {
         });
 
         test(`Returns 422 if grouping is "category" and model is specified`, async () => {
-            const testProduct = {
-                model: "model",
-                category: Category.APPLIANCE,
-                quantity: 1,
-                details: "details",
-                sellingPrice: 1,
-                arrivalDate: "2022-01-01",
-            };
             jest.spyOn(
                 Authenticator.prototype,
                 "isAdminOrManager",

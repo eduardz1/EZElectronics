@@ -2,9 +2,9 @@ import express from "express";
 import { User } from "../components/user";
 import UserDAO from "../dao/userDAO";
 import { Utility } from "../utilities";
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+import session from "express-session";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
 
 /**
  * Represents a class that defines the routes for handling authentication.
@@ -42,14 +42,12 @@ class Authenticator {
                 secret: "ezelectronicssecretse2324",
                 resave: false,
                 saveUninitialized: false,
-                maxAge: 7 * 24 * 60 * 60 * 1000,
+                cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
             }),
         );
 
         this.app.use(passport.initialize()); // Initialize passport
         this.app.use(passport.session()); // Initialize passport session
-
-        const copyThis = this;
 
         /**
          * Sets up the local strategy for passport.
@@ -59,11 +57,11 @@ class Authenticator {
         passport.use(
             new LocalStrategy(
                 (username: string, password: string, done: any) => {
-                    copyThis.dao
+                    this.dao
                         .getIsUserAuthenticated(username, password)
                         .then((authenticated: boolean) => {
                             if (authenticated) {
-                                copyThis.dao
+                                this.dao
                                     .getUserByUsername(username)
                                     .then((user: User) => {
                                         return done(null, user);
@@ -83,8 +81,8 @@ class Authenticator {
          * Serializes the user to the session.
          * This method is called when a user is authenticated and the user is serialized to the session.
          */
-        passport.serializeUser((user: User, done: any) => {
-            done(null, user);
+        passport.serializeUser((user: any, done: any) => {
+            done(null, user.username);
         });
 
         /**
@@ -133,12 +131,12 @@ class Authenticator {
     /**
      * Logs out the user.
      * @param req - The request object.
-     * @param res - The response object.
-     * @param next - The next middleware function.
+     * @param _res - The response object.
+     * @param _next - The next middleware function.
      * @returns A Promise that resolves to null.
      */
-    logout(req: any, res: any, next: any) {
-        return new Promise((resolve, reject) => {
+    logout(req: any, _res: any, _next: any) {
+        return new Promise((resolve, _reject) => {
             req.logout(() => resolve(null));
         });
     }

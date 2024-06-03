@@ -1,13 +1,6 @@
-import { rejects } from "assert";
 import { User } from "../components/user";
 import { ProductReview } from "../components/review";
-import { resolve } from "path";
-import {
-    ExistingReviewError,
-    NoReviewProductError,
-} from "../errors/reviewError";
 import db from "../db/db";
-import { error } from "console";
 
 /**
  * A class that implements the interaction with the database for all review-related operations.

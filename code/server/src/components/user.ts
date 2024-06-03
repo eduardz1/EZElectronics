@@ -2,15 +2,12 @@
  * Represents a user in the system.
  */
 class User {
-    password(username: string, name: string, surname: string, password: any, role: Role) {
-        throw new Error("Method not implemented.")
-    }
-    username: string
-    name: string
-    surname: string
-    role: Role
-    address: string
-    birthdate: string
+    username: string;
+    name: string;
+    surname: string;
+    role: Role;
+    address: string;
+    birthdate: string;
 
     /**
      * Creates a new instance of the User class.
@@ -21,13 +18,20 @@ class User {
      * @param address - The address of the user. Is null when the user is created, can be updated later.
      * @param birthdate - The birthdate of the user. Is null when the user is created, can be updated later.
      */
-    constructor(username: string, name: string, surname: string, role: Role, address: string, birthdate: string) {
-        this.username = username
-        this.name = name
-        this.surname = surname
-        this.role = role
-        this.address = address
-        this.birthdate = birthdate
+    constructor(
+        username: string,
+        name: string,
+        surname: string,
+        role: Role,
+        address: string,
+        birthdate: string,
+    ) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.role = role;
+        this.address = address;
+        this.birthdate = birthdate;
     }
 }
 
@@ -38,7 +42,7 @@ class User {
 enum Role {
     MANAGER = "Manager",
     CUSTOMER = "Customer",
-    ADMIN = "Admin"
+    ADMIN = "Admin",
 }
 
-export { User, Role }
+export { User, Role };
