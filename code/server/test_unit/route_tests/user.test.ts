@@ -1,49 +1,35 @@
-import {
-    test,
-    expect,
-    jest,
-    beforeEach,
-    afterEach,
-    describe,
-} from "@jest/globals";
+import { test, expect, jest, afterEach, describe } from "@jest/globals";
 import request from "supertest";
-import express from "express";
-import UserRoutes from "../../src/routers/userRoutes";
-import AuthRoutes from "../../src/routers/auth"; // Correct import
+import { app } from "../../index";
 import Authenticator from "../../src/routers/auth";
 import UserController from "../../src/controllers/userController";
-import ErrorHandler from "../../src/helper";
 import { User, Role } from "../../src/components/user";
+import {
+    BirthdateError,
+    UserAlreadyExistsError,
+    UserIsAdminError,
+    UserNotAdminError,
+    UserNotFoundError,
+} from "../../src/errors/userError";
 
-// Mock the dependencies
+const baseURL = "/ezelectronics/users";
+
 jest.mock("../../src/routers/auth");
 jest.mock("../../src/controllers/userController");
-jest.mock("../../src/helper");
+
+afterEach(() => {
+    jest.resetAllMocks();
+});
 
 describe("UserRoutes", () => {
-    let app: express.Application;
-    let authService: jest.Mocked<Authenticator>;
-    let userController: jest.Mocked<UserController>;
+    describe(`POST ${baseURL}/`, () => {
+        test("Returns 200 if successful", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
 
-    beforeEach(() => {
-        app = express(); // Provide the Express app instance
-        authService = new Authenticator(app) as jest.Mocked<Authenticator>;
-        userController = new UserController() as jest.Mocked<UserController>;
-
-        const userRoutes = new UserRoutes(authService);
-        app.use(express.json());
-        app.use("/users", userRoutes.getRouter());
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    describe("POST /users", () => {
-        test("should create a new user", async () => {
-            userController.createUser.mockResolvedValue(true);
-
-            const response = await request(app).post("/users").send({
+            const response = await request(app).post(`${baseURL}/`).send({
                 username: "testUser",
                 name: "Test",
                 surname: "User",
@@ -52,7 +38,7 @@ describe("UserRoutes", () => {
             });
 
             expect(response.status).toBe(200);
-            expect(userController.createUser).toHaveBeenCalledWith(
+            expect(UserController.prototype.createUser).toHaveBeenCalledWith(
                 "testUser",
                 "Test",
                 "User",
@@ -60,10 +46,137 @@ describe("UserRoutes", () => {
                 Role.CUSTOMER,
             );
         });
+
+        test("Returns 409 if user already exists", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockRejectedValue(new UserAlreadyExistsError());
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                password: "password",
+                role: Role.CUSTOMER,
+            });
+
+            expect(response.status).toBe(409);
+            expect(UserController.prototype.createUser).toHaveBeenCalledWith(
+                "testUser",
+                "Test",
+                "User",
+                "password",
+                Role.CUSTOMER,
+            );
+        });
+
+        test("Returns 422 if username is missing", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                name: "Test",
+                surname: "User",
+                password: "password",
+                role: Role.CUSTOMER,
+            });
+
+            expect(response.status).toBe(422);
+            expect(UserController.prototype.createUser).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if name is missing", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                surname: "User",
+                password: "password",
+                role: Role.CUSTOMER,
+            });
+
+            expect(response.status).toBe(422);
+            expect(UserController.prototype.createUser).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if surname is missing", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                name: "Test",
+                password: "password",
+                role: Role.CUSTOMER,
+            });
+
+            expect(response.status).toBe(422);
+            expect(UserController.prototype.createUser).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if password is missing", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                role: Role.CUSTOMER,
+            });
+
+            expect(response.status).toBe(422);
+            expect(UserController.prototype.createUser).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if role is missing", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                password: "password",
+            });
+
+            expect(response.status).toBe(422);
+            expect(UserController.prototype.createUser).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if role is invalid", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockResolvedValueOnce(true);
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                password: "password",
+                role: "Invalid",
+            });
+
+            expect(response.status).toBe(422);
+            expect(UserController.prototype.createUser).not.toHaveBeenCalled();
+        });
     });
 
-    describe("GET /users", () => {
-        test("should retrieve all users", async () => {
+    describe(`GET ${baseURL}/`, () => {
+        test("Returns 200 if successful", async () => {
             const users: User[] = [
                 new User(
                     "testUser1",
@@ -82,18 +195,42 @@ describe("UserRoutes", () => {
                     "1990-01-01",
                 ),
             ];
-            userController.getUsers.mockResolvedValue(users);
+            jest.spyOn(
+                UserController.prototype,
+                "getUsers",
+            ).mockResolvedValueOnce(users);
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
 
-            const response = await request(app).get("/users");
+            const response = await request(app).get(`${baseURL}/`);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(users);
-            expect(userController.getUsers).toHaveBeenCalled();
+            expect(UserController.prototype.getUsers).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if user is not an admin", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUsers",
+            ).mockResolvedValueOnce([]);
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, res: any, _next: any) =>
+                    res
+                        .status(401)
+                        .json({ error: "Unauthorized", status: 401 }),
+            );
+
+            const response = await request(app).get(`${baseURL}/`);
+
+            expect(response.status).toBe(401);
+            expect(UserController.prototype.getUsers).not.toHaveBeenCalled();
         });
     });
 
-    describe("GET /users/roles/:role", () => {
-        test("should retrieve users by role", async () => {
+    describe(`GET ${baseURL}/roles/:role`, () => {
+        test("Returns 200 if successful", async () => {
             const users: User[] = [
                 new User(
                     "testUser1",
@@ -104,22 +241,50 @@ describe("UserRoutes", () => {
                     "2000-01-01",
                 ),
             ];
-            userController.getUsersByRole.mockResolvedValue(users);
+            jest.spyOn(
+                UserController.prototype,
+                "getUsersByRole",
+            ).mockResolvedValueOnce(users);
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
 
             const response = await request(app).get(
-                `/users/roles/${Role.CUSTOMER}`,
+                `${baseURL}/roles/${Role.CUSTOMER}`,
             );
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(users);
-            expect(userController.getUsersByRole).toHaveBeenCalledWith(
-                Role.CUSTOMER,
+            expect(
+                UserController.prototype.getUsersByRole,
+            ).toHaveBeenCalledWith(Role.CUSTOMER);
+        });
+
+        test("Returns 401 if user is not an admin", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUsersByRole",
+            ).mockResolvedValueOnce([]);
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, res: any, _next: any) =>
+                    res
+                        .status(401)
+                        .json({ error: "Unauthorized", status: 401 }),
             );
+
+            const response = await request(app).get(
+                `${baseURL}/roles/${Role.CUSTOMER}`,
+            );
+
+            expect(response.status).toBe(401);
+            expect(
+                UserController.prototype.getUsersByRole,
+            ).not.toHaveBeenCalled();
         });
     });
 
-    describe("GET /users/:username", () => {
-        test("should retrieve a user by username", async () => {
+    describe(`GET ${baseURL}/:username`, () => {
+        test("Returns 200 if successful, customer calling on its username", async () => {
             const user = new User(
                 "testUser",
                 "Test",
@@ -128,70 +293,178 @@ describe("UserRoutes", () => {
                 "Address",
                 "2000-01-01",
             );
-            userController.getUserByUsername.mockResolvedValue(user);
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(user);
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
-            const response = await request(app)
-                .get("/users/testUser")
-                .set("user", JSON.stringify(user));
+            const response = await request(app).get(`${baseURL}/testUser`);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(user);
-            expect(userController.getUserByUsername).toHaveBeenCalledWith(
-                user,
-                "testUser",
-            );
+            expect(
+                UserController.prototype.getUserByUsername,
+            ).toHaveBeenCalled();
         });
-    });
 
-    describe("DELETE /users/:username", () => {
-        test("should delete a user", async () => {
-            userController.deleteUser.mockResolvedValue(true);
-
-            const user = new User(
-                "admin",
-                "Admin",
+        test("Returns 200 if user is an admin and tries to retrieve another user's information", async () => {
+            const userToRetrieve = new User(
+                "testUser",
+                "Test",
                 "User",
-                Role.ADMIN,
-                "Admin Address",
-                "1990-01-01",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
             );
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(userToRetrieve);
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
-            const response = await request(app)
-                .delete("/users/testUser")
-                .set("user", JSON.stringify(user));
+            const response = await request(app).get(`${baseURL}/testUser`);
 
             expect(response.status).toBe(200);
-            expect(userController.deleteUser).toHaveBeenCalledWith(
-                user,
-                "testUser",
-            );
+            expect(response.body).toEqual(userToRetrieve);
+            expect(
+                UserController.prototype.getUserByUsername,
+            ).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if user is not an admin and tries to retrieve another user's information", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockRejectedValueOnce(new UserNotAdminError());
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app).get(`${baseURL}/testUser2`);
+
+            expect(response.status).toBe(401);
+            expect(
+                UserController.prototype.getUserByUsername,
+            ).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if the calling user is an Admin an `username` represents a different Admin user", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockRejectedValueOnce(new UserIsAdminError());
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app).get(`${baseURL}/admin`);
+
+            expect(response.status).toBe(401);
+            expect(
+                UserController.prototype.getUserByUsername,
+            ).toHaveBeenCalled();
+        });
+
+        test("Returns 404 if user does not exist", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockRejectedValueOnce(new UserNotFoundError());
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app).get(`${baseURL}/testUser`);
+
+            expect(response.status).toBe(404);
+            expect(
+                UserController.prototype.getUserByUsername,
+            ).toHaveBeenCalled();
         });
     });
 
-    describe("DELETE /users", () => {
-        test("should delete all users", async () => {
-            userController.deleteAll.mockResolvedValue(true);
+    describe(`DELETE ${baseURL}/:username`, () => {
+        test("Returns 200 if successful", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "deleteUser",
+            ).mockResolvedValueOnce(true);
 
-            const user = new User(
-                "admin",
-                "Admin",
-                "User",
-                Role.ADMIN,
-                "Admin Address",
-                "1990-01-01",
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
             );
 
-            const response = await request(app)
-                .delete("/users")
-                .set("user", JSON.stringify(user));
+            const response = await request(app).delete(`${baseURL}/testUser`);
 
             expect(response.status).toBe(200);
-            expect(userController.deleteAll).toHaveBeenCalled();
+            expect(UserController.prototype.deleteUser).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if user is not an admin", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "deleteUser",
+            ).mockResolvedValueOnce(true);
+
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, res: any, _next: any) =>
+                    res
+                        .status(401)
+                        .json({ error: "Unauthorized", status: 401 }),
+            );
+
+            const response = await request(app).delete(`${baseURL}/testUser`);
+
+            expect(response.status).toBe(401);
+            expect(UserController.prototype.deleteUser).not.toHaveBeenCalled();
         });
     });
 
-    describe("PATCH /users/:username", () => {
-        test("should update user information", async () => {
+    describe(`DELETE ${baseURL}/`, () => {
+        test("Returns 200 if successful", async () => {
+            jest.spyOn(UserController.prototype, "deleteAll").mockResolvedValue(
+                true,
+            );
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
+
+            const response = await request(app).delete(`${baseURL}/`);
+
+            expect(response.status).toBe(200);
+            expect(UserController.prototype.deleteAll).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if user is not an admin", async () => {
+            jest.spyOn(UserController.prototype, "deleteAll").mockResolvedValue(
+                true,
+            );
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, res: any, _next: any) =>
+                    res
+                        .status(401)
+                        .json({ error: "Unauthorized", status: 401 }),
+            );
+
+            const response = await request(app).delete(`${baseURL}/`);
+
+            expect(response.status).toBe(401);
+            expect(UserController.prototype.deleteAll).not.toHaveBeenCalled();
+        });
+    });
+
+    describe(`PATCH ${baseURL}/:username`, () => {
+        test("Returns 200 if successful", async () => {
             const user = new User(
                 "testUser",
                 "Test",
@@ -208,10 +481,13 @@ describe("UserRoutes", () => {
                 "New Address",
                 "2000-01-01",
             );
-            userController.updateUserInfo.mockResolvedValue(updatedUser);
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockResolvedValue(updatedUser);
 
             const response = await request(app)
-                .patch("/users/testUser")
+                .patch(`${baseURL}/testUser`)
                 .set("user", JSON.stringify(user))
                 .send({
                     name: "Updated",
@@ -222,8 +498,10 @@ describe("UserRoutes", () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(updatedUser);
-            expect(userController.updateUserInfo).toHaveBeenCalledWith(
-                user,
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
                 "Updated",
                 "User",
                 "New Address",
@@ -231,85 +509,199 @@ describe("UserRoutes", () => {
                 "testUser",
             );
         });
-    });
-});
 
-describe("AuthRoutes", () => {
-    let app: express.Application;
-    let authService: jest.Mocked<Authenticator>;
-
-    beforeEach(() => {
-        app = express(); // Provide the Express app instance
-        authService = new Authenticator(app) as jest.Mocked<Authenticator>;
-
-        const authRoutes = new AuthRoutes(authService as any); // Ensure this is the correct name and type assertion
-        app.use(express.json());
-        app.use("/auth", authRoutes.getRouter());
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    describe("POST /auth", () => {
-        test("should log in a user", async () => {
+        test("Returns 200 if successful, admin updating another user's information", async () => {
             const user = new User(
+                "admin",
+                "Admin",
+                "User",
+                Role.ADMIN,
+                "Admin Address",
+                "1990-01-01",
+            );
+            const updatedUser = new User(
                 "testUser",
-                "Test",
+                "Updated",
                 "User",
                 Role.CUSTOMER,
-                "Address",
+                "New Address",
                 "2000-01-01",
             );
-            authService.login.mockResolvedValue(user);
-
-            const response = await request(app).post("/auth").send({
-                username: "testUser",
-                password: "password",
-            });
-
-            expect(response.status).toBe(200);
-            expect(response.body).toEqual(user);
-            expect(authService.login).toHaveBeenCalledWith(
-                expect.any(Object),
-                expect.any(Object),
-                expect.any(Function),
-            );
-        });
-    });
-
-    describe("DELETE /auth/current", () => {
-        test("should log out the current user", async () => {
-            authService.logout.mockResolvedValue(true);
-
-            const response = await request(app).delete("/auth/current");
-
-            expect(response.status).toBe(200);
-            expect(authService.logout).toHaveBeenCalledWith(
-                expect.any(Object),
-                expect.any(Object),
-                expect.any(Function),
-            );
-        });
-    });
-
-    describe("GET /auth/current", () => {
-        test("should return the currently logged-in user", async () => {
-            const user = new User(
-                "testUser",
-                "Test",
-                "User",
-                Role.CUSTOMER,
-                "Address",
-                "2000-01-01",
-            );
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockResolvedValue(updatedUser);
 
             const response = await request(app)
-                .get("/auth/current")
-                .set("user", JSON.stringify(user));
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual(user);
+            expect(response.body).toEqual(updatedUser);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
+                "Updated",
+                "User",
+                "New Address",
+                "2000-01-01",
+                "testUser",
+            );
+        });
+
+        test("Returns 404 if user does not exist", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockRejectedValue(new UserNotFoundError());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(404);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
+                "Updated",
+                "User",
+                "New Address",
+                "2000-01-01",
+                "testUser",
+            );
+        });
+
+        test("Returns 401 if username does not correspond to the user's username", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockRejectedValue(new UserNotAdminError());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser2`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(401);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
+                "Updated",
+                "User",
+                "New Address",
+                "2000-01-01",
+                "testUser2",
+            );
+        });
+
+        test("Returns 400 if birthdate is after the current date", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockRejectedValue(new BirthdateError());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2022-01-01",
+                });
+
+            expect(response.status).toBe(400);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
+                "Updated",
+                "User",
+                "New Address",
+                "2022-01-01",
+                "testUser",
+            );
+        });
+
+        test("Returns 401 if username does not correspond to the user's username and the user is an admin", async () => {
+            const user = new User(
+                "admin",
+                "Admin",
+                "User",
+                Role.ADMIN,
+                "Admin Address",
+                "1990-01-01",
+            );
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockRejectedValue(new UserNotAdminError());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser2`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(401);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
+                "Updated",
+                "User",
+                "New Address",
+                "2000-01-01",
+                "testUser2",
+            );
         });
     });
 });

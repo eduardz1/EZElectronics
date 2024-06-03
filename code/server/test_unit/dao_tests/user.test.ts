@@ -1,14 +1,24 @@
-import { test, expect, jest, beforeEach, afterEach, describe } from "@jest/globals";
+import {
+    test,
+    expect,
+    jest,
+    beforeEach,
+    afterEach,
+    describe,
+} from "@jest/globals";
 import UserDAO from "../../src/dao/userDAO";
 import { User, Role } from "../../src/components/user";
-import { UserAlreadyExistsError, UserNotFoundError } from "../../src/errors/userError";
+import {
+    UserAlreadyExistsError,
+    UserNotFoundError,
+} from "../../src/errors/userError";
 import crypto from "crypto";
 
 // Mock the db module
 jest.mock("../../src/db/db", () => ({
     get: jest.fn(),
     run: jest.fn(),
-    all: jest.fn()
+    all: jest.fn(),
 }));
 
 import db from "../../src/db/db";
@@ -29,7 +39,9 @@ describe("UserDAO", () => {
             const username = "testUser";
             const plainPassword = "password";
             const salt = crypto.randomBytes(16).toString("hex");
-            const hashedPassword = crypto.scryptSync(plainPassword, salt, 16).toString("hex");
+            const hashedPassword = crypto
+                .scryptSync(plainPassword, salt, 16)
+                .toString("hex");
 
             (db.get as jest.Mock).mockImplementation((...args: any[]) => {
                 const callback = args[args.length - 1];
@@ -40,7 +52,10 @@ describe("UserDAO", () => {
                 });
             });
 
-            const result = await userDao.getIsUserAuthenticated(username, plainPassword);
+            const result = await userDao.getIsUserAuthenticated(
+                username,
+                plainPassword,
+            );
             expect(result).toBe(true);
         });
 
@@ -48,7 +63,9 @@ describe("UserDAO", () => {
             const username = "testUser";
             const plainPassword = "password";
             const salt = crypto.randomBytes(16).toString("hex");
-            const hashedPassword = crypto.scryptSync("wrongpassword", salt, 16).toString("hex");
+            const hashedPassword = crypto
+                .scryptSync("wrongpassword", salt, 16)
+                .toString("hex");
 
             (db.get as jest.Mock).mockImplementation((...args: any[]) => {
                 const callback = args[args.length - 1];
@@ -59,7 +76,10 @@ describe("UserDAO", () => {
                 });
             });
 
-            const result = await userDao.getIsUserAuthenticated(username, plainPassword);
+            const result = await userDao.getIsUserAuthenticated(
+                username,
+                plainPassword,
+            );
             expect(result).toBe(false);
         });
 
@@ -69,7 +89,10 @@ describe("UserDAO", () => {
                 callback(null, null);
             });
 
-            const result = await userDao.getIsUserAuthenticated("nonExistentUser", "password");
+            const result = await userDao.getIsUserAuthenticated(
+                "nonExistentUser",
+                "password",
+            );
             expect(result).toBe(false);
         });
     });
@@ -81,7 +104,13 @@ describe("UserDAO", () => {
                 callback(null);
             });
 
-            const result = await userDao.createUser("testUser", "Test", "User", "password", Role.CUSTOMER);
+            const result = await userDao.createUser(
+                "testUser",
+                "Test",
+                "User",
+                "password",
+                Role.CUSTOMER,
+            );
             expect(result).toBe(true);
             expect(db.run).toHaveBeenCalledTimes(1);
         });
@@ -89,12 +118,20 @@ describe("UserDAO", () => {
         test("should throw UserAlreadyExistsError for duplicate user", async () => {
             (db.run as jest.Mock).mockImplementation((...args: any[]) => {
                 const callback = args[args.length - 1];
-                const error = new Error("UNIQUE constraint failed: users.username");
+                const error = new Error(
+                    "UNIQUE constraint failed: users.username",
+                );
                 callback(error);
             });
 
             await expect(
-                userDao.createUser("testUser", "Test", "User", "password", Role.CUSTOMER)
+                userDao.createUser(
+                    "testUser",
+                    "Test",
+                    "User",
+                    "password",
+                    Role.CUSTOMER,
+                ),
             ).rejects.toThrow(UserAlreadyExistsError);
             expect(db.run).toHaveBeenCalledTimes(1);
         });
@@ -103,8 +140,22 @@ describe("UserDAO", () => {
     describe("getUsers", () => {
         test("should return all users", async () => {
             const users = [
-                { username: "testUser1", name: "Test1", surname: "User1", role: Role.CUSTOMER, address: "Address1", birthdate: "2000-01-01" },
-                { username: "testUser2", name: "Test2", surname: "User2", role: Role.MANAGER, address: "Address2", birthdate: "1990-01-01" },
+                {
+                    username: "testUser1",
+                    name: "Test1",
+                    surname: "User1",
+                    role: Role.CUSTOMER,
+                    address: "Address1",
+                    birthdate: "2000-01-01",
+                },
+                {
+                    username: "testUser2",
+                    name: "Test2",
+                    surname: "User2",
+                    role: Role.MANAGER,
+                    address: "Address2",
+                    birthdate: "1990-01-01",
+                },
             ];
 
             (db.all as jest.Mock).mockImplementation((...args: any[]) => {
@@ -116,12 +167,41 @@ describe("UserDAO", () => {
             expect(result).toHaveLength(2);
             expect(db.all).toHaveBeenCalledTimes(1);
         });
+
+        test("should return empty array for no users", async () => {
+            (db.all as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, []);
+            });
+
+            const result = await userDao.getUsers();
+            expect(result).toHaveLength(0);
+            expect(db.all).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw error for db error", async () => {
+            (db.all as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(userDao.getUsers()).rejects.toThrow(Error);
+            expect(db.all).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("getUsersByRole", () => {
         test("should return users by role", async () => {
             const users = [
-                { username: "testUser1", name: "Test1", surname: "User1", role: Role.CUSTOMER, address: "Address1", birthdate: "2000-01-01" },
+                {
+                    username: "testUser1",
+                    name: "Test1",
+                    surname: "User1",
+                    role: Role.CUSTOMER,
+                    address: "Address1",
+                    birthdate: "2000-01-01",
+                },
             ];
 
             (db.all as jest.Mock).mockImplementation((...args: any[]) => {
@@ -131,6 +211,30 @@ describe("UserDAO", () => {
 
             const result = await userDao.getUsersByRole(Role.CUSTOMER);
             expect(result).toHaveLength(1);
+            expect(db.all).toHaveBeenCalledTimes(1);
+        });
+
+        test("should return empty array for no users", async () => {
+            (db.all as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                callback(null, []);
+            });
+
+            const result = await userDao.getUsersByRole(Role.CUSTOMER);
+            expect(result).toHaveLength(0);
+            expect(db.all).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw error for db error", async () => {
+            (db.all as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(userDao.getUsersByRole(Role.CUSTOMER)).rejects.toThrow(
+                Error,
+            );
             expect(db.all).toHaveBeenCalledTimes(1);
         });
     });
@@ -146,6 +250,21 @@ describe("UserDAO", () => {
             expect(result).toBe(true);
             expect(db.run).toHaveBeenCalledTimes(1);
         });
+
+        test("should throw UserNotFoundError for non-existent user", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error(
+                    "UNIQUE constraint failed: users.username",
+                );
+                callback(error);
+            });
+
+            await expect(userDao.deleteUser("nonExistentUser")).rejects.toThrow(
+                UserNotFoundError,
+            );
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("deleteAll", () => {
@@ -157,6 +276,17 @@ describe("UserDAO", () => {
 
             const result = await userDao.deleteAll();
             expect(result).toBe(true);
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw error for db error", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(userDao.deleteAll()).rejects.toThrow(Error);
             expect(db.run).toHaveBeenCalledTimes(1);
         });
     });
@@ -178,7 +308,16 @@ describe("UserDAO", () => {
             });
 
             const result = await userDao.getUserByUsername("testUser");
-            expect(result).toEqual(new User("testUser", "Test", "User", Role.CUSTOMER, "Test Address", "2000-01-01"));
+            expect(result).toEqual(
+                new User(
+                    "testUser",
+                    "Test",
+                    "User",
+                    Role.CUSTOMER,
+                    "Test Address",
+                    "2000-01-01",
+                ),
+            );
             expect(db.get).toHaveBeenCalledTimes(1);
         });
 
@@ -188,7 +327,22 @@ describe("UserDAO", () => {
                 callback(null, null);
             });
 
-            await expect(userDao.getUserByUsername("nonExistentUser")).rejects.toThrow(UserNotFoundError);
+            await expect(
+                userDao.getUserByUsername("nonExistentUser"),
+            ).rejects.toThrow(UserNotFoundError);
+            expect(db.get).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw error for db error", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(userDao.getUserByUsername("testUser")).rejects.toThrow(
+                Error,
+            );
             expect(db.get).toHaveBeenCalledTimes(1);
         });
     });
@@ -215,6 +369,19 @@ describe("UserDAO", () => {
             expect(result).toBe(false);
             expect(db.get).toHaveBeenCalledTimes(1);
         });
+
+        test("should throw error for db error", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(userDao.checkIfUserExists("testUser")).rejects.toThrow(
+                Error,
+            );
+            expect(db.get).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("updateUserInfo", () => {
@@ -225,7 +392,7 @@ describe("UserDAO", () => {
                 "User",
                 Role.CUSTOMER,
                 "New Address",
-                "1990-01-01"
+                "1990-01-01",
             );
 
             (db.run as jest.Mock).mockImplementation((...args: any[]) => {
@@ -233,18 +400,69 @@ describe("UserDAO", () => {
                 callback(null);
             });
 
-            jest.spyOn(userDao, "getUserByUsername").mockResolvedValueOnce(user);
+            jest.spyOn(userDao, "getUserByUsername").mockResolvedValueOnce(
+                user,
+            );
 
             const result = await userDao.updateUserInfo(
                 user.username,
                 user.name,
                 user.surname,
                 user.address,
-                user.birthdate
+                user.birthdate,
             );
             expect(result).toEqual(user);
             expect(db.run).toHaveBeenCalledTimes(1);
             expect(userDao.getUserByUsername).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw UserNotFoundError for non-existent user", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error(
+                    "UNIQUE constraint failed: users.username",
+                );
+                callback(error);
+            });
+
+            await expect(
+                userDao.updateUserInfo(
+                    "nonExistentUser",
+                    "Updated",
+                    "User",
+                    "New Address",
+                    "1990-01-01",
+                ),
+            ).rejects.toThrow(UserNotFoundError);
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
+
+        test("should throw error for db error", async () => {
+            const user = new User(
+                "testUser",
+                "Updated",
+                "User",
+                Role.CUSTOMER,
+                "New Address",
+                "1990-01-01",
+            );
+
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(
+                userDao.updateUserInfo(
+                    user.username,
+                    user.name,
+                    user.surname,
+                    user.address,
+                    user.birthdate,
+                ),
+            ).rejects.toThrow(Error);
+            expect(db.run).toHaveBeenCalledTimes(1);
         });
     });
 });

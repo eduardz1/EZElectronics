@@ -3,7 +3,7 @@ import ErrorHandler from "../helper";
 import { body, param } from "express-validator";
 import UserController from "../controllers/userController";
 import Authenticator from "./auth";
-import { User } from "../components/user";
+import { Role, User } from "../components/user";
 
 /**
  * Represents a class that defines the routes for handling users.
@@ -60,7 +60,7 @@ class UserRoutes {
             body("name").isString().notEmpty(),
             body("surname").isString().notEmpty(),
             body("password").isString().notEmpty(),
-            body("role").isString().isIn(["Manager", "Customer", "Admin"]),
+            body("role").isString().isIn(Object.values(Role)),
             this.errorHandler.validateRequest,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -83,9 +83,25 @@ class UserRoutes {
         this.router.get(
             "/",
             this.authenticator.isAdmin,
-            (req: any, res: any, next: any) =>
+            (_req: any, res: any, next: any) =>
                 this.controller
                     .getUsers()
+                    .then((users: User[]) => res.status(200).json(users))
+                    .catch((err) => next(err)),
+        );
+
+        /**
+         * Route for retrieving all users of a specific role.
+         * It requires the user to be logged in and to be an admin.
+         * It expects the role of the users in the request parameters: the role must be one of ("Manager", "Customer", "Admin").
+         * It returns an array of users.
+         */
+        this.router.get(
+            "/roles/:role",
+            this.authenticator.isAdmin,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getUsersByRole(req.params.role)
                     .then((users: User[]) => res.status(200).json(users))
                     .catch((err) => next(err)),
         );
@@ -114,7 +130,7 @@ class UserRoutes {
          */
         this.router.delete(
             "/:username",
-            this.authenticator.isLoggedIn,
+            this.authenticator.isAdmin,
             (req: any, res: any, next: any) =>
                 this.controller
                     .deleteUser(req.user, req.params.username)
@@ -130,7 +146,7 @@ class UserRoutes {
         this.router.delete(
             "/",
             this.authenticator.isAdmin,
-            (req: any, res: any, next: any) =>
+            (_req: any, res: any, next: any) =>
                 this.controller
                     .deleteAll()
                     .then(() => res.status(200).end())
@@ -224,11 +240,14 @@ class AuthRoutes {
          * It expects the user to be logged in.
          * It returns a 200 status code.
          */
-        this.router.delete("/current", (req, res, next) =>
-            this.authService
-                .logout(req, res, next)
-                .then(() => res.status(200).end())
-                .catch((err: any) => next(err)),
+        this.router.delete(
+            "/current",
+            this.authService.isLoggedIn,
+            (req, res, next) =>
+                this.authService
+                    .logout(req, res, next)
+                    .then(() => res.status(200).end())
+                    .catch((err: any) => next(err)),
         );
 
         /**
@@ -236,9 +255,12 @@ class AuthRoutes {
          * It expects the user to be logged in.
          * It returns the logged in user.
          */
-        this.router.get("/current", (req: any, res: any) =>
-            // FIXME: doesn't work for managers
-            res.status(200).json(req.user),
+        this.router.get(
+            "/current",
+            this.authService.isLoggedIn,
+            (req: any, res: any) =>
+                // FIXME: doesn't work for managers
+                res.status(200).json(req.user),
         );
     }
 }
