@@ -182,6 +182,14 @@ class UserDAO {
                 const sql = "DELETE FROM users WHERE username = ?";
                 db.run(sql, [username], (err: Error | null) => {
                     if (err) {
+                        if (
+                            err.message.includes(
+                                "UNIQUE constraint failed: users.username",
+                            )
+                        ) {
+                            reject(new UserNotFoundError());
+                            return;
+                        }
                         reject(err);
                         return;
                     }
@@ -284,13 +292,20 @@ class UserDAO {
                     [name, surname, address, birthdate, username],
                     (err: Error | null) => {
                         if (err) {
+                            if (
+                                err.message.includes(
+                                    "UNIQUE constraint failed: users.username",
+                                )
+                            ) {
+                                reject(new UserNotFoundError());
+                                return;
+                            }
+
                             reject(err);
                             return;
                         }
 
-                        this.getUserByUsername(username)
-                            .then((user) => resolve(user))
-                            .catch((err) => reject(err));
+                        resolve(this.getUserByUsername(username));
                     },
                 );
             } catch (error) {
