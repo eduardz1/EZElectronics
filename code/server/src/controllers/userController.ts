@@ -108,34 +108,26 @@ class UserController {
         birthdate: string,
         username: string,
     ): Promise<User> {
-        try {
-            if (!(await this.dao.checkIfUserExists(username))) {
-                throw new UserNotFoundError();
-            }
-
-            if (user.username !== username && user.role !== "Admin") {
-                throw new UserNotAdminError();
-            }
-
-            if (dayjs(birthdate).isAfter(dayjs())) {
-                throw new Error("The birthdate cannot be after the current date");
-            }
-
-            const updatedUser = await this.dao.updateUserInfo(
-                username,
-                name,
-                surname,
-                address,
-                birthdate
-            );
-
-            return updatedUser;
-        } catch (error) {
-            console.error("Error in updateUserInfo:", error);
-            throw error;
+        if (!(await this.dao.checkIfUserExists(username))) {
+            throw new UserNotFoundError();
         }
+
+        if (user.username !== username && user.role !== "Admin") {
+            throw new UserNotAdminError();
+        }
+
+        if (dayjs(birthdate).isAfter(dayjs())) {
+            throw new Error("The birthdate cannot be after the current date");
+        }
+
+        return this.dao.updateUserInfo(
+            username,
+            name,
+            surname,
+            address,
+            birthdate,
+        );
     }
 }
-
 
 export default UserController;
