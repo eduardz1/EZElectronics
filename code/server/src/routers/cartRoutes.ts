@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import ErrorHandler from "../helper";
-import { body, param } from "express-validator";
+import { param } from "express-validator";
 import CartController from "../controllers/cartController";
 import Authenticator from "./auth";
 import { Cart } from "../components/cart";
@@ -47,15 +47,18 @@ class CartRoutes {
          * It requires the user to be logged in and to be a customer.
          * It returns the cart of the logged in customer.
          */
-        this.router.get("/", (req: any, res: any, next: any) =>
-            this.controller
-                .getCart(req.user)
-                .then((cart: Cart) => {
-                    res.status(200).json(cart);
-                })
-                .catch((err) => {
-                    next(err);
-                }),
+        this.router.get(
+            "/",
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getCart(req.user)
+                    .then((cart: Cart) => {
+                        res.status(200).json(cart);
+                    })
+                    .catch((err) => {
+                        next(err);
+                    }),
         );
 
         /**
@@ -65,13 +68,16 @@ class CartRoutes {
          * - model: string. It cannot be empty, it must represent an existing product model, and the product model's available quantity must be above 0
          * It returns a 200 status code if the product was added to the cart.
          */
-        this.router.post("/", (req: any, res: any, next: any) =>
-            this.controller
-                .addToCart(req.user, req.body.model)
-                .then(() => res.status(200).end())
-                .catch((err) => {
-                    next(err);
-                }),
+        this.router.post(
+            "/",
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .addToCart(req.user, req.body.model)
+                    .then(() => res.status(200).end())
+                    .catch((err) => {
+                        next(err);
+                    }),
         );
 
         /**
@@ -80,13 +86,16 @@ class CartRoutes {
          * It returns a 200 status code if the cart was checked out.
          * It fails if the cart is empty, there is no current cart in the database, or at least one of the products in the cart is not available in the required quantity.
          */
-        this.router.patch("/", (req: any, res: any, next: any) =>
-            this.controller
-                .checkoutCart(req.user)
-                .then(() => res.status(200).end())
-                .catch((err) => {
-                    next(err);
-                }),
+        this.router.patch(
+            "/",
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .checkoutCart(req.user)
+                    .then(() => res.status(200).end())
+                    .catch((err) => {
+                        next(err);
+                    }),
         );
 
         /**
@@ -94,11 +103,14 @@ class CartRoutes {
          * It requires the user to be logged in and to be a customer.
          * It returns the history of the logged in customer's carts (only carts that have been paid for are returned - the current cart is not included in the list).
          */
-        this.router.get("/history", (req: any, res: any, next: any) =>
-            this.controller
-                .getCustomerCarts(req.user)
-                .then((carts: Cart[]) => res.status(200).json(carts))
-                .catch((err) => next(err)),
+        this.router.get(
+            "/history",
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getCustomerCarts(req.user)
+                    .then((carts: Cart[]) => res.status(200).json(carts))
+                    .catch((err) => next(err)),
         );
 
         /**
@@ -109,6 +121,9 @@ class CartRoutes {
          */
         this.router.delete(
             "/products/:model",
+            param("model").isString().notEmpty(),
+            this.errorHandler.validateRequest,
+            this.authenticator.isCustomer,
             (req: any, res: any, next: any) =>
                 this.controller
                     .removeProductFromCart(req.user, req.params.model)
@@ -124,11 +139,14 @@ class CartRoutes {
          * It fails if the user does not have a current cart.
          * It returns a 200 status code if the products were removed from the cart.
          */
-        this.router.delete("/current", (req: any, res: any, next: any) =>
-            this.controller
-                .clearCart(req.user)
-                .then(() => res.status(200).end())
-                .catch((err) => next(err)),
+        this.router.delete(
+            "/current",
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .clearCart(req.user)
+                    .then(() => res.status(200).end())
+                    .catch((err) => next(err)),
         );
 
         /**
@@ -136,11 +154,14 @@ class CartRoutes {
          * It requires the user to be authenticated and to be either an admin or a manager.
          * It returns a 200 status code.
          */
-        this.router.delete("/", (req: any, res: any, next: any) =>
-            this.controller
-                .deleteAllCarts()
-                .then(() => res.status(200).end())
-                .catch((err: any) => next(err)),
+        this.router.delete(
+            "/",
+            this.authenticator.isAdminOrManager,
+            (_req: any, res: any, next: any) =>
+                this.controller
+                    .deleteAllCarts()
+                    .then(() => res.status(200).end())
+                    .catch((err: any) => next(err)),
         );
 
         /**
@@ -148,11 +169,14 @@ class CartRoutes {
          * It requires the user to be authenticated and to be either an admin or a manager.
          * It returns an array of carts.
          */
-        this.router.get("/all", (req: any, res: any, next: any) =>
-            this.controller
-                .getAllCarts()
-                .then((carts: Cart[]) => res.status(200).json(carts))
-                .catch((err: any) => next(err)),
+        this.router.get(
+            "/all",
+            this.authenticator.isAdminOrManager,
+            (_req: any, res: any, next: any) =>
+                this.controller
+                    .getAllCarts()
+                    .then((carts: Cart[]) => res.status(200).json(carts))
+                    .catch((err: any) => next(err)),
         );
     }
 }

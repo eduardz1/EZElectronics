@@ -42,7 +42,6 @@ enum Category {
     SMARTPHONE = "Smartphone",
     LAPTOP = "Laptop",
     APPLIANCE = "Appliance",
-    Electronics = "Electronics",
 }
 
 export { Product, Category };
