@@ -243,7 +243,7 @@ describe("UserDAO", () => {
         test("should delete user", async () => {
             (db.run as jest.Mock).mockImplementation((...args: any[]) => {
                 const callback = args[args.length - 1];
-                callback(null);
+                callback.call({ changes: 1 });
             });
 
             const result = await userDao.deleteUser("testUser");
@@ -254,10 +254,7 @@ describe("UserDAO", () => {
         test("should throw UserNotFoundError for non-existent user", async () => {
             (db.run as jest.Mock).mockImplementation((...args: any[]) => {
                 const callback = args[args.length - 1];
-                const error = new Error(
-                    "UNIQUE constraint failed: users.username",
-                );
-                callback(error);
+                callback.call({ changes: 0 });
             });
 
             await expect(userDao.deleteUser("nonExistentUser")).rejects.toThrow(

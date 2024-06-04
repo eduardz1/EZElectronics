@@ -15,95 +15,81 @@ class ProductDAO {
         arrivalDate: string | null,
     ): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            try {
-                const sql =
-                    "INSERT INTO products(model, category, quantity, details, sellingPrice" +
-                    (arrivalDate ? " , arrivalDate" : "") +
-                    (details ? " , details" : "") +
-                    ") VALUES(?, ?, ?, ?, ?" +
-                    (arrivalDate ? ", ?" : "") +
-                    (details ? ", ?" : "") +
-                    ")";
+            const sql =
+                "INSERT INTO products(model, category, quantity, details, sellingPrice" +
+                (arrivalDate ? " , arrivalDate" : "") +
+                (details ? " , details" : "") +
+                ") VALUES(?, ?, ?, ?, ?" +
+                (arrivalDate ? ", ?" : "") +
+                (details ? ", ?" : "") +
+                ")";
 
-                const params =
-                    arrivalDate && details
+            const params =
+                arrivalDate && details
+                    ? [
+                          model,
+                          category,
+                          quantity,
+                          details,
+                          sellingPrice,
+                          arrivalDate,
+                          details,
+                      ]
+                    : arrivalDate
+                      ? [
+                            model,
+                            category,
+                            quantity,
+                            details,
+                            sellingPrice,
+                            arrivalDate,
+                        ]
+                      : details
                         ? [
                               model,
                               category,
                               quantity,
                               details,
                               sellingPrice,
-                              arrivalDate,
                               details,
                           ]
-                        : arrivalDate
-                          ? [
-                                model,
-                                category,
-                                quantity,
-                                details,
-                                sellingPrice,
-                                arrivalDate,
-                            ]
-                          : details
-                            ? [
-                                  model,
-                                  category,
-                                  quantity,
-                                  details,
-                                  sellingPrice,
-                                  details,
-                              ]
-                            : [
-                                  model,
-                                  category,
-                                  quantity,
-                                  details,
-                                  sellingPrice,
-                              ];
+                        : [model, category, quantity, details, sellingPrice];
 
-                db.run(sql, params, (err: Error | null) => {
-                    if (err) {
-                        console.log(err);
-                        reject(err);
-                        return;
-                    }
+            db.run(sql, params, (err: Error | null) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
 
-                    resolve(true);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(true);
+            });
         });
     }
 
     getProductByModel(model: string): Promise<Product | null> {
         return new Promise<Product | null>((resolve, reject) => {
-            try {
-                const sql = "SELECT * FROM products WHERE model = ?";
-                db.get(sql, [model], (err: Error | null, row: any) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql = "SELECT * FROM products WHERE model = ?";
+            db.get(sql, [model], (err: Error | null, row: any) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    if (row) {
-                        const product: Product = {
-                            model: row.model,
-                            category: row.category,
-                            quantity: row.quantity,
-                            details: row.details,
-                            sellingPrice: row.sellingPrice,
-                            arrivalDate: row.arrivalDate,
-                        };
-                        resolve(product);
-                    } else {
-                        resolve(null);
-                    }
-                });
-            } catch (err) {
-                reject(err);
-            }
+                if (row) {
+                    const product: Product = {
+                        model: row.model,
+                        category: row.category,
+                        quantity: row.quantity,
+                        details: row.details,
+                        sellingPrice: row.sellingPrice,
+                        arrivalDate: row.arrivalDate,
+                    };
+                    resolve(product);
+                } else {
+                    resolve(null);
+                }
+            });
         });
     }
 
@@ -113,29 +99,25 @@ class ProductDAO {
         changeDate: string | null,
     ): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            try {
-                const sql =
-                    "UPDATE products SET quantity = ?" +
-                    (changeDate ? ", arrivalDate = ?" : "") +
-                    " WHERE model = ?";
+            const sql =
+                "UPDATE products SET quantity = ?" +
+                (changeDate ? ", arrivalDate = ?" : "") +
+                " WHERE model = ?";
 
-                db.run(
-                    sql,
-                    changeDate
-                        ? [newQuantity, changeDate, model]
-                        : [newQuantity, model],
-                    (err: Error | null) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
+            db.run(
+                sql,
+                changeDate
+                    ? [newQuantity, changeDate, model]
+                    : [newQuantity, model],
+                (err: Error | null) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
 
-                        resolve(newQuantity);
-                    },
-                );
-            } catch (err) {
-                reject(err);
-            }
+                    resolve(newQuantity);
+                },
+            );
         });
     }
 
@@ -145,226 +127,186 @@ class ProductDAO {
         sellingDate: string | null,
     ): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            try {
-                const sql =
-                    "UPDATE products SET quantity = ?, sellingDate = ? WHERE model = ?";
+            const sql =
+                "UPDATE products SET quantity = ?, sellingDate = ? WHERE model = ?";
 
-                db.run(
-                    sql,
-                    [quantity, sellingDate, model],
-                    (err: Error | null) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
+            db.run(sql, [quantity, sellingDate, model], (err: Error | null) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                        resolve(quantity);
-                    },
-                );
-            } catch (err) {
-                reject(err);
-            }
+                resolve(quantity);
+            });
         });
     }
 
     getProductsByCategory(category: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
-            try {
-                const sql = "SELECT * FROM products WHERE category = ?";
-                db.all(sql, [category], (err: Error | null, rows: any[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql = "SELECT * FROM products WHERE category = ?";
+            db.all(sql, [category], (err: Error | null, rows: any[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    const products: Product[] = rows.map((row) => ({
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    }));
+                const products: Product[] = rows.map((row) => ({
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                }));
 
-                    resolve(products);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(products);
+            });
         });
     }
 
     getProductsByModel(model: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
-            try {
-                const sql = "SELECT * FROM products WHERE model = ?";
-                db.all(sql, [model], (err: Error | null, rows: any[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql = "SELECT * FROM products WHERE model = ?";
+            db.all(sql, [model], (err: Error | null, rows: any[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    const products: Product[] = rows.map((row) => ({
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    }));
+                const products: Product[] = rows.map((row) => ({
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                }));
 
-                    resolve(products);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(products);
+            });
         });
     }
 
     getAllProducts(): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
-            try {
-                const sql = "SELECT * FROM products";
-                db.all(sql, [], (err: Error | null, rows: any[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql = "SELECT * FROM products";
+            db.all(sql, [], (err: Error | null, rows: any[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    const products: Product[] = rows.map((row) => ({
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    }));
+                const products: Product[] = rows.map((row) => ({
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                }));
 
-                    resolve(products);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(products);
+            });
         });
     }
 
     getAvailableProductsByCategory(category: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
-            try {
-                const sql =
-                    "SELECT * FROM products WHERE category = ? AND quantity > 0";
-                db.all(sql, [category], (err: Error | null, rows: any[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql =
+                "SELECT * FROM products WHERE category = ? AND quantity > 0";
+            db.all(sql, [category], (err: Error | null, rows: any[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    const products: Product[] = rows.map((row) => ({
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    }));
+                const products: Product[] = rows.map((row) => ({
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                }));
 
-                    resolve(products);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(products);
+            });
         });
     }
 
     getAvailableProductsByModel(model: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
-            try {
-                const sql =
-                    "SELECT * FROM products WHERE model = ? AND quantity > 0";
-                db.all(sql, [model], (err: Error | null, rows: any[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql =
+                "SELECT * FROM products WHERE model = ? AND quantity > 0";
+            db.all(sql, [model], (err: Error | null, rows: any[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    const products: Product[] = rows.map((row) => ({
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    }));
+                const products: Product[] = rows.map((row) => ({
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                }));
 
-                    resolve(products);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(products);
+            });
         });
     }
 
     getAllAvailableProducts(): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
-            try {
-                const sql = "SELECT * FROM products WHERE quantity > 0";
-                db.all(sql, [], (err: Error | null, rows: any[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql = "SELECT * FROM products WHERE quantity > 0";
+            db.all(sql, [], (err: Error | null, rows: any[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    const products: Product[] = rows.map((row) => ({
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    }));
+                const products: Product[] = rows.map((row) => ({
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                }));
 
-                    resolve(products);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(products);
+            });
         });
     }
 
     deleteAllProducts(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            try {
-                const sql = "DELETE FROM products";
-                db.run(sql, [], (err: Error | null) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
+            const sql = "DELETE FROM products";
+            db.run(sql, [], (err: Error | null) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
 
-                    resolve(true);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(true);
+            });
         });
     }
 
     deleteProduct(model: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            try {
-                const sql = "DELETE FROM products WHERE model = ?";
-                db.run(sql, [model], (err: Error | null) => {
-                    if (err) {
-                        console.log(err);
-                        reject(err);
-                        return;
-                    }
+            const sql = "DELETE FROM products WHERE model = ?";
+            db.run(sql, [model], (err: Error | null) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
 
-                    resolve(true);
-                });
-            } catch (err) {
-                reject(err);
-            }
+                resolve(true);
+            });
         });
     }
 }
