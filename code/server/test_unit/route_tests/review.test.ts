@@ -38,11 +38,11 @@ describe("Review routes", () => {
             };
             jest.spyOn(
                 ReviewController.prototype,
-                "addReview"
+                "addReview",
             ).mockResolvedValueOnce(undefined);
             jest.spyOn(
                 Authenticator.prototype,
-                "isCustomer"
+                "isCustomer",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app)
@@ -51,13 +51,13 @@ describe("Review routes", () => {
 
             expect(response.status).toBe(200);
             expect(ReviewController.prototype.addReview).toHaveBeenCalledTimes(
-                1
+                1,
             );
             expect(ReviewController.prototype.addReview).toHaveBeenCalledWith(
                 testReview.model,
                 testReview.user,
                 testReview.score,
-                testReview.comment
+                testReview.comment,
             );
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
         });
@@ -78,7 +78,7 @@ describe("Review routes", () => {
             };
             jest.spyOn(
                 Authenticator.prototype,
-                "isCustomer"
+                "isCustomer",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app)
@@ -87,7 +87,7 @@ describe("Review routes", () => {
 
             expect(response.status).toBe(422);
             expect(ReviewController.prototype.addReview).toHaveBeenCalledTimes(
-                0
+                0,
             );
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(0);
         });
@@ -108,7 +108,7 @@ describe("Review routes", () => {
             };
             jest.spyOn(
                 Authenticator.prototype,
-                "isCustomer"
+                "isCustomer",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app)
@@ -117,7 +117,7 @@ describe("Review routes", () => {
 
             expect(response.status).toBe(401);
             expect(ReviewController.prototype.addReview).toHaveBeenCalledTimes(
-                0
+                0,
             );
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
         });
@@ -137,11 +137,11 @@ describe("Review routes", () => {
             };
             jest.spyOn(
                 Authenticator.prototype,
-                "isCustomer"
+                "isCustomer",
             ).mockImplementation((_req, _res, next) => next());
             jest.spyOn(
                 ReviewController.prototype,
-                "addReview"
+                "addReview",
             ).mockRejectedValueOnce(new ExistingReviewError());
 
             const response = await request(app)
@@ -150,13 +150,13 @@ describe("Review routes", () => {
 
             expect(response.status).toBe(409);
             expect(ReviewController.prototype.addReview).toHaveBeenCalledTimes(
-                1
+                1,
             );
             expect(ReviewController.prototype.addReview).toHaveBeenCalledWith(
                 testReview.model,
                 testReview.user,
                 testReview.score,
-                testReview.comment
+                testReview.comment,
             );
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
         });
@@ -177,7 +177,7 @@ describe("Review routes", () => {
             };
             jest.spyOn(
                 ReviewController.prototype,
-                "getProductReviews"
+                "getProductReviews",
             ).mockRejectedValueOnce(new ProductNotFoundError());
 
             const response = await request(app)
@@ -186,7 +186,7 @@ describe("Review routes", () => {
 
             expect(response.status).toBe(404);
             expect(ReviewController.prototype.addReview).toHaveBeenCalledTimes(
-                0
+                0,
             );
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
         });
@@ -201,7 +201,7 @@ describe("Review routes", () => {
                     "surname",
                     Role.CUSTOMER,
                     "address",
-                    "1998-04-09"
+                    "1998-04-09",
                 ),
                 new User(
                     "username2",
@@ -209,7 +209,7 @@ describe("Review routes", () => {
                     "surname",
                     Role.CUSTOMER,
                     "address",
-                    "1998-04-09"
+                    "1998-04-09",
                 ),
                 new User(
                     "username3",
@@ -217,7 +217,7 @@ describe("Review routes", () => {
                     "surname",
                     Role.CUSTOMER,
                     "address",
-                    "1998-04-09"
+                    "1998-04-09",
                 ),
             ];
 
@@ -246,11 +246,11 @@ describe("Review routes", () => {
             ];
             jest.spyOn(
                 ReviewController.prototype,
-                "getProductReviews"
+                "getProductReviews",
             ).mockResolvedValueOnce(testReviews);
             jest.spyOn(
                 Authenticator.prototype,
-                "isLoggedIn"
+                "isLoggedIn",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app).get(`${baseURL}/`);
@@ -258,10 +258,10 @@ describe("Review routes", () => {
             expect(response.status).toBe(200);
             expect(response.body).toEqual(testReviews);
             expect(
-                ReviewController.prototype.getProductReviews
+                ReviewController.prototype.getProductReviews,
             ).toHaveBeenCalledTimes(1);
             expect(
-                Authenticator.prototype.isAdminOrManager
+                Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
     });
@@ -275,7 +275,7 @@ describe("Review routes", () => {
                     "surname",
                     Role.CUSTOMER,
                     "address",
-                    "1998-04-09"
+                    "1998-04-09",
                 ),
                 new User(
                     "username2",
@@ -283,7 +283,7 @@ describe("Review routes", () => {
                     "surname",
                     Role.CUSTOMER,
                     "address",
-                    "1998-04-09"
+                    "1998-04-09",
                 ),
                 new User(
                     "username3",
@@ -291,7 +291,7 @@ describe("Review routes", () => {
                     "surname",
                     Role.CUSTOMER,
                     "address",
-                    "1998-04-09"
+                    "1998-04-09",
                 ),
             ];
 
@@ -321,70 +321,70 @@ describe("Review routes", () => {
 
             jest.spyOn(
                 ReviewController.prototype,
-                "deleteReview"
+                "deleteReview",
             ).mockResolvedValueOnce(undefined);
             jest.spyOn(
                 Authenticator.prototype,
-                "isAdminOrManager"
+                "isAdminOrManager",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app).delete(`${baseURL}/`);
 
             expect(response.status).toBe(200);
             expect(
-                ReviewController.prototype.deleteReview
+                ReviewController.prototype.deleteReview,
             ).toHaveBeenCalledTimes(1);
             expect(
-                ReviewController.prototype.deleteReview
+                ReviewController.prototype.deleteReview,
             ).toHaveBeenCalledWith(testReviews[0].model);
             expect(
-                Authenticator.prototype.isAdminOrManager
+                Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
 
         test(`Returns 401 if user is not Admin or Manager`, async () => {
             jest.spyOn(
                 Authenticator.prototype,
-                "isAdminOrManager"
+                "isAdminOrManager",
             ).mockImplementation((_req, res, _next) =>
                 res.status(401).json({
                     error: "User is not Admin or Manager",
                     status: 401,
-                })
+                }),
             );
 
             const response = await request(app).delete(`${baseURL}/`);
 
             expect(response.status).toBe(401);
             expect(
-                ReviewController.prototype.deleteReview
+                ReviewController.prototype.deleteReview,
             ).toHaveBeenCalledTimes(0);
             expect(
-                Authenticator.prototype.isAdminOrManager
+                Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
 
         test(`Returns 404 if model does not represent an existing product`, async () => {
             jest.spyOn(
                 ReviewController.prototype,
-                "deleteReview"
+                "deleteReview",
             ).mockRejectedValueOnce(new ProductNotFoundError());
             jest.spyOn(
                 Authenticator.prototype,
-                "isAdminOrManager"
+                "isAdminOrManager",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app).delete(`${baseURL}/`);
 
             expect(response.status).toBe(404);
             expect(
-                ReviewController.prototype.deleteReview
+                ReviewController.prototype.deleteReview,
             ).toHaveBeenCalledTimes(1);
             expect(
-                ReviewController.prototype.deleteReview
+                ReviewController.prototype.deleteReview,
             ).toHaveBeenCalledWith("model");
             expect(
-                Authenticator.prototype.isAdminOrManager
+                Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
     });
@@ -393,43 +393,43 @@ describe("Review routes", () => {
         test(`Returns 200 if successful`, async () => {
             jest.spyOn(
                 ReviewController.prototype,
-                "deleteAllReviews"
+                "deleteAllReviews",
             ).mockResolvedValueOnce(undefined);
             jest.spyOn(
                 Authenticator.prototype,
-                "isAdminOrManager"
+                "isAdminOrManager",
             ).mockImplementation((_req, _res, next) => next());
 
             const response = await request(app).delete(`${baseURL}/`);
 
             expect(response.status).toBe(200);
             expect(
-                ReviewController.prototype.deleteAllReviews
+                ReviewController.prototype.deleteAllReviews,
             ).toHaveBeenCalledTimes(1);
             expect(
-                Authenticator.prototype.isAdminOrManager
+                Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
 
         test(`Returns 401 if user is not an admin or manager`, async () => {
             jest.spyOn(
                 Authenticator.prototype,
-                "isAdminOrManager"
+                "isAdminOrManager",
             ).mockImplementation((_req, res, _next) =>
                 res.status(401).json({
                     error: "User is not an admin or manager",
                     status: 401,
-                })
+                }),
             );
 
             const response = await request(app).delete(`${baseURL}/model/all`);
 
             expect(response.status).toBe(401);
             expect(
-                ReviewController.prototype.deleteAllReviews
+                ReviewController.prototype.deleteAllReviews,
             ).toHaveBeenCalledTimes(0);
             expect(
-                Authenticator.prototype.isAdminOrManager
+                Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
     });
