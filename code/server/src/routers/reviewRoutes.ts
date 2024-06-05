@@ -38,8 +38,8 @@ class ReviewRoutes {
             param("model").isString().notEmpty(),
             body("score").isInt({ min: 1, max: 5 }),
             body("comment").isString().notEmpty(),
-            this.authenticator.isCustomer,
             this.errorHandler.validateRequest,
+            this.authenticator.isCustomer,
             (req: any, res: any, next: any) =>
                 this.controller
                     .addReview(
@@ -63,7 +63,8 @@ class ReviewRoutes {
          */
         this.router.get(
             "/:model",
-            body("model").isString().notEmpty(),
+            param("model").isString().notEmpty(),
+            this.errorHandler.validateRequest,
             this.authenticator.isLoggedIn,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -117,7 +118,7 @@ class ReviewRoutes {
         this.router.delete(
             "/",
             this.authenticator.isAdminOrManager,
-            (req: any, res: any, next: any) =>
+            (_req: any, res: any, next: any) =>
                 this.controller
                     .deleteAllReviews()
                     .then(() => res.status(200).send())

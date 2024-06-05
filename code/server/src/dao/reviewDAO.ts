@@ -16,28 +16,18 @@ class ReviewDAO {
         return new Promise<void>((resolve, reject) => {
             const sql =
                 "INSERT INTO reviews(model,user, score,comment) VALUES(?, ?, ?, ?)";
-            db.run(sql, [model, user, score, comment], (err: Error | null) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve();
-            });
+            db.run(sql, [model, user, score, comment], (err: Error | null) =>
+                err ? reject(err) : resolve(),
+            );
         });
     }
 
     checkExistsReview(model: string, user: User): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql = "SELECT * FROM reviews WHERE model = ? AND user = ?";
-            db.get(sql, [model, user], (err: Error | null, row: any) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve(row !== undefined);
-            });
+            db.get(sql, [model, user], (err: Error | null, row: any) =>
+                err ? reject(err) : resolve(!!row),
+            );
         });
     }
 
@@ -45,10 +35,7 @@ class ReviewDAO {
         return new Promise<ProductReview[]>((resolve, reject) => {
             const sql = "SELECT * FROM reviews WHERE model=?";
             db.all(sql, [model], (err: Error | null, rows: any[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+                if (err) return reject(err);
 
                 const productReviews: ProductReview[] = rows.map(
                     (row) =>
@@ -69,42 +56,25 @@ class ReviewDAO {
     deleteReview(model: string, user: User): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const sql = "DELETE FROM reviews WHERE model = ? AND user = ?";
-            db.run(sql, [model, user], (err: Error | null) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve();
-            });
+            db.run(sql, [model, user], (err: Error | null) =>
+                err ? reject(err) : resolve(),
+            );
         });
     }
 
     deleteReviewsOfProduct(model: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const sql = "DELETE FROM reviews WHERE model = ?";
-            db.run(sql, [model], (err: Error | null) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve();
-            });
+            db.run(sql, [model], (err: Error | null) =>
+                err ? reject(err) : resolve(),
+            );
         });
     }
 
     deleteAllReviews(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const sql = "DELETE FROM reviews ";
-            db.run(sql, [], (err: Error | null) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve();
-            });
+            db.run(sql, (err: Error | null) => (err ? reject(err) : resolve()));
         });
     }
 }

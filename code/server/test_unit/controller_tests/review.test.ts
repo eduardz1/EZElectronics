@@ -1,4 +1,11 @@
-import { test, expect, jest } from "@jest/globals";
+import {
+    test,
+    expect,
+    jest,
+    beforeEach,
+    afterEach,
+    describe,
+} from "@jest/globals";
 import ReviewController from "../../src/controllers/reviewController";
 import ReviewDAO from "../../src/dao/reviewDAO";
 import ProductDAO from "../../src/dao/productDAO";
@@ -9,7 +16,7 @@ import {
     ExistingReviewError,
     NoReviewProductError,
 } from "../../src/errors/reviewError";
-import { Category, Product } from "../../src/components/product";
+import { Category } from "../../src/components/product";
 
 beforeEach(() => {
     jest.mock("../../src/dao/reviewDAO");
@@ -474,22 +481,7 @@ describe("ReviewController", () => {
                 ReviewDAO.prototype,
                 "deleteAllReviews",
             ).mockResolvedValueOnce(undefined);
-            const testUser = {
-                username: "user",
-                name: "name",
-                surname: "surname",
-                role: Role.CUSTOMER,
-                address: "address",
-                birthdate: "1956-05-31",
-            };
 
-            const testReview = {
-                model: "model",
-                user: testUser,
-                score: 5,
-                date: "2021-06-01",
-                comment: "Great product!",
-            };
             const controller = new ReviewController();
             await controller.deleteAllReviews();
             expect(ReviewDAO.prototype.deleteAllReviews).toHaveBeenCalledTimes(

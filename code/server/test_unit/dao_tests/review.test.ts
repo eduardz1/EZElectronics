@@ -1,19 +1,9 @@
-import {
-    describe,
-    test,
-    expect,
-    beforeAll,
-    afterAll,
-    afterEach,
-    jest,
-} from "@jest/globals";
-import ProductDAO from "../../src/dao/productDAO";
+import { describe, test, expect, afterEach, jest } from "@jest/globals";
 import db from "../../src/db/db";
 
 import { Database } from "sqlite3";
-import { Role, User } from "../../src/components/user";
+import { Role } from "../../src/components/user";
 import ReviewDAO from "../../src/dao/reviewDAO";
-import reviewDAO from "../../src/dao/reviewDAO";
 
 jest.mock("crypto");
 jest.mock("../../src/db/db.ts");
@@ -76,7 +66,7 @@ describe("ReviewDAO", () => {
         });
 
         describe("checkExistsReview", () => {
-            test("Check for an existing review for a spefic product and user", async () => {
+            test("Check for an existing review for a specif product and user", async () => {
                 const testUser = {
                     username: "username",
                     name: "name",
@@ -94,7 +84,7 @@ describe("ReviewDAO", () => {
                 };
 
                 const reviewDAO = new ReviewDAO();
-                jest.spyOn(db, "run").mockImplementation(
+                jest.spyOn(db, "get").mockImplementation(
                     (_sql, _params, callback) => {
                         callback(null, testReview);
                         return {} as Database;
@@ -105,6 +95,49 @@ describe("ReviewDAO", () => {
                     testUser,
                 );
                 expect(result).toBe(true);
+            });
+
+            test("Returns false when review is not found", async () => {
+                const reviewDAO = new ReviewDAO();
+                jest.spyOn(db, "get").mockImplementation(
+                    (_sql, _params, callback) => {
+                        callback(null, undefined);
+                        return {} as Database;
+                    },
+                );
+                const result = await reviewDAO.checkExistsReview("model", {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                });
+                expect(result).toBe(false);
+            });
+
+            test("Fails to check for an existing review for a specific product and user", async () => {
+                const testUser = {
+                    username: "username",
+                    name: "name",
+                    surname: "surname",
+                    role: Role.CUSTOMER,
+                    address: "123 Main St",
+                    birthdate: "1965-10-10",
+                };
+
+                const reviewDAO = new ReviewDAO();
+                jest.spyOn(db, "get").mockImplementation(
+                    (_sql, _params, callback) => {
+                        callback(new Error());
+                        return {} as Database;
+                    },
+                );
+                reviewDAO
+                    .checkExistsReview("model", testUser)
+                    .catch((error) => {
+                        expect(error).toBeInstanceOf(Error);
+                    });
             });
         });
 
@@ -126,31 +159,31 @@ describe("ReviewDAO", () => {
                     comment: "details",
                 };
                 const reviewDAO = new ReviewDAO();
-                jest.spyOn(db, "get").mockImplementation(
+                jest.spyOn(db, "all").mockImplementation(
                     (_sql, _params, callback) => {
-                        callback(null, testReview);
+                        callback(null, [testReview]);
                         return {} as Database;
                     },
                 );
                 const result = await reviewDAO.getProductReviews("model");
-                expect(result).toEqual(testReview);
+                expect(result).toEqual([testReview]);
             });
 
-            test("Returns null when review is not found", async () => {
+            test("Returns empty array when review is not found", async () => {
                 const reviewDAO = new ReviewDAO();
-                jest.spyOn(db, "get").mockImplementation(
+                jest.spyOn(db, "all").mockImplementation(
                     (_sql, _params, callback) => {
-                        callback(null, null);
+                        callback(null, []);
                         return {} as Database;
                     },
                 );
                 const result = await reviewDAO.getProductReviews("model");
-                expect(result).toBeNull();
+                expect(result).toEqual([]);
             });
 
             test("Fails to get a review by model", async () => {
                 const reviewDAO = new ReviewDAO();
-                jest.spyOn(db, "get").mockImplementation(
+                jest.spyOn(db, "all").mockImplementation(
                     (_sql, _params, callback) => {
                         callback(new Error());
                         return {} as Database;
@@ -242,40 +275,21 @@ describe("ReviewDAO", () => {
 
         describe("deleteAllReviews", () => {
             test("Deletes all reviews from the database", async () => {
-                const testUser = {
-                    username: "username",
-                    name: "name",
-                    surname: "surname",
-                    role: Role.CUSTOMER,
-                    address: "123 Main St",
-                    birthdate: "1965-10-10",
-                };
-
-                const testReview = {
-                    model: "model",
-                    user: testUser,
-                    score: 3,
-                    comment: "details",
-                };
                 const reviewDAO = new ReviewDAO();
-                jest.spyOn(db, "run").mockImplementation(
-                    (_sql, _params, callback) => {
-                        callback(null, testReview);
-                        return {} as Database;
-                    },
-                );
+                jest.spyOn(db, "run").mockImplementation((_sql, callback) => {
+                    callback(null);
+                    return {} as Database;
+                });
                 const result = await reviewDAO.deleteAllReviews();
                 expect(result).toBe(undefined);
             });
 
             test("Fails to delete all reviews from the database", async () => {
                 const reviewDAO = new ReviewDAO();
-                jest.spyOn(db, "run").mockImplementation(
-                    (_sql, _params, callback) => {
-                        callback(new Error());
-                        return {} as Database;
-                    },
-                );
+                jest.spyOn(db, "run").mockImplementation((_sql, callback) => {
+                    callback(new Error());
+                    return {} as Database;
+                });
                 reviewDAO.deleteAllReviews().catch((error) => {
                     expect(error).toBeInstanceOf(Error);
                 });
