@@ -176,6 +176,10 @@ class UserDAO {
         });
     }
 
+    /**
+     * Deletes all users from the database except for the ones with the 'Admin' role.
+     * @returns A Promise that resolves to a boolean indicating whether the deletion was successful.
+     */
     deleteAll(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql = "DELETE FROM users WHERE role != 'Admin'";
@@ -223,6 +227,11 @@ class UserDAO {
         });
     }
 
+    /**
+     * Checks if a user with the given username exists in the database.
+     * @param username - The username to check.
+     * @returns A Promise that resolves to a boolean indicating whether the user exists or not.
+     */
     checkIfUserExists(username: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql =
@@ -238,6 +247,18 @@ class UserDAO {
         });
     }
 
+    /**
+     * Updates the user information in the database.
+     *
+     * @param  username - The username of the user to update.
+     * @param  name - The new name of the user.
+     * @param  surname - The new surname of the user.
+     * @param  address - The new address of the user.
+     * @param  birthdate - The new birthdate of the user.
+     * @returns A promise that resolves to the updated user object.
+     * @throws {UserNotFoundError} If the user with the specified username is not found.
+     * @throws {Error} If there is an error updating the user information.
+     */
     updateUserInfo(
         username: string,
         name: string,

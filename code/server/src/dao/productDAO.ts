@@ -6,6 +6,17 @@ import db from "../db/db";
  * You are free to implement any method you need here, as long as the requirements are satisfied.
  */
 class ProductDAO {
+    /**
+     * Registers products in the database.
+     *
+     * @param model - The model of the product.
+     * @param category - The category of the product.
+     * @param quantity - The quantity of the product.
+     * @param details - The details of the product (optional).
+     * @param sellingPrice - The selling price of the product.
+     * @param arrivalDate - The arrival date of the product (optional).
+     * @returns A promise that resolves to a boolean indicating whether the registration was successful.
+     */
     registerProducts(
         model: string,
         category: string,
@@ -67,6 +78,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets a product by its model.
+     *
+     * @param model - The model of the product.
+     * @returns A promise that resolves to a product object if the product is found, or null otherwise.
+     */
     getProductByModel(model: string): Promise<Product | null> {
         return new Promise<Product | null>((resolve, reject) => {
             const sql = "SELECT * FROM products WHERE model = ?";
@@ -92,6 +109,15 @@ class ProductDAO {
             });
         });
     }
+
+    /**
+     * Changes the quantity of a product.
+     *
+     * @param model - The model of the product.
+     * @param newQuantity - The new quantity of the product.
+     * @param changeDate - The date of the change (optional).
+     * @returns A promise that resolves to the new quantity of the product.
+     */
 
     changeProductQuantity(
         model: string,
@@ -121,6 +147,14 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Sells a product.
+     *
+     * @param model - The model of the product.
+     * @param quantity - The quantity of the product to sell.
+     * @param sellingDate - The date of the sale (optional).
+     * @returns A promise that resolves to the new quantity of the product.
+     */
     sellProduct(
         model: string,
         quantity: number,
@@ -141,6 +175,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets all products of a given category.
+     *
+     * @param category - The category of the products.
+     * @returns A promise that resolves to an array of products.
+     */
     getProductsByCategory(category: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
             const sql = "SELECT * FROM products WHERE category = ?";
@@ -164,6 +204,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets all products of a given model.
+     *
+     * @param model - The model of the products.
+     * @returns A promise that resolves to an array of products.
+     */
     getProductsByModel(model: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
             const sql = "SELECT * FROM products WHERE model = ?";
@@ -187,6 +233,11 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets all products.
+     *
+     * @returns A promise that resolves to an array of all products.
+     */
     getAllProducts(): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
             const sql = "SELECT * FROM products";
@@ -210,6 +261,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets all available products of a given category.
+     *
+     * @param category - The category of the products.
+     * @returns A promise that resolves to an array of products.
+     */
     getAvailableProductsByCategory(category: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
             const sql =
@@ -234,6 +291,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets all available products of a given model.
+     *
+     * @param model - The model of the products.
+     * @returns A promise that resolves to an array of products.
+     */
     getAvailableProductsByModel(model: string): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
             const sql =
@@ -258,6 +321,11 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Gets all available products.
+     *
+     * @returns A promise that resolves to an array of all available products.
+     */
     getAllAvailableProducts(): Promise<Product[]> {
         return new Promise<Product[]>((resolve, reject) => {
             const sql = "SELECT * FROM products WHERE quantity > 0";
@@ -281,6 +349,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Deletes all products.
+     *
+     * @returns A promise that resolves to a boolean indicating whether the deletion was successful.
+     * @throws An error if the deletion was not successful.
+     */
     deleteAllProducts(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql = "DELETE FROM products";
@@ -295,6 +369,12 @@ class ProductDAO {
         });
     }
 
+    /**
+     * Deletes all products of a given model.
+     *
+     * @param model - The model of the products.
+     * @returns A promise that resolves to a boolean indicating whether the deletion was successful.
+     */
     deleteProduct(model: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql = "DELETE FROM products WHERE model = ?";

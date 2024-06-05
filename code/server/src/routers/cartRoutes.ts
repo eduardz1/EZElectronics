@@ -1,6 +1,5 @@
 import express, { Router } from "express";
 import ErrorHandler from "../helper";
-import { body, param } from "express-validator";
 import CartController from "../controllers/cartController";
 import Authenticator from "./auth";
 import { Cart } from "../components/cart";
