@@ -1629,6 +1629,27 @@ describe("Product routes", () => {
             ).toHaveBeenCalledTimes(1);
         });
 
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                ProductController.prototype,
+                "deleteAllProducts",
+            ).mockRejectedValueOnce(new Error());
+            jest.spyOn(
+                Authenticator.prototype,
+                "isAdminOrManager",
+            ).mockImplementation((_req, _res, next) => next());
+
+            const response = await request(app).delete(`${baseURL}/`);
+
+            expect(response.status).toBe(503);
+            expect(
+                ProductController.prototype.deleteAllProducts,
+            ).toHaveBeenCalledTimes(1);
+            expect(
+                Authenticator.prototype.isAdminOrManager,
+            ).toHaveBeenCalledTimes(1);
+        });
+
         test(`Returns 401 if user is not an admin or manager`, async () => {
             jest.spyOn(
                 Authenticator.prototype,

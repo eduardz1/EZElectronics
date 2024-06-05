@@ -12,8 +12,6 @@ import {
     UserNotFoundError,
 } from "../../src/errors/userError";
 
-const baseURL = "/ezelectronics/users";
-
 jest.mock("../../src/routers/auth");
 jest.mock("../../src/controllers/userController");
 
@@ -22,6 +20,8 @@ afterEach(() => {
 });
 
 describe("UserRoutes", () => {
+    const baseURL = "/ezelectronics/users";
+
     describe(`POST ${baseURL}/`, () => {
         test("Returns 200 if successful", async () => {
             jest.spyOn(
@@ -38,6 +38,30 @@ describe("UserRoutes", () => {
             });
 
             expect(response.status).toBe(200);
+            expect(UserController.prototype.createUser).toHaveBeenCalledWith(
+                "testUser",
+                "Test",
+                "User",
+                "password",
+                Role.CUSTOMER,
+            );
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "createUser",
+            ).mockRejectedValueOnce(new Error("Error"));
+
+            const response = await request(app).post(`${baseURL}/`).send({
+                username: "testUser",
+                name: "Test",
+                surname: "User",
+                password: "password",
+                role: Role.CUSTOMER,
+            });
+
+            expect(response.status).toBe(503);
             expect(UserController.prototype.createUser).toHaveBeenCalledWith(
                 "testUser",
                 "Test",
@@ -210,6 +234,21 @@ describe("UserRoutes", () => {
             expect(UserController.prototype.getUsers).toHaveBeenCalled();
         });
 
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUsers",
+            ).mockRejectedValueOnce(new Error("Error"));
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
+
+            const response = await request(app).get(`${baseURL}/`);
+
+            expect(response.status).toBe(503);
+            expect(UserController.prototype.getUsers).toHaveBeenCalled();
+        });
+
         test("Returns 401 if user is not an admin", async () => {
             jest.spyOn(
                 UserController.prototype,
@@ -255,6 +294,25 @@ describe("UserRoutes", () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(users);
+            expect(
+                UserController.prototype.getUsersByRole,
+            ).toHaveBeenCalledWith(Role.CUSTOMER);
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUsersByRole",
+            ).mockRejectedValueOnce(new Error("Error"));
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
+
+            const response = await request(app).get(
+                `${baseURL}/roles/${Role.CUSTOMER}`,
+            );
+
+            expect(response.status).toBe(503);
             expect(
                 UserController.prototype.getUsersByRole,
             ).toHaveBeenCalledWith(Role.CUSTOMER);
@@ -306,6 +364,24 @@ describe("UserRoutes", () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(user);
+            expect(
+                UserController.prototype.getUserByUsername,
+            ).toHaveBeenCalled();
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockRejectedValueOnce(new Error("Error"));
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app).get(`${baseURL}/testUser`);
+
+            expect(response.status).toBe(503);
             expect(
                 UserController.prototype.getUserByUsername,
             ).toHaveBeenCalled();
@@ -410,6 +486,22 @@ describe("UserRoutes", () => {
             expect(UserController.prototype.deleteUser).toHaveBeenCalled();
         });
 
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "deleteUser",
+            ).mockRejectedValueOnce(new Error("Error"));
+
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
+
+            const response = await request(app).delete(`${baseURL}/testUser`);
+
+            expect(response.status).toBe(503);
+            expect(UserController.prototype.deleteUser).toHaveBeenCalled();
+        });
+
         test("Returns 401 if user is not an admin", async () => {
             jest.spyOn(
                 UserController.prototype,
@@ -442,6 +534,20 @@ describe("UserRoutes", () => {
             const response = await request(app).delete(`${baseURL}/`);
 
             expect(response.status).toBe(200);
+            expect(UserController.prototype.deleteAll).toHaveBeenCalled();
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(UserController.prototype, "deleteAll").mockRejectedValue(
+                new Error("Error"),
+            );
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
+
+            const response = await request(app).delete(`${baseURL}/`);
+
+            expect(response.status).toBe(503);
             expect(UserController.prototype.deleteAll).toHaveBeenCalled();
         });
 
@@ -498,6 +604,43 @@ describe("UserRoutes", () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual(updatedUser);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).toHaveBeenCalledWith(
+                undefined,
+                "Updated",
+                "User",
+                "New Address",
+                "2000-01-01",
+                "testUser",
+            );
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            jest.spyOn(
+                UserController.prototype,
+                "updateUserInfo",
+            ).mockRejectedValue(new Error("Error"));
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(503);
             expect(
                 UserController.prototype.updateUserInfo,
             ).toHaveBeenCalledWith(
@@ -702,6 +845,150 @@ describe("UserRoutes", () => {
                 "2000-01-01",
                 "testUser2",
             );
+        });
+    });
+});
+
+describe("AuthRoutes", () => {
+    const baseURL = "/ezelectronics/sessions";
+
+    describe(`POST ${baseURL}`, () => {
+        test("Returns 200 if successful", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            jest.spyOn(Authenticator.prototype, "login").mockResolvedValue(
+                user,
+            );
+
+            const response = await request(app).post(`${baseURL}`).send({
+                username: "testUser",
+                password: "password",
+            });
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(user);
+            expect(Authenticator.prototype.login).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if username does not exist", async () => {
+            jest.spyOn(Authenticator.prototype, "login").mockRejectedValue(
+                new Error("User not found"),
+            );
+
+            const response = await request(app).post(`${baseURL}`).send({
+                username: "testUser",
+                password: "password",
+            });
+
+            expect(response.status).toBe(401);
+            expect(Authenticator.prototype.login).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if password is incorrect", async () => {
+            jest.spyOn(Authenticator.prototype, "login").mockRejectedValue(
+                new Error("Incorrect password"),
+            );
+
+            const response = await request(app).post(`${baseURL}`).send({
+                username: "testUser",
+                password: "password",
+            });
+
+            expect(response.status).toBe(401);
+            expect(Authenticator.prototype.login).toHaveBeenCalled();
+        });
+    });
+
+    describe(`DELETE ${baseURL}/current`, () => {
+        test("Returns 200 if successful, logout", async () => {
+            jest.spyOn(Authenticator.prototype, "logout").mockResolvedValue(
+                null,
+            );
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req, _res, next) => {
+                next();
+            });
+
+            const response = await request(app).delete(`${baseURL}/current`);
+
+            expect(response.status).toBe(200);
+            expect(Authenticator.prototype.logout).toHaveBeenCalled();
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(Authenticator.prototype, "logout").mockRejectedValue(
+                new Error("Error"),
+            );
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req, _res, next) => {
+                next();
+            });
+
+            const response = await request(app).delete(`${baseURL}/current`);
+
+            expect(response.status).toBe(503);
+            expect(Authenticator.prototype.logout).toHaveBeenCalled();
+        });
+
+        test("Returns 401 if user is not logged in", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req, res) => {
+                res.status(401).send("Unauthorized");
+            });
+
+            const response = await request(app).delete(`${baseURL}/current`);
+
+            expect(response.status).toBe(401);
+        });
+    });
+
+    describe(`GET ${baseURL}/current`, () => {
+        test("Returns 200 if successful", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req, _res, next) => {
+                _req.user = user;
+                next();
+            });
+
+            const response = await request(app).get(`${baseURL}/current`);
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual(user);
+        });
+
+        test("Returns 401 if user is not logged in", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req, res) => {
+                res.status(401).send("Unauthorized");
+            });
+
+            const response = await request(app).get(`${baseURL}/current`);
+
+            expect(response.status).toBe(401);
         });
     });
 });
