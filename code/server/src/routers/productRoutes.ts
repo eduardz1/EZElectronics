@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import ErrorHandler from "../helper";
-import { body, param } from "express-validator";
+import { body, query } from "express-validator";
 import ProductController from "../controllers/productController";
 import Authenticator from "./auth";
 import { Category, Product } from "../components/product";
@@ -57,12 +57,15 @@ class ProductRoutes {
          */
         this.router.post(
             "/",
-            body("model").isString().notEmpty(),
+            body("model").isString().notEmpty({ ignore_whitespace: true }),
             body("category").isString().isIn(Object.values(Category)),
-            body("quantity").isNumeric().notEmpty(),
+            body("quantity").isInt({ gt: 0 }),
             body("details").isString(),
-            body("sellingPrice").isNumeric().notEmpty(),
-            body("arrivalDate").isString(),
+            body("sellingPrice").isNumeric(),
+            body("arrivalDate")
+                .optional()
+                .isString()
+                .isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
             this.authenticator.isAdminOrManager,
             (req: any, res: any, next: any) =>
@@ -90,9 +93,11 @@ class ProductRoutes {
          */
         this.router.patch(
             "/:model",
-            param("model").isString().notEmpty(),
-            body("quantity").isNumeric().notEmpty(),
-            body("changeDate").isString(),
+            body("quantity").isInt({ gt: 0 }),
+            body("changeDate")
+                .optional()
+                .isString()
+                .isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
             this.authenticator.isAdminOrManager,
             (req: any, res: any, next: any) =>
@@ -119,9 +124,11 @@ class ProductRoutes {
          */
         this.router.patch(
             "/:model/sell",
-            param("model").isString().notEmpty(),
-            body("quantity").isNumeric().notEmpty(),
-            body("sellingDate").isString(),
+            body("quantity").isInt({ gt: 0 }),
+            body("sellingDate")
+                .optional()
+                .isString()
+                .isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
             this.authenticator.isAdminOrManager,
             (req: any, res: any, next: any) =>
@@ -179,7 +186,21 @@ class ProductRoutes {
          */
         this.router.get(
             "/available",
-            // TODO: should we validate the query parameters? They are not strings
+            query("grouping").optional().isIn(["category", "model"]),
+            query("category")
+                .if(query("grouping").equals("category"))
+                .isIn(Object.values(Category))
+                .if(query("grouping").equals("model"))
+                .isEmpty()
+                .if(query("grouping").isEmpty())
+                .isEmpty(),
+            query("model")
+                .if(query("grouping").equals("model"))
+                .notEmpty()
+                .if(query("grouping").equals("category"))
+                .isEmpty()
+                .if(query("grouping").isEmpty())
+                .isEmpty(),
             this.authenticator.isLoggedIn,
             (req: any, res: any, next: any) =>
                 this.controller

@@ -1,12 +1,12 @@
 import { User } from "../components/user";
 import UserDAO from "../dao/userDAO";
 import {
-    BirthdateError,
     UserIsAdminError,
     UserNotAdminError,
     UserNotFoundError,
 } from "../errors/userError";
 import dayjs from "dayjs";
+import { DateError } from "../utilities";
 
 /**
  * Represents a controller for managing users.
@@ -128,7 +128,7 @@ class UserController {
         }
 
         if (dayjs(birthdate).isAfter(dayjs())) {
-            throw new BirthdateError();
+            throw new DateError();
         }
 
         return this.dao.updateUserInfo(

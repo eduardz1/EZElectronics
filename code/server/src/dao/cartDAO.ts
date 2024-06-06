@@ -75,6 +75,11 @@ class CartDAO {
         });
     }
 
+    /**
+     * Retrieves the user's active cart from the database.
+     * @param user The user whose cart will be retrieved.
+     * @returns A Promise that resolves to the user's active cart, or null if no active cart exists.
+     */
     getCart(user: User): Promise<Cart | null> {
         return new Promise<Cart | null>((resolve, reject) => {
             const sql =
@@ -108,6 +113,12 @@ class CartDAO {
         });
     }
 
+    /**
+     * Retrieves all products in the user's cart.
+     * @param customer The user whose cart will be retrieved.
+     * @param paymentDate The date of the cart to retrieve. If null, retrieves the active cart.
+     * @returns A Promise that resolves to an array of products in the cart.
+     */
     getProductsInCart(
         customer: User,
         paymentDate: string | null,
@@ -342,6 +353,11 @@ class CartDAO {
         });
     }
 
+    /**
+     * Creates a new cart for the user.
+     * @param user The user for whom to create a new cart.
+     * @returns A Promise that resolves to the newly created cart.
+     */
     createCart(user: User): Promise<Cart> {
         return new Promise<Cart>((resolve, reject) => {
             const sql =

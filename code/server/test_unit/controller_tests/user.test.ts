@@ -9,12 +9,12 @@ import {
 import UserController from "../../src/controllers/userController";
 import UserDAO from "../../src/dao/userDAO";
 import {
-    BirthdateError,
     UserIsAdminError,
     UserNotAdminError,
     UserNotFoundError,
 } from "../../src/errors/userError";
 import { User, Role } from "../../src/components/user";
+import { DateError } from "../../src/utilities";
 
 beforeEach(() => {
     jest.mock("../../src/dao/userDAO");
@@ -469,7 +469,7 @@ describe("UserController", () => {
                     "3000-01-01",
                     testUser.username,
                 ),
-            ).rejects.toThrow(BirthdateError);
+            ).rejects.toThrow(DateError);
         });
 
         test("Update user information for a user that does not exist", async () => {

@@ -1,9 +1,6 @@
 import { test, expect, jest, describe, afterEach } from "@jest/globals";
 import request from "supertest";
 import {
-    ArrivalDateInTheFutureError,
-    ChangeDateBeforeArrivalDateError,
-    ChangeDateInTheFutureError,
     EmptyProductStockError,
     IncorrectCategoryGroupingError,
     IncorrectGroupingError,
@@ -12,10 +9,11 @@ import {
     ProductAlreadyExistsError,
     ProductNotFoundError,
 } from "../../src/errors/productError";
-import { Category } from "../../src/components/product";
+import { Category, Product } from "../../src/components/product";
 import { app } from "../../index";
 import Authenticator from "../../src/routers/auth";
 import ProductController from "../../src/controllers/productController";
+import { DateError } from "../../src/utilities";
 
 const baseURL = "/ezelectronics/products";
 
@@ -29,14 +27,14 @@ afterEach(() => {
 describe("Product routes", () => {
     describe(`POST ${baseURL}/`, () => {
         test("Returns 200 if successful", async () => {
-            const testProduct = {
-                model: "model",
-                category: Category.SMARTPHONE,
-                quantity: 1,
-                details: "details",
-                sellingPrice: 1,
-                arrivalDate: "2022-01-01",
-            };
+            const testProduct = new Product(
+                1,
+                "model",
+                Category.SMARTPHONE,
+                "2022-01-01",
+                "details",
+                1,
+            );
             jest.spyOn(
                 ProductController.prototype,
                 "registerProducts",
@@ -455,7 +453,7 @@ describe("Product routes", () => {
             jest.spyOn(
                 ProductController.prototype,
                 "registerProducts",
-            ).mockRejectedValueOnce(new ArrivalDateInTheFutureError());
+            ).mockRejectedValueOnce(new DateError());
 
             const response = await request(app)
                 .post(`${baseURL}/`)
@@ -683,7 +681,7 @@ describe("Product routes", () => {
             jest.spyOn(
                 ProductController.prototype,
                 "changeProductQuantity",
-            ).mockRejectedValueOnce(new ChangeDateInTheFutureError());
+            ).mockRejectedValueOnce(new DateError());
 
             const response = await request(app)
                 .patch(`${baseURL}/model`)
@@ -717,7 +715,7 @@ describe("Product routes", () => {
             jest.spyOn(
                 ProductController.prototype,
                 "changeProductQuantity",
-            ).mockRejectedValueOnce(new ChangeDateBeforeArrivalDateError());
+            ).mockRejectedValueOnce(new DateError());
 
             const response = await request(app)
                 .patch(`${baseURL}/model`)
@@ -918,7 +916,7 @@ describe("Product routes", () => {
             jest.spyOn(
                 ProductController.prototype,
                 "sellProduct",
-            ).mockRejectedValueOnce(new ChangeDateInTheFutureError());
+            ).mockRejectedValueOnce(new DateError());
             jest.spyOn(
                 Authenticator.prototype,
                 "isAdminOrManager",
@@ -952,7 +950,7 @@ describe("Product routes", () => {
             jest.spyOn(
                 ProductController.prototype,
                 "sellProduct",
-            ).mockRejectedValueOnce(new ChangeDateBeforeArrivalDateError());
+            ).mockRejectedValueOnce(new DateError());
             jest.spyOn(
                 Authenticator.prototype,
                 "isAdminOrManager",
@@ -1621,6 +1619,27 @@ describe("Product routes", () => {
             const response = await request(app).delete(`${baseURL}/`);
 
             expect(response.status).toBe(200);
+            expect(
+                ProductController.prototype.deleteAllProducts,
+            ).toHaveBeenCalledTimes(1);
+            expect(
+                Authenticator.prototype.isAdminOrManager,
+            ).toHaveBeenCalledTimes(1);
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                ProductController.prototype,
+                "deleteAllProducts",
+            ).mockRejectedValueOnce(new Error());
+            jest.spyOn(
+                Authenticator.prototype,
+                "isAdminOrManager",
+            ).mockImplementation((_req, _res, next) => next());
+
+            const response = await request(app).delete(`${baseURL}/`);
+
+            expect(response.status).toBe(503);
             expect(
                 ProductController.prototype.deleteAllProducts,
             ).toHaveBeenCalledTimes(1);

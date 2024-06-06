@@ -70,6 +70,63 @@ describe("ProductDAO", () => {
             expect(result).toBe(true);
         });
 
+        test("Register a product without arrival date but with details", async () => {
+            const productDAO = new ProductDAO();
+            jest.spyOn(db, "run").mockImplementation(
+                (_sql, _params, callback) => {
+                    callback(null);
+                    return {} as Database;
+                },
+            );
+            const result = await productDAO.registerProducts(
+                "model",
+                Category.LAPTOP,
+                10,
+                "details",
+                10,
+                null,
+            );
+            expect(result).toBe(true);
+        });
+
+        test("Register a product with details but without arrivalDate", async () => {
+            const productDAO = new ProductDAO();
+            jest.spyOn(db, "run").mockImplementation(
+                (_sql, _params, callback) => {
+                    callback(null);
+                    return {} as Database;
+                },
+            );
+            const result = await productDAO.registerProducts(
+                "model",
+                Category.LAPTOP,
+                10,
+                null,
+                10,
+                "2021-10-10",
+            );
+            expect(result).toBe(true);
+        });
+
+        test("Register a product without details and arrivalDate", async () => {
+            const productDAO = new ProductDAO();
+            jest.spyOn(db, "run").mockImplementation(
+                (_sql, _params, callback) => {
+                    callback(null);
+                    return {} as Database;
+                },
+            );
+            const result = await productDAO.registerProducts(
+                "model",
+                Category.LAPTOP,
+                10,
+                null,
+                10,
+                null,
+            );
+            expect(result).toBe(true);
+        });
+
         test("Fails to register a product", async () => {
             const productDAO = new ProductDAO();
             jest.spyOn(db, "run").mockImplementation(

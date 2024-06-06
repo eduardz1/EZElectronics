@@ -10,8 +10,6 @@ import ProductController from "../../src/controllers/productController";
 import ProductDAO from "../../src/dao/productDAO";
 import { Category } from "../../src/components/product";
 import {
-    ArrivalDateInTheFutureError,
-    ChangeDateInTheFutureError,
     EmptyProductStockError,
     IncorrectGroupingError,
     LowProductStockError,
@@ -20,6 +18,7 @@ import {
     ProductAlreadyExistsError,
     ProductNotFoundError,
 } from "../../src/errors/productError";
+import { DateError } from "../../src/utilities";
 
 beforeEach(() => {
     jest.mock("../../src/dao/productDAO");
@@ -155,7 +154,7 @@ describe("ProductController", () => {
                     testProduct.sellingPrice,
                     testProduct.arrivalDate,
                 ),
-            ).rejects.toThrow(ArrivalDateInTheFutureError);
+            ).rejects.toThrow(DateError);
         });
     });
 
@@ -245,7 +244,7 @@ describe("ProductController", () => {
                     1,
                     "3000-01-01",
                 ),
-            ).rejects.toThrow(ChangeDateInTheFutureError);
+            ).rejects.toThrow(DateError);
         });
 
         test("Increase the quantity of a product with a change date before the arrival date", async () => {
