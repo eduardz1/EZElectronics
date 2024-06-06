@@ -1,252 +1,361 @@
-import { test, expect, jest, beforeEach, describe } from "@jest/globals";
-import { User, Role } from "../../src/components/user";
-import CartDAO from "../../src/dao/cartDAO";
-import db from "../../src/db/db";
+import {
+    test,
+    expect,
+    jest,
+    beforeEach,
+    afterEach,
+    describe,
+  } from "@jest/globals";
+  import CartController from "../../src/controllers/cartController";
+  import CartDAO from "../../src/dao/cartDAO";
+  import { Role, User } from "../../src/components/user";
+  import { Category, Product } from "../../src/components/product";
+  import { Cart, ProductInCart } from "../../src/components/cart";
+  
+  jest.mock("../../src/dao/cartDAO"); 
 
-jest.mock("../../src/db/db.ts");
+describe("CartController", () => {
+  let user: User;
 
-const mockDbGet = (error: Error | null = null, result: any = undefined) => {
-    return jest.spyOn(db, "get").mockImplementation((...args: any[]) => {
-        const callback = args[args.length - 1];
-        callback(error, result);
-    });
-};
-
-const mockDbRun = (error: Error | null = null) => {
-    return jest.spyOn(db, "run").mockImplementation((...args: any[]) => {
-        const callback = args[args.length - 1];
-        callback(error);
-    });
-};
-
-describe("CartDAO", () => {
-    let cartDao: CartDAO;
-    let mockUser: User;
-
-    // Set up CartDAO and mockUser before each test
-    beforeEach(() => {
-        cartDao = new CartDAO();
-        mockUser = new User(
-            "testuser",
-            "User",
-            "User",
-            Role.CUSTOMER,
-            "User",
-            "User",
-        );
-        jest.clearAllMocks();
-    });
-
+  beforeEach(() => {
+    user = new User("testuser", "Test", "User", Role.CUSTOMER, "testuser@example.com", "password123");
+    jest.clearAllMocks(); 
+  });
+  
     describe("addToCart", () => {
-        // Test adding a new product to the cart
-        test("adds a new product if not already in the cart", async () => {
-            mockDbGet(null, undefined); // Mock db.get to return no existing product
-            mockDbRun(); // Mock db.run to succeed
-
-            const productId = "prod123";
-            const result = await cartDao.addToCart(mockUser, productId);
-
-            // Verify db.get was called correctly
-            expect(db.get).toHaveBeenCalledTimes(1);
-            expect(db.get).toHaveBeenCalledWith(
-                expect.stringContaining("SELECT * FROM products_in_cart"),
-                [mockUser.username, productId],
-                expect.any(Function),
-            );
-
-            // Verify db.run was called correctly
-            expect(db.run).toHaveBeenCalledWith(
-                expect.stringContaining("INSERT INTO products_in_cart"),
-                [
-                    productId,
-                    1,
-                    expect.any(String),
-                    expect.any(Number),
-                    mockUser.username,
-                    null,
-                ],
-                expect.any(Function),
-            );
-
-            // Verify the result
-            expect(result).toBe(true);
-        });
-
-        // Test increasing quantity of an existing product in the cart
-        test("increases quantity if the product is already in the cart", async () => {
-            const existingProduct = {
-                quantity: 1,
-                category: "Electronics",
-                price: 299,
-            };
-            mockDbGet(null, existingProduct); // Mock db.get to return an existing product
-            mockDbRun(); // Mock db.run to succeed
-
-            const productId = "prod123";
-            const result = await cartDao.addToCart(mockUser, productId);
-
-            // Verify db.get was called correctly
-            expect(db.get).toHaveBeenCalledTimes(1);
-            // Verify db.run was called correctly
-            expect(db.run).toHaveBeenCalledWith(
-                expect.stringContaining(
-                    "UPDATE products_in_cart SET quantity = ?",
-                ),
-                [
-                    existingProduct.quantity + 1,
-                    mockUser.username,
-                    productId,
-                    null,
-                ],
-                expect.any(Function),
-            );
-
-            // Verify the result
-            expect(result).toBe(true);
-        });
-
-        // Test handling database errors when adding a new product
-        test("handles database errors when adding a new product", async () => {
-            mockDbGet(new Error("Database error")); // Mock db.get to return an error
-
-            const productId = "prod123";
-            // Expect the addToCart method to throw an error
-            await expect(
-                cartDao.addToCart(mockUser, productId),
-            ).rejects.toThrow("Database error");
-
-            // Verify db.get was called
-            expect(db.get).toHaveBeenCalled();
-            // Verify db.run was not called
-            expect(db.run).not.toHaveBeenCalled();
-        });
-
-        // Test handling database errors when increasing quantity of an existing product
-        test("handles database errors when increasing quantity", async () => {
-            const existingProduct = {
-                quantity: 1,
-                category: "Electronics",
-                price: 299,
-            };
-            mockDbGet(null, existingProduct); // Mock db.get to return an existing product
-            mockDbRun(new Error("Database error")); // Mock db.run to return an error
-
-            const productId = "prod123";
-            // Expect the addToCart method to throw an error
-            await expect(
-                cartDao.addToCart(mockUser, productId),
-            ).rejects.toThrow("Database error");
-
-            // Verify db.get was called
-            expect(db.get).toHaveBeenCalledTimes(1);
-            // Verify db.run was called
-            expect(db.run).toHaveBeenCalled();
-        });
+      test("Add a valid product to the cart", async () => {
+        const testProduct = new Product(3, "test", Category.APPLIANCE, "test", "test", 2);
+        const testCart = new Cart(user.username, false, null, 0, []);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "addToCart").mockResolvedValueOnce(true);
+  
+        const controller = new CartController();
+        const response = await controller.addToCart(user, testProduct.model);
+  
+        expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.addToCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.addToCart).toHaveBeenCalledWith(user, testProduct.model);
+        expect(response).toBe(true);
+      });
+  
+      test("Add a product that already exists in the cart and increase quantity", async () => {
+        const testProduct = new Product(3, "test", Category.APPLIANCE, "test", "test", 2);
+        const testCart = new Cart(user.username, false, null, 0, [{ model: "test", quantity: 1, category: Category.APPLIANCE, price: 1 }]);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "addToCart").mockResolvedValueOnce(true);
+  
+        const controller = new CartController();
+        const response = await controller.addToCart(user, testProduct.model);
+  
+        expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.addToCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.addToCart).toHaveBeenCalledWith(user, testProduct.model);
+        expect(response).toBe(true);
+      });
+  
+      test("Try to add an item that is not a product", async () => {
+        const controller = new CartController();
+        await expect(controller.addToCart(user, "not a product")).rejects.toThrow(
+          new Error("Incorrect item type")
+        );
+      });
+  
+      test("Try to add a product that does not exist", async () => {
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(new Cart(user.username, false, null, 0, []));
+        jest.spyOn(CartDAO.prototype, "addToCart").mockRejectedValueOnce(
+          new Error("Item not found")
+        );
+  
+        const controller = new CartController();
+        await expect(controller.addToCart(user, "test")).rejects.toThrow(
+          new Error("Item not found")
+        );
+      });
+  
+      test("Try to add a product with insufficient quantity", async () => {
+        const testProduct = new Product(3, "test", Category.APPLIANCE, "test", "test", 2);
+        const testCart = new Cart(user.username, false, null, 0, []);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "addToCart").mockRejectedValueOnce(
+          new Error("Insufficient product quantity")
+        );
+  
+        const controller = new CartController();
+        await expect(controller.addToCart(user, testProduct.model)).rejects.toThrow(
+          new Error("Insufficient product quantity")
+        );
+      });
     });
-
-    describe("removeFromCart", () => {
-        // Test removing a product from the cart
-        test("removes a product from the cart", async () => {
-            mockDbRun(); // Mock db.run to succeed
-
-            const productId = "prod123";
-            const result = await cartDao.removeFromCart(mockUser, productId);
-
-            // Verify db.run was called correctly
-            expect(db.run).toHaveBeenCalledWith(
-                expect.stringContaining("DELETE FROM products_in_cart"),
-                [mockUser.username, productId],
-                expect.any(Function),
-            );
-
-            // Verify the result
-            expect(result).toBe(true);
-        });
-
-        // Test handling database errors when removing a product
-        test("handles database errors when removing a product", async () => {
-            mockDbRun(new Error("Database error")); // Mock db.run to return an error
-
-            const productId = "prod123";
-            // Expect the removeFromCart method to throw an error
-            await expect(
-                cartDao.removeFromCart(mockUser, productId),
-            ).rejects.toThrow("Database error");
-
-            // Verify db.run was called
-            expect(db.run).toHaveBeenCalled();
-        });
+  
+    describe("removeProductFromCart", () => {
+      test("Remove a valid product from the cart", async () => {
+        const testProduct = new Product(3, "test", Category.APPLIANCE, "test", "test", 2);
+        const testCart = new Cart(user.username, false, null, 0, [{ model: "test", quantity: 1, category: Category.APPLIANCE, price: 1 }]);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "removeProductFromCart").mockResolvedValueOnce(true);
+  
+        const controller = new CartController();
+        const response = await controller.removeProductFromCart(user, testProduct.model);
+  
+        expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.removeProductFromCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.removeProductFromCart).toHaveBeenCalledWith(user, testProduct.model);
+        expect(response).toBe(true);
+      });
+  
+      test("Try to remove a product that does not exist in the cart", async () => {
+        const testProduct = new Product(3, "test", Category.APPLIANCE, "test", "test", 2);
+        const testCart = new Cart(user.username, false, null, 0, []);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "removeProductFromCart").mockRejectedValueOnce(
+          new Error("Item not found")
+        );
+  
+        const controller = new CartController();
+        await expect(controller.removeProductFromCart(user, testProduct.model)).rejects.toThrow(
+          new Error("Item not found")
+        );
+      });
+  
+      test("Try to remove a product from an empty cart", async () => {
+        const testCart = new Cart(user.username, false, null, 0, []);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "removeProductFromCart").mockRejectedValueOnce(
+          new Error("Empty cart")
+        );
+  
+        const controller = new CartController();
+        await expect(controller.removeProductFromCart(user, "test")).rejects.toThrow(
+          new Error("Empty cart")
+        );
+      });
     });
-
-    describe("getCartItems", () => {
-        // Test getting all items in the user's cart
-        test("gets all items in the user's cart", async () => {
-            const cartItems = [
-                { productId: "prod123", quantity: 2 },
-                { productId: "prod456", quantity: 1 },
-            ];
-            mockDbGet(null, cartItems); // Mock db.get to return cart items
-
-            const result = await cartDao.getCartItems(mockUser);
-
-            // Verify db.get was called correctly
-            expect(db.get).toHaveBeenCalledWith(
-                expect.stringContaining(
-                    "SELECT * FROM products_in_cart WHERE username = ?",
-                ),
-                [mockUser.username],
-                expect.any(Function),
-            );
-
-            // Verify the result
-            expect(result).toEqual(cartItems);
-        });
-
-        // Test handling database errors when getting cart items
-        test("handles database errors when getting cart items", async () => {
-            mockDbGet(new Error("Database error")); // Mock db.get to return an error
-
-            // Expect the getCartItems method to throw an error
-            await expect(cartDao.getCartItems(mockUser)).rejects.toThrow(
-                "Database error",
-            );
-
-            // Verify db.get was called
-            expect(db.get).toHaveBeenCalled();
-        });
+  
+    describe("checkoutCart", () => {
+      test("Checkout the cart successfully", async () => {
+        const testCart = new Cart(user.username, false, null, 100, [
+          { model: "test", quantity: 1, category: Category.SMARTPHONE, price: 100 },
+        ]);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "checkoutCart").mockResolvedValueOnce(true);
+  
+        const controller = new CartController();
+        const response = await controller.checkoutCart(user);
+  
+        expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
+        expect(response).toBe(true);
+      });
+  
+      test("Try to checkout an empty cart", async () => {
+        const testCart = new Cart(user.username, false, null, 0, []);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+        jest.spyOn(CartDAO.prototype, "checkoutCart").mockRejectedValueOnce(
+          new Error("Empty cart")
+        );
+  
+        const controller = new CartController();
+        await expect(controller.checkoutCart(user)).rejects.toThrow(new Error("Empty cart"));
+      });
     });
-
+  
     describe("clearCart", () => {
-        // Test clearing all items in the user's cart
-        test("clears all items in the user's cart", async () => {
-            mockDbRun(); // Mock db.run to succeed
-
-            const result = await cartDao.clearCart(mockUser);
-
-            // Verify db.run was called correctly
-            expect(db.run).toHaveBeenCalledWith(
-                expect.stringContaining(
-                    "DELETE FROM products_in_cart WHERE username = ?",
-                ),
-                [mockUser.username],
-                expect.any(Function),
-            );
-
-            // Verify the result
-            expect(result).toBe(true);
-        });
-
-        // Test handling database errors when clearing the cart
-        test("handles database errors when clearing the cart", async () => {
-            mockDbRun(new Error("Database error")); // Mock db.run to return an error
-
-            // Expect the clearCart method to throw an error
-            await expect(cartDao.clearCart(mockUser)).rejects.toThrow(
-                "Database error",
-            );
-
-            // Verify db.run was called
-            expect(db.run).toHaveBeenCalled();
-        });
+      test("Clears the user's cart", async () => {
+        jest.spyOn(CartDAO.prototype, "clearCart").mockResolvedValueOnce(true);
+  
+        const controller = new CartController();
+        const response = await controller.clearCart(user);
+  
+        expect(CartDAO.prototype.clearCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.clearCart).toHaveBeenCalledWith(user);
+        expect(response).toBe(true);
+      });
+  
+      test("Fails to clear the cart", async () => {
+        jest.spyOn(CartDAO.prototype, "clearCart").mockRejectedValueOnce(new Error());
+  
+        const controller = new CartController();
+        await expect(controller.clearCart(user)).rejects.toThrow(Error);
+      });
     });
-});
+  
+    describe("getCart", () => {
+      test("Gets the user's active cart", async () => {
+        const testCart = new Cart(user.username, false, null, 100, [
+          { model: "test", quantity: 1, category: Category.SMARTPHONE, price: 100 },
+        ]);
+  
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(testCart);
+  
+        const controller = new CartController();
+        const response = await controller.getCart(user);
+  
+        expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
+        expect(response).toEqual(testCart);
+      });
+  
+      test("Returns null if no active cart exists", async () => {
+        jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(null);
+  
+        const controller = new CartController();
+        const response = await controller.getCart(user);
+  
+        expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
+        expect(response).toBeNull();
+      });
+    });
+  
+    describe("getCustomerCarts", () => {
+      test("Returns all paid carts for the user", async () => {
+        const cartRows = [
+          { user: user.username, paid: 1, paymentDate: "2022-01-01", total: 100 },
+          { user: user.username, paid: 1, paymentDate: "2022-02-01", total: 200 },
+        ];
+  
+        jest.spyOn(CartDAO.prototype, "getCustomerCarts").mockResolvedValue(
+          cartRows.map(row => new Cart(row.user, !!row.paid, row.paymentDate, row.total, []))
+        );
+  
+        const controller = new CartController();
+        const response = await controller.getCustomerCarts(user);
+  
+        expect(CartDAO.prototype.getCustomerCarts).toHaveBeenCalledTimes(1);
+        expect(response.length).toBe(2);
+        expect(response[0].total).toBe(100);
+        expect(response[1].total).toBe(200);
+      });
+  
+      test("Fails to retrieve the paid carts", async () => {
+        jest.spyOn(CartDAO.prototype, "getCustomerCarts").mockRejectedValueOnce(new Error());
+  
+        const controller = new CartController();
+        await expect(controller.getCustomerCarts(user)).rejects.toThrow(Error);
+      });
+    });
+  
+    describe("createCart", () => {
+      test("Creates a new cart for the user", async () => {
+        const testCart = new Cart(user.username, false, null, 0, []);
+  
+        jest.spyOn(CartDAO.prototype, "createCart").mockResolvedValueOnce(testCart);
+  
+        const controller = new CartController();
+        const response = await controller.createCart(user);
+  
+        expect(CartDAO.prototype.createCart).toHaveBeenCalledTimes(1);
+        expect(CartDAO.prototype.createCart).toHaveBeenCalledWith(user);
+        expect(response).toEqual(testCart);
+      });
+  
+      test("Fails to create a new cart", async () => {
+        jest.spyOn(CartDAO.prototype, "createCart").mockRejectedValueOnce(new Error());
+  
+        const controller = new CartController();
+        await expect(controller.createCart(user)).rejects.toThrow(Error);
+      });
+    });
+  
+    describe("deleteAllCarts", () => {
+      test("Deletes all carts from the database", async () => {
+        jest.spyOn(CartDAO.prototype, "deleteAllCarts").mockResolvedValueOnce(true);
+  
+        const controller = new CartController();
+        const response = await controller.deleteAllCarts();
+  
+        expect(CartDAO.prototype.deleteAllCarts).toHaveBeenCalledTimes(1);
+        expect(response).toBe(true);
+      });
+  
+      test("Fails to delete all carts from the database", async () => {
+        jest.spyOn(CartDAO.prototype, "deleteAllCarts").mockRejectedValueOnce(new Error());
+  
+        const controller = new CartController();
+        await expect(controller.deleteAllCarts()).rejects.toThrow(Error);
+      });
+    });
+  
+    describe("getAllCarts", () => {
+      test("Gets all carts", async () => {
+        const cartRows = [
+          { user: user.username, paid: 1, paymentDate: "2022-01-01", total: 100 },
+          { user: user.username, paid: 1, paymentDate: "2022-02-01", total: 200 },
+        ];
+  
+        jest.spyOn(CartDAO.prototype, "getAllCarts").mockResolvedValue(
+          cartRows.map(row => new Cart(row.user, !!row.paid, row.paymentDate, row.total, []))
+        );
+  
+        const controller = new CartController();
+        const response = await controller.getAllCarts();
+  
+        expect(CartDAO.prototype.getAllCarts).toHaveBeenCalledTimes(1);
+        expect(response.length).toBe(2);
+        expect(response[0].total).toBe(100);
+        expect(response[1].total).toBe(200);
+      });
+  
+      test("Returns an empty array when no carts are found", async () => {
+        jest.spyOn(CartDAO.prototype, "getAllCarts").mockResolvedValueOnce([]);
+  
+        const controller = new CartController();
+        const response = await controller.getAllCarts();
+  
+        expect(CartDAO.prototype.getAllCarts).toHaveBeenCalledTimes(1);
+        expect(response).toEqual([]);
+      });
+  
+      test("Fails to get all carts", async () => {
+        jest.spyOn(CartDAO.prototype, "getAllCarts").mockRejectedValueOnce(new Error());
+  
+        const controller = new CartController();
+        await expect(controller.getAllCarts()).rejects.toThrow(Error);
+      });
+    });
+  
+    describe("getProductsInCart", () => {
+      test("Gets all products in the user's cart", async () => {
+        const productRows = [
+          { model: "product1", quantity: 1, category: "cat1", price: 50 },
+          { model: "product2", quantity: 2, category: "cat2", price: 30 },
+        ];
+  
+        jest.spyOn(CartDAO.prototype, "getProductsInCart").mockResolvedValue(
+          productRows.map(row => new ProductInCart(row.model, row.quantity, Category.SMARTPHONE, row.price))
+        );
+  
+        const controller = new CartController();
+        const response = await controller.getProductsInCart(user);
+  
+        expect(CartDAO.prototype.getProductsInCart).toHaveBeenCalledTimes(1);
+        expect(response.length).toBe(2);
+        expect(response[0]).toEqual(new ProductInCart("product1", 1, Category.SMARTPHONE, 50));
+        expect(response[1]).toEqual(new ProductInCart("product2", 2, Category.SMARTPHONE, 30));
+      });
+  
+      test("Returns an empty array when no products are found", async () => {
+        jest.spyOn(CartDAO.prototype, "getProductsInCart").mockResolvedValueOnce([]);
+  
+        const controller = new CartController();
+        const response = await controller.getProductsInCart(user);
+  
+        expect(CartDAO.prototype.getProductsInCart).toHaveBeenCalledTimes(1);
+        expect(response).toEqual([]);
+      });
+  
+      test("Fails to get products in the cart", async () => {
+        jest.spyOn(CartDAO.prototype, "getProductsInCart").mockRejectedValueOnce(new Error());
+  
+        const controller = new CartController();
+        await expect(controller.getProductsInCart(user)).rejects.toThrow(Error);
+      });
+    });
+  });
+  

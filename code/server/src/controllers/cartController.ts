@@ -18,6 +18,12 @@ import {
  * All methods of this class must interact with the corresponding DAO class to retrieve or store data.
  */
 class CartController {
+    createCart(user: User) {
+        throw new Error("Method not implemented.");
+    }
+    getProductsInCart(user: User): any {
+        throw new Error("Method not implemented.");
+    }
     private dao: CartDAO;
     private productDao: ProductDAO;
 
