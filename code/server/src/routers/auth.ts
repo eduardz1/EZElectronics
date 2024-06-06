@@ -72,9 +72,7 @@ class Authenticator {
          * Serializes the user to the session.
          * This method is called when a user is authenticated and the user is serialized to the session.
          */
-        passport.serializeUser((user: any, done: any) => {
-            done(null, user.username);
-        });
+        passport.serializeUser((user: any, done: any) => done(null, user));
 
         /**
          * Deserializes the user from the session.

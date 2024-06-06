@@ -263,9 +263,9 @@ class AuthRoutes {
         this.router.get(
             "/current",
             this.authService.isLoggedIn,
-            (req: any, res: any) =>
-                // FIXME: doesn't work for managers
-                res.status(200).json(req.user),
+            (req: any, res: any) => {
+                res.status(200).json(req.user);
+            },
         );
     }
 }

@@ -26,47 +26,34 @@ class ProductDAO {
         arrivalDate: string | null,
     ): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            const sql =
-                "INSERT INTO products(model, category, quantity, sellingPrice" +
-                (arrivalDate ? " , arrivalDate" : "") +
-                (details ? " , details" : "") +
-                ") VALUES(?, ?, ?, ?" +
-                (arrivalDate ? ", ?" : "") +
-                (details ? ", ?" : "") +
-                ")";
+            const sql = `
+            INSERT INTO
+                products(
+                    model,
+                    category,
+                    quantity,
+                    sellingPrice
+                    ${arrivalDate ? ",arrivalDate" : ""}
+                    ${details ? ",details" : ""}
+                )
+            VALUES
+                (
+                    ?,
+                    ?,
+                    ?,
+                    ?
+                    ${arrivalDate ? ",?" : ""}
+                    ${details ? ",?" : ""}
+                );`;
 
-            const params =
-                arrivalDate && details
-                    ? [
-                          model,
-                          category,
-                          quantity,
-                          sellingPrice,
-                          arrivalDate,
-                          details,
-                      ]
-                    : arrivalDate
-                      ? [
-                            model,
-                            category,
-                            quantity,
-                            details,
-                            sellingPrice,
-                            arrivalDate,
-                        ]
-                      : details
-                        ? [model, category, quantity, sellingPrice, details]
-                        : [model, category, quantity, sellingPrice];
+            const params = [model, category, quantity, sellingPrice];
 
-            db.run(sql, params, (err: Error | null) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                    return;
-                }
+            if (arrivalDate) params.push(arrivalDate);
+            if (details) params.push(details);
 
-                resolve(true);
-            });
+            db.run(sql, params, (err: Error | null) =>
+                err ? reject(err) : resolve(true),
+            );
         });
     }
 
@@ -80,24 +67,20 @@ class ProductDAO {
         return new Promise<Product | null>((resolve, reject) => {
             const sql = "SELECT * FROM products WHERE model = ?";
             db.get(sql, [model], (err: Error | null, row: any) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+                if (err) return reject(err);
 
-                if (row) {
-                    const product: Product = {
-                        model: row.model,
-                        category: row.category,
-                        quantity: row.quantity,
-                        details: row.details,
-                        sellingPrice: row.sellingPrice,
-                        arrivalDate: row.arrivalDate,
-                    };
-                    resolve(product);
-                } else {
-                    resolve(null);
-                }
+                if (!row) return resolve(null);
+
+                const product: Product = {
+                    model: row.model,
+                    category: row.category,
+                    quantity: row.quantity,
+                    details: row.details,
+                    sellingPrice: row.sellingPrice,
+                    arrivalDate: row.arrivalDate,
+                };
+
+                resolve(product);
             });
         });
     }
@@ -153,17 +136,22 @@ class ProductDAO {
         sellingDate: string | null,
     ): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            const sql =
-                "UPDATE products SET quantity = ?, sellingDate = ? WHERE model = ?";
+            const sql = `
+                UPDATE
+                    products
+                SET
+                    quantity = ?
+                    ${sellingDate ? ",sellingDate = ?" : ""}
+                WHERE
+                    model = ?;`;
 
-            db.run(sql, [quantity, sellingDate, model], (err: Error | null) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+            const params = [quantity.toString()];
+            if (sellingDate) params.push(sellingDate);
+            params.push(model);
 
-                resolve(quantity);
-            });
+            db.run(sql, params, (err: Error | null) =>
+                err ? reject(err) : resolve(quantity),
+            );
         });
     }
 
@@ -370,15 +358,9 @@ class ProductDAO {
     deleteProduct(model: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql = "DELETE FROM products WHERE model = ?";
-            db.run(sql, [model], (err: Error | null) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                    return;
-                }
-
-                resolve(true);
-            });
+            db.run(sql, [model], (err: Error | null) =>
+                err ? reject(err) : resolve(true),
+            );
         });
     }
 }

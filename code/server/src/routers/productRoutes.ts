@@ -63,7 +63,7 @@ class ProductRoutes {
             body("details").isString(),
             body("sellingPrice").isNumeric(),
             body("arrivalDate")
-                .optional()
+                .optional({ checkFalsy: true })
                 .isString()
                 .isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
@@ -79,7 +79,10 @@ class ProductRoutes {
                         req.body.arrivalDate,
                     )
                     .then(() => res.status(200).end())
-                    .catch((err) => next(err)),
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -95,7 +98,7 @@ class ProductRoutes {
             "/:model",
             body("quantity").isInt({ gt: 0 }),
             body("changeDate")
-                .optional()
+                .optional({ checkFalsy: true })
                 .isString()
                 .isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
@@ -110,7 +113,10 @@ class ProductRoutes {
                     .then((quantity: number) =>
                         res.status(200).json({ quantity: quantity }),
                     )
-                    .catch((err) => next(err)),
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -126,7 +132,7 @@ class ProductRoutes {
             "/:model/sell",
             body("quantity").isInt({ gt: 0 }),
             body("sellingDate")
-                .optional()
+                .optional({ checkFalsy: true })
                 .isString()
                 .isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
@@ -186,7 +192,9 @@ class ProductRoutes {
          */
         this.router.get(
             "/available",
-            query("grouping").optional().isIn(["category", "model"]),
+            query("grouping")
+                .optional({ checkFalsy: true })
+                .isIn(["category", "model"]),
             query("category")
                 .if(query("grouping").equals("category"))
                 .isIn(Object.values(Category))
@@ -212,7 +220,10 @@ class ProductRoutes {
                     .then((products: Product[]) =>
                         res.status(200).json(products),
                     )
-                    .catch((err) => next(err)),
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -227,7 +238,10 @@ class ProductRoutes {
                 this.controller
                     .deleteAllProducts()
                     .then(() => res.status(200).end())
-                    .catch((err: any) => next(err)),
+                    .catch((err: any) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -243,7 +257,10 @@ class ProductRoutes {
                 this.controller
                     .deleteProduct(req.params.model)
                     .then(() => res.status(200).end())
-                    .catch((err: any) => next(err)),
+                    .catch((err: any) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
     }
 }

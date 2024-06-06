@@ -3,6 +3,7 @@ import ErrorHandler from "../helper";
 import CartController from "../controllers/cartController";
 import Authenticator from "./auth";
 import { Cart } from "../components/cart";
+import { body } from "express-validator";
 
 /**
  * Represents a class that defines the routes for handling carts.
@@ -56,6 +57,7 @@ class CartRoutes {
                         res.status(200).json(cart);
                     })
                     .catch((err) => {
+                        console.log(err);
                         next(err);
                     }),
         );
@@ -69,12 +71,15 @@ class CartRoutes {
          */
         this.router.post(
             "/",
+            body("model").isString().notEmpty({ ignore_whitespace: true }),
+            this.errorHandler.validateRequest,
             this.authenticator.isCustomer,
             (req: any, res: any, next: any) =>
                 this.controller
                     .addToCart(req.user, req.body.model)
                     .then(() => res.status(200).end())
                     .catch((err) => {
+                        console.log(err);
                         next(err);
                     }),
         );
@@ -93,6 +98,7 @@ class CartRoutes {
                     .checkoutCart(req.user)
                     .then(() => res.status(200).end())
                     .catch((err) => {
+                        console.log(err);
                         next(err);
                     }),
         );
@@ -109,7 +115,10 @@ class CartRoutes {
                 this.controller
                     .getCustomerCarts(req.user)
                     .then((carts: Cart[]) => res.status(200).json(carts))
-                    .catch((err) => next(err)),
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -120,14 +129,13 @@ class CartRoutes {
          */
         this.router.delete(
             "/products/:model",
-            param("model").isString().notEmpty(),
-            this.errorHandler.validateRequest,
             this.authenticator.isCustomer,
             (req: any, res: any, next: any) =>
                 this.controller
                     .removeProductFromCart(req.user, req.params.model)
                     .then(() => res.status(200).end())
                     .catch((err) => {
+                        console.log(err);
                         next(err);
                     }),
         );
@@ -145,7 +153,10 @@ class CartRoutes {
                 this.controller
                     .clearCart(req.user)
                     .then(() => res.status(200).end())
-                    .catch((err) => next(err)),
+                    .catch((err) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -160,7 +171,10 @@ class CartRoutes {
                 this.controller
                     .deleteAllCarts()
                     .then(() => res.status(200).end())
-                    .catch((err: any) => next(err)),
+                    .catch((err: any) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
 
         /**
@@ -175,7 +189,10 @@ class CartRoutes {
                 this.controller
                     .getAllCarts()
                     .then((carts: Cart[]) => res.status(200).json(carts))
-                    .catch((err: any) => next(err)),
+                    .catch((err: any) => {
+                        console.log(err);
+                        next(err);
+                    }),
         );
     }
 }

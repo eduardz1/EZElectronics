@@ -1,6 +1,7 @@
 import { User } from "../components/user";
 import { ProductReview } from "../components/review";
 import db from "../db/db";
+import dayjs from "dayjs";
 
 /**
  * A class that implements the interaction with the database for all review-related operations.
@@ -23,10 +24,28 @@ class ReviewDAO {
         comment: string,
     ): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const sql =
-                "INSERT INTO reviews(model,user, score,comment) VALUES(?, ?, ?, ?)";
-            db.run(sql, [model, user, score, comment], (err: Error | null) =>
-                err ? reject(err) : resolve(),
+            const sql = `
+                INSERT INTO
+                    reviews(
+                        model,
+                        date,
+                        user,
+                        score,
+                        comment
+                    )
+                VALUES
+                    (?, ?, ?, ?, ?)`;
+
+            db.run(
+                sql,
+                [
+                    model,
+                    dayjs().toISOString().slice(0, 10),
+                    user.username,
+                    score,
+                    comment,
+                ],
+                (err: Error | null) => (err ? reject(err) : resolve()),
             );
         });
     }
@@ -40,8 +59,11 @@ class ReviewDAO {
     checkExistsReview(model: string, user: User): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql = "SELECT * FROM reviews WHERE model = ? AND user = ?";
-            db.get(sql, [model, user], (err: Error | null, row: any) =>
-                err ? reject(err) : resolve(!!row),
+            db.get(
+                sql,
+                [model, user.username],
+                (err: Error | null, row: any) =>
+                    err ? reject(err) : resolve(!!row),
             );
         });
     }
@@ -83,7 +105,7 @@ class ReviewDAO {
     deleteReview(model: string, user: User): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const sql = "DELETE FROM reviews WHERE model = ? AND user = ?";
-            db.run(sql, [model, user], (err: Error | null) =>
+            db.run(sql, [model, user.username], (err: Error | null) =>
                 err ? reject(err) : resolve(),
             );
         });

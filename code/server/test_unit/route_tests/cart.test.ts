@@ -70,6 +70,21 @@ describe("CartRoutes", () => {
             expect(response.body).toEqual(testCart);
         });
 
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isCustomer",
+            ).mockImplementation((_req, _res, next) => next());
+            jest.spyOn(CartController.prototype, "getCart").mockRejectedValue(
+                new Error(),
+            );
+
+            await request(app).get(baseURL).expect(503);
+
+            expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
+            expect(CartController.prototype.getCart).toHaveBeenCalledTimes(1);
+        });
+
         test("Returns 401 if user is not a customer", async () => {
             jest.spyOn(
                 Authenticator.prototype,
@@ -108,7 +123,10 @@ describe("CartRoutes", () => {
                 "isCustomer",
             ).mockImplementation((_req, res) => res.sendStatus(401));
 
-            await request(app).post(baseURL).expect(401);
+            await request(app)
+                .post(baseURL)
+                .send({ model: "model" })
+                .expect(401);
 
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
         });
@@ -147,6 +165,18 @@ describe("CartRoutes", () => {
 
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
             expect(CartController.prototype.addToCart).toHaveBeenCalledTimes(1);
+        });
+
+        test("Returns 422 if model is empty", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isCustomer",
+            ).mockImplementation((_req, _res, next) => next());
+
+            await request(app).post(baseURL).send({}).expect(422);
+
+            expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(0);
+            expect(CartController.prototype.addToCart).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -294,6 +324,24 @@ describe("CartRoutes", () => {
             ).mockResolvedValue([testCart]);
 
             await request(app).get(`${baseURL}/history`).expect(200);
+
+            expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
+            expect(
+                CartController.prototype.getCustomerCarts,
+            ).toHaveBeenCalledTimes(1);
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isCustomer",
+            ).mockImplementation((_req, _res, next) => next());
+            jest.spyOn(
+                CartController.prototype,
+                "getCustomerCarts",
+            ).mockRejectedValue(new Error());
+
+            await request(app).get(`${baseURL}/history`).expect(503);
 
             expect(Authenticator.prototype.isCustomer).toHaveBeenCalledTimes(1);
             expect(
@@ -498,6 +546,26 @@ describe("CartRoutes", () => {
                 Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
         });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isAdminOrManager",
+            ).mockImplementation((_req, _res, next) => next());
+            jest.spyOn(
+                CartController.prototype,
+                "deleteAllCarts",
+            ).mockRejectedValue(new Error());
+
+            await request(app).delete(baseURL).expect(503);
+
+            expect(
+                Authenticator.prototype.isAdminOrManager,
+            ).toHaveBeenCalledTimes(1);
+            expect(
+                CartController.prototype.deleteAllCarts,
+            ).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe(`GET ${baseURL}/all`, () => {
@@ -558,6 +626,26 @@ describe("CartRoutes", () => {
             expect(
                 Authenticator.prototype.isAdminOrManager,
             ).toHaveBeenCalledTimes(1);
+        });
+
+        test("Returns 503 if an error occurs", async () => {
+            jest.spyOn(
+                Authenticator.prototype,
+                "isAdminOrManager",
+            ).mockImplementation((_req, _res, next) => next());
+            jest.spyOn(
+                CartController.prototype,
+                "getAllCarts",
+            ).mockRejectedValue(new Error());
+
+            await request(app).get(`${baseURL}/all`).expect(503);
+
+            expect(
+                Authenticator.prototype.isAdminOrManager,
+            ).toHaveBeenCalledTimes(1);
+            expect(CartController.prototype.getAllCarts).toHaveBeenCalledTimes(
+                1,
+            );
         });
     });
 });
