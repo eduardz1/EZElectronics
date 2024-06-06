@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import ErrorHandler from "../helper";
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 import ReviewController from "../controllers/reviewController";
 import Authenticator from "./auth";
 import { ProductReview } from "../components/review";
@@ -35,9 +35,8 @@ class ReviewRoutes {
          */
         this.router.post(
             "/:model",
-            param("model").isString().notEmpty(),
             body("score").isInt({ min: 1, max: 5 }),
-            body("comment").isString().notEmpty(),
+            body("comment").notEmpty({ ignore_whitespace: true }),
             this.errorHandler.validateRequest,
             this.authenticator.isCustomer,
             (req: any, res: any, next: any) =>
@@ -63,8 +62,6 @@ class ReviewRoutes {
          */
         this.router.get(
             "/:model",
-            param("model").isString().notEmpty(),
-            this.errorHandler.validateRequest,
             this.authenticator.isLoggedIn,
             (req: any, res: any, next: any) =>
                 this.controller

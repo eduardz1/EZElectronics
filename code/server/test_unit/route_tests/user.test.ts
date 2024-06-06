@@ -5,12 +5,12 @@ import Authenticator from "../../src/routers/auth";
 import UserController from "../../src/controllers/userController";
 import { User, Role } from "../../src/components/user";
 import {
-    BirthdateError,
     UserAlreadyExistsError,
     UserIsAdminError,
     UserNotAdminError,
     UserNotFoundError,
 } from "../../src/errors/userError";
+import { DateError } from "../../src/utilities";
 
 jest.mock("../../src/routers/auth");
 jest.mock("../../src/controllers/userController");
@@ -785,7 +785,7 @@ describe("UserRoutes", () => {
             jest.spyOn(
                 UserController.prototype,
                 "updateUserInfo",
-            ).mockRejectedValue(new BirthdateError());
+            ).mockRejectedValue(new DateError());
 
             const response = await request(app)
                 .patch(`${baseURL}/testUser`)

@@ -56,11 +56,11 @@ class UserRoutes {
          */
         this.router.post(
             "/",
-            body("username").isString().notEmpty(),
-            body("name").isString().notEmpty(),
-            body("surname").isString().notEmpty(),
-            body("password").isString().notEmpty(),
-            body("role").isString().isIn(Object.values(Role)),
+            body("username").notEmpty({ ignore_whitespace: true }),
+            body("name").notEmpty({ ignore_whitespace: true }),
+            body("surname").notEmpty({ ignore_whitespace: true }),
+            body("password").notEmpty({ ignore_whitespace: true }),
+            body("role").isIn(Object.values(Role)),
             this.errorHandler.validateRequest,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -166,11 +166,11 @@ class UserRoutes {
          */
         this.router.patch(
             "/:username",
-            param("username").isString().notEmpty(),
-            body("name").isString().notEmpty(),
-            body("surname").isString().notEmpty(),
-            body("address").isString().notEmpty(),
-            body("birthdate").isDate().notEmpty(),
+            param("username").notEmpty({ ignore_whitespace: true }),
+            body("name").notEmpty({ ignore_whitespace: true }),
+            body("surname").notEmpty({ ignore_whitespace: true }),
+            body("address").notEmpty({ ignore_whitespace: true }),
+            body("birthdate").isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -228,11 +228,16 @@ class AuthRoutes {
          * It returns an error if the username represents a non-existing user or if the password is incorrect.
          * It returns the logged in user.
          */
-        this.router.post("/", (req, res, next) =>
-            this.authService
-                .login(req, res, next)
-                .then((user: User) => res.status(200).json(user))
-                .catch((err: any) => res.status(401).json(err)),
+        this.router.post(
+            "/",
+            body("username").notEmpty({ ignore_whitespace: true }),
+            body("password").notEmpty({ ignore_whitespace: true }),
+            this.errorHandler.validateRequest,
+            (req, res, next) =>
+                this.authService
+                    .login(req, res, next)
+                    .then((user: User) => res.status(200).json(user))
+                    .catch((err: any) => res.status(401).json(err)),
         );
 
         /**

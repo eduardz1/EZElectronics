@@ -9,13 +9,6 @@ const INCORRECT_CATEGORY_GROUPING =
     "`category` cannot be `null` when specifying a `category` as a grouping and `model` should be `null`";
 const INCORRECT_MODEL_GROUPING =
     "`model` cannot be `null` when specifying a `model` as a grouping and `category` should be `null`";
-const ARRIVAL_DATE_IN_THE_FUTURE = "Arrival date cannot be in the future";
-const CHANGE_DATE_IN_THE_FUTURE = "Change date cannot be in the future";
-const CHANGE_DATE_BEFORE_ARRIVAL_DATE =
-    "Change date cannot be before arrival date";
-const SELLING_DATE_IN_THE_FUTURE = "Selling date cannot be in the future";
-const SELLING_DATE_BEFORE_ARRIVAL_DATE =
-    "Selling date cannot be before arrival date";
 
 /**
  * Represents an error that occurs when a product is not found.
@@ -114,61 +107,6 @@ class IncorrectModelGroupingError extends Error {
     }
 }
 
-class ArrivalDateInTheFutureError extends Error {
-    customMessage: string;
-    customCode: number;
-
-    constructor() {
-        super();
-        this.customMessage = ARRIVAL_DATE_IN_THE_FUTURE;
-        this.customCode = 400;
-    }
-}
-
-class ChangeDateInTheFutureError extends Error {
-    customMessage: string;
-    customCode: number;
-
-    constructor() {
-        super();
-        this.customMessage = CHANGE_DATE_IN_THE_FUTURE;
-        this.customCode = 400;
-    }
-}
-
-class ChangeDateBeforeArrivalDateError extends Error {
-    customMessage: string;
-    customCode: number;
-
-    constructor() {
-        super();
-        this.customMessage = CHANGE_DATE_BEFORE_ARRIVAL_DATE;
-        this.customCode = 400;
-    }
-}
-
-class SellingDateInTheFutureError extends Error {
-    customMessage: string;
-    customCode: number;
-
-    constructor() {
-        super();
-        this.customMessage = SELLING_DATE_IN_THE_FUTURE;
-        this.customCode = 400;
-    }
-}
-
-class SellingDateBeforeArrivalDateError extends Error {
-    customMessage: string;
-    customCode: number;
-
-    constructor() {
-        super();
-        this.customMessage = SELLING_DATE_BEFORE_ARRIVAL_DATE;
-        this.customCode = 400;
-    }
-}
-
 export {
     ProductNotFoundError,
     ProductAlreadyExistsError,
@@ -178,9 +116,4 @@ export {
     IncorrectGroupingError,
     IncorrectCategoryGroupingError,
     IncorrectModelGroupingError,
-    ArrivalDateInTheFutureError,
-    ChangeDateInTheFutureError,
-    ChangeDateBeforeArrivalDateError,
-    SellingDateInTheFutureError,
-    SellingDateBeforeArrivalDateError,
 };

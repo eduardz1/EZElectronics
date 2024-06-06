@@ -9,12 +9,8 @@ import {
     IncorrectGroupingError,
     IncorrectCategoryGroupingError,
     IncorrectModelGroupingError,
-    ArrivalDateInTheFutureError,
-    ChangeDateInTheFutureError,
-    ChangeDateBeforeArrivalDateError,
-    SellingDateInTheFutureError,
-    SellingDateBeforeArrivalDateError,
 } from "../errors/productError";
+import { DateError } from "../utilities";
 
 /**
  * Represents a controller for managing products.
@@ -49,7 +45,7 @@ class ProductController {
             throw new ProductAlreadyExistsError();
         }
         if (dayjs(arrivalDate).isAfter(dayjs())) {
-            throw new ArrivalDateInTheFutureError();
+            throw new DateError();
         }
 
         return this.dao.registerProducts(
@@ -71,17 +67,17 @@ class ProductController {
      */
     async changeProductQuantity(
         model: string,
-        newQuantity: number, // TODO: assert positive
+        newQuantity: number,
         changeDate: string | null,
     ): Promise<number> {
         const product = await this.dao.getProductByModel(model);
-
         if (!product) throw new ProductNotFoundError();
-        if (dayjs(changeDate).isAfter(dayjs())) {
-            throw new ChangeDateInTheFutureError();
-        }
-        if (dayjs(changeDate).isBefore(dayjs(product.arrivalDate))) {
-            throw new ChangeDateBeforeArrivalDateError();
+
+        if (
+            dayjs(changeDate).isAfter(dayjs()) ||
+            dayjs(changeDate).isBefore(dayjs(product.arrivalDate))
+        ) {
+            throw new DateError();
         }
 
         return this.dao.changeProductQuantity(
@@ -106,12 +102,13 @@ class ProductController {
         const product = await this.dao.getProductByModel(model);
 
         if (!product) throw new ProductNotFoundError();
-        if (dayjs(sellingDate).isAfter(dayjs())) {
-            throw new SellingDateInTheFutureError();
+        if (
+            dayjs(sellingDate).isAfter(dayjs()) ||
+            dayjs(sellingDate).isBefore(dayjs(product.arrivalDate))
+        ) {
+            throw new DateError();
         }
-        if (dayjs(sellingDate).isBefore(dayjs(product.arrivalDate))) {
-            throw new SellingDateBeforeArrivalDateError();
-        }
+
         if (product.quantity === 0) throw new EmptyProductStockError();
         if (product.quantity < quantity) throw new LowProductStockError();
 
