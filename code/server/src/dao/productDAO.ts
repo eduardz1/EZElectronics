@@ -27,10 +27,10 @@ class ProductDAO {
     ): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const sql =
-                "INSERT INTO products(model, category, quantity, details, sellingPrice" +
+                "INSERT INTO products(model, category, quantity, sellingPrice" +
                 (arrivalDate ? " , arrivalDate" : "") +
                 (details ? " , details" : "") +
-                ") VALUES(?, ?, ?, ?, ?" +
+                ") VALUES(?, ?, ?, ?" +
                 (arrivalDate ? ", ?" : "") +
                 (details ? ", ?" : "") +
                 ")";
@@ -41,7 +41,6 @@ class ProductDAO {
                           model,
                           category,
                           quantity,
-                          details,
                           sellingPrice,
                           arrivalDate,
                           details,
@@ -56,15 +55,8 @@ class ProductDAO {
                             arrivalDate,
                         ]
                       : details
-                        ? [
-                              model,
-                              category,
-                              quantity,
-                              details,
-                              sellingPrice,
-                              details,
-                          ]
-                        : [model, category, quantity, details, sellingPrice];
+                        ? [model, category, quantity, sellingPrice, details]
+                        : [model, category, quantity, sellingPrice];
 
             db.run(sql, params, (err: Error | null) => {
                 if (err) {

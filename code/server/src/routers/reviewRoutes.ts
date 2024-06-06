@@ -36,7 +36,7 @@ class ReviewRoutes {
         this.router.post(
             "/:model",
             body("score").isInt({ min: 1, max: 5 }),
-            body("comment").notEmpty({ ignore_whitespace: true }),
+            body("comment").isString().notEmpty({ ignore_whitespace: true }),
             this.errorHandler.validateRequest,
             this.authenticator.isCustomer,
             (req: any, res: any, next: any) =>

@@ -56,11 +56,11 @@ class UserRoutes {
          */
         this.router.post(
             "/",
-            body("username").notEmpty({ ignore_whitespace: true }),
-            body("name").notEmpty({ ignore_whitespace: true }),
-            body("surname").notEmpty({ ignore_whitespace: true }),
-            body("password").notEmpty({ ignore_whitespace: true }),
-            body("role").isIn(Object.values(Role)),
+            body("username").isString().notEmpty({ ignore_whitespace: true }),
+            body("name").isString().notEmpty({ ignore_whitespace: true }),
+            body("surname").isString().notEmpty({ ignore_whitespace: true }),
+            body("password").isString().notEmpty({ ignore_whitespace: true }),
+            body("role").isString().isIn(Object.values(Role)),
             this.errorHandler.validateRequest,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -166,11 +166,11 @@ class UserRoutes {
          */
         this.router.patch(
             "/:username",
-            param("username").notEmpty({ ignore_whitespace: true }),
-            body("name").notEmpty({ ignore_whitespace: true }),
-            body("surname").notEmpty({ ignore_whitespace: true }),
-            body("address").notEmpty({ ignore_whitespace: true }),
-            body("birthdate").isISO8601({ strict: true }),
+            param("username").isString().notEmpty({ ignore_whitespace: true }),
+            body("name").isString().notEmpty({ ignore_whitespace: true }),
+            body("surname").isString().notEmpty({ ignore_whitespace: true }),
+            body("address").isString().notEmpty({ ignore_whitespace: true }),
+            body("birthdate").isString().isISO8601({ strict: true }),
             this.errorHandler.validateRequest,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -230,8 +230,8 @@ class AuthRoutes {
          */
         this.router.post(
             "/",
-            body("username").notEmpty({ ignore_whitespace: true }),
-            body("password").notEmpty({ ignore_whitespace: true }),
+            body("username").isString().notEmpty({ ignore_whitespace: true }),
+            body("password").isString().notEmpty({ ignore_whitespace: true }),
             this.errorHandler.validateRequest,
             (req, res, next) =>
                 this.authService

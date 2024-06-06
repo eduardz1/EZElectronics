@@ -67,6 +67,33 @@ describe("Product routes", () => {
             ).toHaveBeenCalledTimes(1);
         });
 
+        test(`Returns 422 if model is not a string`, async () => {
+            const testProduct = {
+                model: 1,
+                category: Category.SMARTPHONE,
+                quantity: 1,
+                details: "details",
+                sellingPrice: 1,
+                arrivalDate: "2022-01-01",
+            };
+            jest.spyOn(
+                Authenticator.prototype,
+                "isAdminOrManager",
+            ).mockImplementation((_req, _res, next) => next());
+
+            const response = await request(app)
+                .post(`${baseURL}/`)
+                .send(testProduct);
+
+            expect(response.status).toBe(422);
+            expect(
+                ProductController.prototype.registerProducts,
+            ).toHaveBeenCalledTimes(0);
+            expect(
+                Authenticator.prototype.isAdminOrManager,
+            ).toHaveBeenCalledTimes(0);
+        });
+
         test(`Returns 422 if model is empty`, async () => {
             const testProduct = {
                 model: "",
