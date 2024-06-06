@@ -18,6 +18,12 @@ import {
  * All methods of this class must interact with the corresponding DAO class to retrieve or store data.
  */
 class CartController {
+    createCart(user: User) {
+        throw new Error("Method not implemented.");
+    }
+    getProductsInCart(user: User): any {
+        throw new Error("Method not implemented.");
+    }
     private dao: CartDAO;
     private productDao: ProductDAO;
 
@@ -33,6 +39,8 @@ class CartController {
      * @param user - The user to whom the product should be added.
      * @param product - The model of the product to add.
      * @returns A Promise that resolves to `true` if the product was successfully added.
+     * @throws ProductNotFoundError if the product does not exist.
+     * @throws EmptyProductStockError if the product is out of stock.
      */
     async addToCart(user: User, product: string): Promise<boolean> {
         const p = await this.productDao.getProductByModel(product);
@@ -42,8 +50,8 @@ class CartController {
         if (p.quantity === 0) {
             throw new EmptyProductStockError();
         }
-        if (!this.dao.getCart(user)) {
-            this.dao.createCart(user);
+        if (!(await this.dao.getCart(user))) {
+            await this.dao.createCart(user);
         }
 
         return this.dao.addToCart(user, product);
@@ -55,12 +63,11 @@ class CartController {
      * @returns A Promise that resolves to the user's cart or an empty one if there is no current cart.
      */
     async getCart(user: User): Promise<Cart> {
-        return this.dao.getCart(user).then((cart) => {
-            if (!cart) {
-                return new Cart(user.username, false, null, 0, []);
-            }
-            return cart;
-        });
+        const cart = await this.dao.getCart(user);
+        if (!cart) {
+            return new Cart(user.username, false, null, 0, []);
+        }
+        return cart;
     }
 
     /**
@@ -83,7 +90,7 @@ class CartController {
                 );
                 if (!p) {
                     throw new ProductNotFoundError();
-                } // TODO: New exception but it's probably necessary
+                }
                 if (p.quantity === 0) {
                     throw new EmptyProductStockError();
                 }
@@ -113,21 +120,14 @@ class CartController {
      * @returns A Promise that resolves to `true` if the product was successfully removed.
      */
     async removeProductFromCart(user: User, product: string): Promise<boolean> {
-        if (!this.productDao.getProductByModel(product)) {
+        if (!(await this.productDao.getProductByModel(product))) {
             throw new ProductNotFoundError();
         }
         const currentCart = await this.dao.getCart(user);
-        if (!currentCart) {
+        if (!currentCart || currentCart.products.length === 0) {
             throw new CartNotFoundError();
         }
-        // TODO: check if it's correct to return other errors
-        if (currentCart.products.length === 0) {
-            throw new EmptyCartError();
-        }
-        const productIndex = currentCart.products.findIndex(
-            (p) => p.model === product,
-        );
-        if (productIndex === -1) {
+        if (currentCart.products.findIndex((p) => p.model === product) === -1) {
             throw new ProductNotInCartError();
         }
 
@@ -140,7 +140,7 @@ class CartController {
      * @returns A Promise that resolves to `true` if the cart was successfully cleared.
      */
     async clearCart(user: User): Promise<boolean> {
-        if (!this.dao.getCart(user)) {
+        if (!(await this.dao.getCart(user))) {
             throw new CartNotFoundError();
         }
 
