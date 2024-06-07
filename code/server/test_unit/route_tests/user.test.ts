@@ -299,6 +299,23 @@ describe("UserRoutes", () => {
             ).toHaveBeenCalledWith(Role.CUSTOMER);
         });
 
+        test("Returns 422 if role is invalid", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "getUsersByRole",
+            ).mockResolvedValueOnce([]);
+            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
+                (_req: any, _res: any, next: any) => next(),
+            );
+
+            const response = await request(app).get(`${baseURL}/roles/Invalid`);
+
+            expect(response.status).toBe(422);
+            expect(
+                UserController.prototype.getUsersByRole,
+            ).not.toHaveBeenCalled();
+        });
+
         test("Returns 503 if an error occurs", async () => {
             jest.spyOn(
                 UserController.prototype,

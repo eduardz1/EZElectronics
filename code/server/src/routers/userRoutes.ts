@@ -98,6 +98,8 @@ class UserRoutes {
          */
         this.router.get(
             "/roles/:role",
+            param("role").isString().isIn(Object.values(Role)),
+            this.errorHandler.validateRequest,
             this.authenticator.isAdmin,
             (req: any, res: any, next: any) =>
                 this.controller
