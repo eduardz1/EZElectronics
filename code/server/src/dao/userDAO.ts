@@ -18,22 +18,34 @@ class UserDAO {
         username: string,
         plainPassword: string,
     ): Promise<boolean> {
+        /**
+         * Example of how to retrieve user information from a table that stores
+         * username, encrypted password and salt (encrypted set of 16 random
+         * bytes that ensures additional protection against dictionary attacks).
+         * Using the salt is not mandatory (while it is a good practice for
+         * security), however passwords MUST be hashed using a secure algorithm
+         * (e.g. scrypt, bcrypt, argon2).
+         */
+        const sql = `
+            SELECT
+                username,
+                password,
+                salt
+            FROM
+                users
+            WHERE
+                username = ?;`;
+
         return new Promise<boolean>((resolve, reject) => {
-            /**
-             * Example of how to retrieve user information from a table that stores username, encrypted password and salt (encrypted set of 16 random bytes that ensures additional protection against dictionary attacks).
-             * Using the salt is not mandatory (while it is a good practice for security), however passwords MUST be hashed using a secure algorithm (e.g. scrypt, bcrypt, argon2).
-             */
-            const sql =
-                "SELECT username, password, salt FROM users WHERE username = ?";
             db.get(sql, [username], (err: Error | null, row: any) => {
                 if (err) reject(err);
-                //If there is no user with the given username, or the user salt is not saved in the database, the user is not authenticated.
-                if (!row || row.username !== username || !row.salt) {
-                    resolve(false);
-                    return;
-                }
+                // If there is no user with the given username, or the user salt
+                // is not saved in the database, the user is not authenticated.
+                if (!row || row.username !== username || !row.salt)
+                    return resolve(false);
 
-                //Hashes the plain password using the salt and then compares it with the hashed password stored in the database
+                //Hashes the plain password using the salt and then compares it
+                // with the hashed password stored in the database
                 const hashedPassword = crypto.scryptSync(
                     plainPassword,
                     row.salt,
@@ -41,12 +53,10 @@ class UserDAO {
                 );
 
                 const passwordHex = Buffer.from(row.password, "hex");
-                if (!crypto.timingSafeEqual(passwordHex, hashedPassword)) {
-                    resolve(false);
-                    return;
-                }
 
-                resolve(true);
+                crypto.timingSafeEqual(passwordHex, hashedPassword)
+                    ? resolve(true)
+                    : resolve(false);
             });
         });
     }
@@ -67,26 +77,33 @@ class UserDAO {
         password: string,
         role: string,
     ): Promise<boolean> {
+        const sql = `
+            INSERT INTO
+                users(
+                    username,
+                    name,
+                    surname,
+                    role,
+                    password,
+                    salt
+                )
+            VALUES
+                (?, ?, ?, ?, ?, ?);`;
+
+        const salt = crypto.randomBytes(16);
+        const hashedPassword = crypto.scryptSync(password, salt, 16);
+
         return new Promise<boolean>((resolve, reject) => {
-            const salt = crypto.randomBytes(16);
-            const hashedPassword = crypto.scryptSync(password, salt, 16);
-            const sql =
-                "INSERT INTO users(username, name, surname, role, password, salt) VALUES(?, ?, ?, ?, ?, ?)";
             db.run(
                 sql,
                 [username, name, surname, role, hashedPassword, salt],
                 (err: Error | null) => {
-                    if (err) {
-                        if (
-                            err.message.includes(
-                                "UNIQUE constraint failed: users.username",
-                            )
+                    if (err)
+                        return err.message.includes(
+                            "UNIQUE constraint failed: users.username",
                         )
-                            // FIXME: Why do we check here?
-                            reject(new UserAlreadyExistsError());
-                        reject(err);
-                        return;
-                    }
+                            ? reject(new UserAlreadyExistsError())
+                            : reject(err);
 
                     resolve(true);
                 },
@@ -99,15 +116,17 @@ class UserDAO {
      * @returns A Promise that resolves to an array of users.
      */
     getUsers(): Promise<User[]> {
-        return new Promise<User[]>((resolve, reject) => {
-            const sql = "SELECT * FROM users";
-            db.all(sql, [], (err: Error | null, rows: any[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+        const sql = `
+            SELECT
+                *
+            FROM
+                users;`;
 
-                const users: User[] = rows.map(
+        return new Promise<User[]>((resolve, reject) => {
+            db.all(sql, [], (err: Error | null, rows: any[]) => {
+                if (err) return reject(err);
+
+                const users = rows.map(
                     (row) =>
                         new User(
                             row.username,
@@ -130,13 +149,17 @@ class UserDAO {
      * @returns A Promise that resolves to an array of users with the specified role.
      */
     getUsersByRole(role: string): Promise<User[]> {
+        const sql = `
+            SELECT
+                *
+            FROM
+                users
+            WHERE
+                role = ?;`;
+
         return new Promise<User[]>((resolve, reject) => {
-            const sql = "SELECT * FROM users WHERE role = ?";
             db.all(sql, [role], (err: Error | null, rows: any[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+                if (err) return reject(err);
 
                 const users: User[] = rows.map(
                     (row) =>
@@ -162,16 +185,19 @@ class UserDAO {
      */
     deleteUser(username: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            const sql = "DELETE FROM users WHERE username = ?";
-            db.run(sql, [username], function (err: Error | null) {
-                if (this.changes === 0) {
-                    return reject(new UserNotFoundError());
-                }
-                if (err) {
-                    return reject(err);
-                }
+            const sql = `
+                DELETE
+                FROM
+                    users
+                WHERE
+                    username = ?;`;
 
-                resolve(true);
+            db.run(sql, [username], function (err: Error | null) {
+                if (err) return reject(err);
+
+                this.changes === 0
+                    ? reject(new UserNotFoundError())
+                    : resolve(true);
             });
         });
     }
@@ -181,16 +207,17 @@ class UserDAO {
      * @returns A Promise that resolves to a boolean indicating whether the deletion was successful.
      */
     deleteAll(): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            const sql = "DELETE FROM users WHERE role != 'Admin'";
-            db.run(sql, [], (err: Error | null) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+        const sql = `
+            DELETE
+            FROM
+                users
+            WHERE
+                role != 'Admin';`;
 
-                resolve(true);
-            });
+        return new Promise<boolean>((resolve, reject) => {
+            db.run(sql, [], (err: Error | null) =>
+                err ? reject(err) : resolve(true),
+            );
         });
     }
 
@@ -200,18 +227,19 @@ class UserDAO {
      * @returns A Promise that resolves the information of the requested user
      */
     getUserByUsername(username: string): Promise<User> {
-        return new Promise<User>((resolve, reject) => {
-            const sql = "SELECT * FROM users WHERE username = ?";
-            db.get(sql, [username], (err: Error | null, row: any) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+        const sql = `
+            SELECT
+                *
+            FROM
+                users
+            WHERE
+                username = ?;`;
 
-                if (!row) {
-                    reject(new UserNotFoundError());
-                    return;
-                }
+        return new Promise<User>((resolve, reject) => {
+            db.get(sql, [username], (err: Error | null, row: any) => {
+                if (err) return reject(err);
+
+                if (!row) return reject(new UserNotFoundError());
 
                 const user: User = new User(
                     row.username,
@@ -233,18 +261,15 @@ class UserDAO {
      * @returns A Promise that resolves to a boolean indicating whether the user exists or not.
      */
     checkIfUserExists(username: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            const sql =
-                "SELECT COUNT(*) as count FROM users WHERE username = ?";
-            db.get(sql, [username], (err: Error | null, row: any) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve(row.count > 0);
-            });
-        });
+        return new Promise<boolean>((resolve, reject) =>
+            this.getUserByUsername(username)
+                .then(() => resolve(true))
+                .catch((err) => {
+                    err instanceof UserNotFoundError
+                        ? resolve(false)
+                        : reject(err);
+                }),
+        );
     }
 
     /**
@@ -266,26 +291,26 @@ class UserDAO {
         address: string,
         birthdate: string,
     ): Promise<User> {
+        const sql = `
+            UPDATE
+                users
+            SET
+                name = ?,
+                surname = ?,
+                address = ?,
+                birthdate = ?
+            WHERE
+                username = ?;`;
+
         return new Promise<User>((resolve, reject) => {
-            const sql =
-                "UPDATE users SET name = ?, surname = ?, address = ?, birthdate = ? WHERE username = ?";
             db.run(
                 sql,
                 [name, surname, address, birthdate, username],
                 (err: Error | null) => {
-                    if (err) {
-                        if (
-                            err.message.includes(
-                                "UNIQUE constraint failed: users.username",
-                            )
-                        ) {
-                            reject(new UserNotFoundError());
-                            return;
-                        }
-
-                        reject(err);
-                        return;
-                    }
+                    if (err)
+                        return err.message.includes("UNIQUE constraint failed")
+                            ? reject(new UserNotFoundError())
+                            : reject(err);
 
                     resolve(this.getUserByUsername(username));
                 },

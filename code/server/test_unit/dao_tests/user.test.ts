@@ -59,6 +59,18 @@ describe("UserDAO", () => {
             expect(result).toBe(true);
         });
 
+        test("should reject with error for db error", async () => {
+            (db.get as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(
+                userDao.getIsUserAuthenticated("testUser", "password"),
+            ).rejects.toThrow(Error);
+        });
+
         test("should return false for incorrect password", async () => {
             const username = "testUser";
             const plainPassword = "password";
@@ -262,6 +274,17 @@ describe("UserDAO", () => {
             );
             expect(db.run).toHaveBeenCalledTimes(1);
         });
+
+        test("should throw error for db error", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(userDao.deleteUser("testUser")).rejects.toThrow(Error);
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("deleteAll", () => {
@@ -359,7 +382,7 @@ describe("UserDAO", () => {
         test("should return false if user does not exist", async () => {
             (db.get as jest.Mock).mockImplementation((...args: any[]) => {
                 const callback = args[args.length - 1];
-                callback(null, { count: 0 });
+                callback(null, null);
             });
 
             const result = await userDao.checkIfUserExists("nonExistentUser");
