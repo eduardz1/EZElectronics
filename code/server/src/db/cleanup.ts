@@ -7,9 +7,37 @@ import db from "../db/db";
  * This function must be called before any integration test, to ensure a clean database state for each test run.
  */
 export function cleanup() {
-    db.run("DELETE FROM users");
-    db.run("DELETE FROM carts");
-    db.run("DELETE FROM products");
-    db.run("DELETE FROM reviews");
-    db.run("DELETE FROM products_in_cart");
+    return new Promise((resolve, reject) => {
+        db.run("DELETE FROM users", (err) => {
+            if (err) {
+                reject(err);
+            }
+            db.run("DELETE FROM carts", (err) => {
+                if (err) {
+                    reject(err);
+                }
+                db.run("DELETE FROM products", (err) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    db.run("DELETE FROM reviews", (err) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        db.run("DELETE FROM products_in_cart", (err) => {
+                            if (err) {
+                                reject(err);
+                            }
+                            resolve(undefined);
+                        });
+                    });
+                });
+            });
+        });
+    });
+    // db.run("DELETE FROM users");
+    // db.run("DELETE FROM carts");
+    // db.run("DELETE FROM products");
+    // db.run("DELETE FROM reviews");
+    // db.run("DELETE FROM products_in_cart");
 }

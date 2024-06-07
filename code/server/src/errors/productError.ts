@@ -1,6 +1,6 @@
 const PRODUCT_NOT_FOUND = "Product not found";
 const PRODUCT_ALREADY_EXISTS = "The product already exists";
-// const PRODUCT_SOLD = "Product already sold";
+const PRODUCT_SOLD = "Product already sold";
 const EMPTY_PRODUCT_STOCK = "Product stock is empty";
 const LOW_PRODUCT_STOCK = "Product stock cannot satisfy the requested quantity";
 const INCORRECT_GROUPING =
@@ -38,19 +38,19 @@ class ProductAlreadyExistsError extends Error {
     }
 }
 
-// /**
-//  * Represents an error that occurs when a product is already sold.
-//  */
-// class ProductSoldError extends Error {
-//     customMessage: string;
-//     customCode: number;
+/**
+ * Represents an error that occurs when a product is already sold.
+ */
+class ProductSoldError extends Error {
+    customMessage: string;
+    customCode: number;
 
-//     constructor() {
-//         super();
-//         this.customMessage = PRODUCT_SOLD;
-//         this.customCode = 409;
-//     }
-// }
+    constructor() {
+        super();
+        this.customMessage = PRODUCT_SOLD;
+        this.customCode = 409;
+    }
+}
 
 class EmptyProductStockError extends Error {
     customMessage: string;
@@ -110,7 +110,7 @@ class IncorrectModelGroupingError extends Error {
 export {
     ProductNotFoundError,
     ProductAlreadyExistsError,
-    // ProductSoldError,
+    ProductSoldError,
     EmptyProductStockError,
     LowProductStockError,
     IncorrectGroupingError,
