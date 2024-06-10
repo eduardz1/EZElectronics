@@ -250,7 +250,7 @@ class CartDAO {
                     if (products.length === 0)
                         return reject(new EmptyCartError());
 
-                    products.forEach(async (product) => {
+                    for (const product of products) {
                         const productSql = `
                             SELECT
                                 quantity
@@ -310,7 +310,7 @@ class CartDAO {
                                 );
                             },
                         );
-                    });
+                    }
                 },
             );
         });

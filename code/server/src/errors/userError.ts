@@ -20,7 +20,7 @@ class UserNotFoundError extends Error {
     }
 }
 
-// /**
+// /** // FIXME: useless?
 //  * Represents an error that occurs when a user is not a manager.
 //  */
 // class UserNotManagerError extends Error {
@@ -34,7 +34,7 @@ class UserNotFoundError extends Error {
 //     }
 // }
 
-// /**
+// /** // FIXME: useless?
 //  * Represents an error that occurs when a user is not a customer.
 //  */
 // class UserNotCustomerError extends Error {
@@ -84,6 +84,7 @@ class UserIsAdminError extends Error {
     }
 }
 
+// FIXME: useless?
 // class UnauthorizedUserError extends Error {
 //     customMessage: string;
 //     customCode: number;

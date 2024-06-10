@@ -10,7 +10,7 @@ import { body } from "express-validator";
  */
 class CartRoutes {
     private controller: CartController;
-    private router: Router;
+    private readonly router: Router;
     private errorHandler: ErrorHandler;
     private authenticator: Authenticator;
 
