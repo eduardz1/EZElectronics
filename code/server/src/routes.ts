@@ -20,6 +20,7 @@ const prefix = "/ezelectronics";
  * @param {express.Application} app - The express application instance.
  */
 function initRoutes(app: express.Application) {
+    /* istanbul ignore next */
     if (process.env.NODE_ENV !== "test") {
         app.use(morgan("dev")); // Log requests to the console
     }

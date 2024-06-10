@@ -147,6 +147,25 @@ describe("UserDAO", () => {
             ).rejects.toThrow(UserAlreadyExistsError);
             expect(db.run).toHaveBeenCalledTimes(1);
         });
+
+        test("should throw error for db error", async () => {
+            (db.run as jest.Mock).mockImplementation((...args: any[]) => {
+                const callback = args[args.length - 1];
+                const error = new Error("Database error");
+                callback(error);
+            });
+
+            await expect(
+                userDao.createUser(
+                    "testUser",
+                    "Test",
+                    "User",
+                    "password",
+                    Role.CUSTOMER,
+                ),
+            ).rejects.toThrow(Error);
+            expect(db.run).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe("getUsers", () => {
