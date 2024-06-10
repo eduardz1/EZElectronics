@@ -1,7 +1,7 @@
 import request from "supertest";
 import { app } from "../index";
 import { Role } from "../src/components/user";
-import { Product } from "../src/components/product";
+import { Category, Product } from "../src/components/product";
 
 const routePath = "/ezelectronics"; //Base route path for the API
 
@@ -29,6 +29,15 @@ const manager = {
     role: Role.MANAGER,
 };
 
+const testProduct = new Product(
+    100,
+    "model",
+    Category.SMARTPHONE,
+    null,
+    "details",
+    20,
+);
+
 /**
  * Helper function that creates a new user in the database.
  * Can be used to create a user before the tests or in the tests
@@ -51,11 +60,14 @@ const postUser = async (userInfo: any) => {
  * @param cookie the cookie of the logged-in manager
  */
 const postProduct = async (productInfo: Product, cookie: string) => {
-    await request(app)
+    request(app)
         .post(`${routePath}/products`)
         .set("Cookie", cookie)
         .send(productInfo)
-        .expect(200);
+        .expect(200)
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 /**
@@ -79,7 +91,21 @@ const login = async (userInfo: any) => {
 const logout = async (cookie: string) => {
     await request(app)
         .delete(`${routePath}/sessions/current`)
-        .set("Cookie", cookie);
+        .set("Cookie", cookie)
+        .expect(200)
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
-export { postUser, login, logout, postProduct, customer, admin, manager };
+export {
+    postUser,
+    login,
+    logout,
+    postProduct,
+    customer,
+    admin,
+    manager,
+    routePath,
+    testProduct,
+};
