@@ -12,7 +12,7 @@ import {
     postUser,
     routePath,
     testProduct,
-} from "./helpers";
+} from "./helpers.test";
 import { ProductReview } from "../src/components/review";
 
 const reviewInfo = new ProductReview(

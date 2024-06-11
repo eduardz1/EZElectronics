@@ -9,7 +9,7 @@ import {
 import request from "supertest";
 import { app } from "../index";
 import { cleanup } from "../src/db/cleanup";
-import { admin, customer, login, postUser, routePath } from "./helpers";
+import { admin, customer, login, postUser, routePath } from "./helpers.test";
 
 // Cookies for the users. We use them to keep users logged in. Creating them once
 // and saving them in variables outside of the tests will make cookies reusable
@@ -57,7 +57,7 @@ describe("User routes integration tests", () => {
                 .expect(200);
 
             const cust = users.body.find(
-                (user: any) => user.username === newUser.username
+                (user: any) => user.username === newUser.username,
             );
             expect(cust).toBeDefined();
             expect(cust.name).toBe(newUser.name);
@@ -104,7 +104,7 @@ describe("User routes integration tests", () => {
             expect(users.body).toHaveLength(2); // Since admin and customer exist
 
             const cust = users.body.find(
-                (user: any) => user.username === customer.username
+                (user: any) => user.username === customer.username,
             );
             expect(cust).toBeDefined();
             expect(cust.name).toBe(customer.name);
@@ -112,7 +112,7 @@ describe("User routes integration tests", () => {
             expect(cust.role).toBe(customer.role);
 
             const adm = users.body.find(
-                (user: any) => user.username === admin.username
+                (user: any) => user.username === admin.username,
             );
             expect(adm).toBeDefined();
             expect(adm.name).toBe(admin.name);
@@ -194,7 +194,7 @@ describe("User routes integration tests", () => {
             expect(users.body).toHaveLength(1);
 
             const cust = users.body.find(
-                (user: any) => user.username === customer.username
+                (user: any) => user.username === customer.username,
             );
             expect(cust).toBeUndefined();
         });
@@ -256,6 +256,112 @@ describe("User routes integration tests", () => {
                     birthdate: "2025-01-01",
                 })
                 .expect(400);
+        });
+    });
+});
+
+describe("User authentication integration tests", () => {
+    describe(`POST ${routePath}/sessions`, () => {
+        // Test logging in a user
+        test("It should return a 200 success code and log in a user", async () => {
+            const response = await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    username: customer.username,
+                    password: customer.password,
+                })
+                .expect(200);
+
+            expect(response.body.username).toBe(customer.username);
+            expect(response.body.name).toBe(customer.name);
+            expect(response.body.surname).toBe(customer.surname);
+            expect(response.body.role).toBe(customer.role);
+        });
+
+        // Test logging in with incorrect credentials
+        test("It should return a 401 error code if the credentials are incorrect", async () => {
+            await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    username: customer.username,
+                    password: "wrongpassword",
+                })
+                .expect(401);
+        });
+
+        test("It should return 422 if the request body is missing parameters or they are empty", async () => {
+            await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    username: customer.username,
+                })
+                .expect(422);
+
+            await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    password: customer.password,
+                })
+                .expect(422);
+
+            await request(app).post(`${routePath}/sessions`).expect(422);
+
+            await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    username: "",
+                    password: "",
+                })
+                .expect(422);
+
+            await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    username: "test",
+                    password: "",
+                })
+                .expect(422);
+
+            await request(app)
+                .post(`${routePath}/sessions`)
+                .send({
+                    username: "",
+                    password: "test",
+                })
+                .expect(422);
+        });
+    });
+
+    describe(`DELETE ${routePath}/sessions/current`, () => {
+        // Test logging out a user
+        test("It should return a 200 success code and log out a user", async () => {
+            await request(app)
+                .delete(`${routePath}/sessions/current`)
+                .set("Cookie", customerCookie)
+                .expect(200);
+        });
+    });
+
+    describe(`GET ${routePath}/sessions/current`, () => {
+        // Test getting the current user
+        test("It should return the current user", async () => {
+            const response = await request(app)
+                .get(`${routePath}/sessions/current`)
+                .set("Cookie", customerCookie)
+                .expect(200);
+
+            expect(response.body.username).toBe(customer.username);
+            expect(response.body.name).toBe(customer.name);
+            expect(response.body.surname).toBe(customer.surname);
+            expect(response.body.role).toBe(customer.role);
+        });
+
+        // Test unauthorized access
+        test("It should return a 401 error code if the user is not logged in", async () => {
+            await request(app)
+                .get(`${routePath}/sessions/current`)
+                .set("Cookie", "invalid")
+                .expect(401);
         });
     });
 });

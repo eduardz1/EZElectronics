@@ -11,6 +11,7 @@ import passport, { Strategy } from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import Authenticator from "../../src/routers/auth";
 import { Role } from "../../src/components/user";
+import UserDAO from "../../src/dao/userDAO";
 
 jest.mock("../../src/dao/userDAO");
 
@@ -48,6 +49,31 @@ describe("Authenticator", () => {
             expect(passport.deserializeUser).toHaveBeenCalledWith(
                 expect.any(Function),
             );
+        });
+
+        test("deserializeUser should catch errors", async () => {
+            jest.spyOn(app, "use");
+            jest.spyOn(passport, "use");
+            jest.spyOn(passport, "serializeUser");
+            jest.spyOn(passport, "deserializeUser");
+
+            authenticator.initAuth();
+
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUserByUsername",
+            ).mockRejectedValue(new Error("Database error"));
+
+            const done = jest.fn();
+
+            const user = { username: "testuser" };
+
+            try {
+                passport.deserializeUser(user, done);
+            } catch (err) {
+                // Should not throw an error
+                expect(1).toBe(2);
+            }
         });
     });
 
@@ -129,6 +155,39 @@ describe("Authenticator", () => {
                 expect.any(Function),
             );
             expect(req.login).not.toHaveBeenCalled();
+        });
+
+        test("Should reject with an error if an error occurs during login", async () => {
+            const req = { login: jest.fn() };
+            const res = {};
+            const next = jest.fn();
+
+            authenticator.initAuth();
+
+            const user = { username: "testuser" };
+
+            jest.spyOn(req, "login").mockImplementation(
+                (_user: any, callback: any) => {
+                    callback(new Error("Login error"));
+                },
+            );
+
+            jest.spyOn(passport, "authenticate").mockImplementation(
+                (_strategy: string | Strategy | string[], callback: any) => {
+                    callback(null, user, null);
+                    return jest.fn();
+                },
+            );
+
+            await expect(authenticator.login(req, res, next)).rejects.toEqual(
+                new Error("Login error"),
+            );
+
+            expect(passport.authenticate).toHaveBeenCalledWith(
+                "local",
+                expect.any(Function),
+            );
+            expect(req.login).toHaveBeenCalledWith(user, expect.any(Function));
         });
     });
 
