@@ -1,3 +1,4 @@
+import { test, expect } from "@jest/globals";
 import request from "supertest";
 import { app } from "../index";
 import { Role } from "../src/components/user";
@@ -29,14 +30,14 @@ const manager = {
     role: Role.MANAGER,
 };
 
-const testProduct = new Product(
-    100,
-    "model",
-    Category.SMARTPHONE,
-    null,
-    "details",
-    20,
-);
+const testProduct = {
+    sellingPrice: 100,
+    model: "model",
+    category: Category.SMARTPHONE,
+    arrivalDate: null,
+    details: "details",
+    quantity: 20,
+};
 
 /**
  * Helper function that creates a new user in the database.
@@ -76,7 +77,7 @@ const postProduct = async (productInfo: Product, cookie: string) => {
  * @param userInfo The user information to be sent in the request body
  * @returns The cookie of the logged-in user
  */
-const login = async (userInfo: any) => {
+const login = async (userInfo: any): Promise<string> => {
     return new Promise<string>((resolve, reject) => {
         request(app)
             .post(`${routePath}/sessions`)
@@ -88,6 +89,10 @@ const login = async (userInfo: any) => {
     });
 };
 
+/**
+ * Helper function that logs out a user
+ * @param cookie the cookie of the logged-in user
+ */
 const logout = async (cookie: string) => {
     await request(app)
         .delete(`${routePath}/sessions/current`)
@@ -97,6 +102,8 @@ const logout = async (cookie: string) => {
             console.log(err);
         });
 };
+
+test("1", () => expect(1).toBe(1));
 
 export {
     postUser,

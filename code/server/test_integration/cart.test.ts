@@ -10,7 +10,7 @@ import {
     manager,
     postProduct,
     postUser,
-} from "./helpers";
+} from "./helpers.test";
 import { Cart } from "../src/components/cart";
 import { Category, Product } from "../src/components/product";
 import db from "../src/db/db";
