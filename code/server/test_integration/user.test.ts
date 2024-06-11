@@ -2,14 +2,7 @@ import { describe, test, expect, beforeAll, afterAll } from "@jest/globals";
 import request from "supertest";
 import { app } from "../index";
 import { cleanup } from "../src/db/cleanup";
-import {
-    admin,
-    customer,
-    login,
-    logout,
-    postUser,
-    routePath,
-} from "./helpers.test";
+import { admin, customer, login, postUser, routePath } from "./helpers.test";
 import { Role } from "../src/components/user";
 
 // Cookies for the users. We use them to keep users logged in. Creating them once

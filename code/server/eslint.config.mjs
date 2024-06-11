@@ -12,6 +12,7 @@ export default tseslint.config(
                 "error",
                 { argsIgnorePattern: "^_" },
             ],
+            "trailing-comma": "off",
         },
     },
     eslintConfigPrettier,

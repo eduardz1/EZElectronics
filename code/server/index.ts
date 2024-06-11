@@ -17,7 +17,7 @@ app.use(cors(corsOptions));
 initRoutes(app);
 
 /* istanbul ignore next */
-if (!require.main) {
+if (require.main === module) {
     /* istanbul ignore next */
     app.listen(port, () => {
         console.log(`Server listening at http://localhost:${port}`);

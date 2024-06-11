@@ -4,18 +4,18 @@
 
 # Contents
 
-- [Test Report](#test-report)
-- [Contents](#contents)
-- [Dependency graph](#dependency-graph)
-- [Integration approach](#integration-approach)
-- [Tests](#tests)
-- [Coverage](#coverage)
-  - [Coverage of FR](#coverage-of-fr)
-  - [Coverage white box](#coverage-white-box)
+-   [Test Report](#test-report)
+-   [Contents](#contents)
+-   [Dependency graph](#dependency-graph)
+-   [Integration approach](#integration-approach)
+-   [Tests](#tests)
+-   [Coverage](#coverage)
+    -   [Coverage of FR](#coverage-of-fr)
+    -   [Coverage white box](#coverage-white-box)
 
 # Dependency graph
 
-     <report the here the dependency graph of EzElectronics>
+![Dependency Graph](figures/dependency-graph.svg)
 
 # Integration approach
 
