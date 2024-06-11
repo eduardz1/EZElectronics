@@ -10,7 +10,7 @@ import { Role, User } from "../components/user";
  */
 class UserRoutes {
     private controller: UserController;
-    private router: Router;
+    private readonly router: Router;
     private errorHandler: ErrorHandler;
     private authenticator: Authenticator;
 
@@ -194,7 +194,7 @@ class UserRoutes {
  * Represents a class that defines the authentication routes for the application.
  */
 class AuthRoutes {
-    private router: Router;
+    private readonly router: Router;
     private errorHandler: ErrorHandler;
     private authService: Authenticator;
 

@@ -10,7 +10,7 @@ import { Category, Product } from "../components/product";
  */
 class ProductRoutes {
     private controller: ProductController;
-    private router: Router;
+    private readonly router: Router;
     private errorHandler: ErrorHandler;
     private authenticator: Authenticator;
 

@@ -1,67 +1,26 @@
-import { describe, test, expect, beforeAll, afterAll, beforeEach } from "@jest/globals";
+import {
+    describe,
+    test,
+    expect,
+    beforeAll,
+    afterAll,
+    beforeEach,
+} from "@jest/globals";
 import request from "supertest";
 import { app } from "../index";
 import { cleanup } from "../src/db/cleanup";
-
-const routePath = "/ezelectronics"; // Base route path for the API
-
-// Default user information. We use them to create users and evaluate the returned values
-const customer = {
-    username: "customer",
-    name: "customer",
-    surname: "customer",
-    password: "customer",
-    role: "Customer",
-};
-
-const admin = {
-    username: "admin",
-    name: "admin",
-    surname: "admin",
-    password: "admin",
-    role: "Admin",
-};
+import { admin, customer, login, postUser, routePath } from "./helpers";
 
 // Cookies for the users. We use them to keep users logged in. Creating them once
 // and saving them in variables outside of the tests will make cookies reusable
 let customerCookie: string;
 let adminCookie: string;
 
-/**
- * Helper function that creates a new user in the database.
- * Deletes the user first if it already exists to avoid conflicts.
- * @param userInfo The user information to be sent in the request body
- */
-const postUser = async (userInfo: any) => {
-    await request(app).delete(`${routePath}/users/${userInfo.username}`).set("Cookie", adminCookie);
-    await request(app).post(`${routePath}/users`).send(userInfo).expect(200);
-};
-
-/**
- * Helper function that logs in a user and returns the cookie
- * @param userInfo The user information to be sent in the request body
- * @returns The cookie of the logged-in user
- */
-const login = async (userInfo: any): Promise<string> => {
-    return new Promise<string>((resolve, reject) => {
-        request(app)
-            .post(`${routePath}/sessions`)
-            .send(userInfo)
-            .expect(200)
-            .end((err, res) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(res.header["set-cookie"][0]);
-            });
-    });
-};
-
 // Before executing tests, we remove everything from our test database, create
 // an Admin user and log in as Admin, saving the cookie in the corresponding variable
 beforeAll(async () => {
     await cleanup();
-    await request(app).post(`${routePath}/users`).send(admin);
+    await postUser(admin);
     adminCookie = await login(admin);
     await request(app).post(`${routePath}/users`).send(customer);
     customerCookie = await login(customer);
@@ -97,7 +56,9 @@ describe("User routes integration tests", () => {
                 .set("Cookie", adminCookie)
                 .expect(200);
 
-            const cust = users.body.find((user: any) => user.username === newUser.username);
+            const cust = users.body.find(
+                (user: any) => user.username === newUser.username
+            );
             expect(cust).toBeDefined();
             expect(cust.name).toBe(newUser.name);
             expect(cust.surname).toBe(newUser.surname);
@@ -142,13 +103,17 @@ describe("User routes integration tests", () => {
 
             expect(users.body).toHaveLength(2); // Since admin and customer exist
 
-            const cust = users.body.find((user: any) => user.username === customer.username);
+            const cust = users.body.find(
+                (user: any) => user.username === customer.username
+            );
             expect(cust).toBeDefined();
             expect(cust.name).toBe(customer.name);
             expect(cust.surname).toBe(customer.surname);
             expect(cust.role).toBe(customer.role);
 
-            const adm = users.body.find((user: any) => user.username === admin.username);
+            const adm = users.body.find(
+                (user: any) => user.username === admin.username
+            );
             expect(adm).toBeDefined();
             expect(adm.name).toBe(admin.name);
             expect(adm.surname).toBe(admin.surname);
@@ -228,7 +193,9 @@ describe("User routes integration tests", () => {
 
             expect(users.body).toHaveLength(1);
 
-            const cust = users.body.find((user: any) => user.username === customer.username);
+            const cust = users.body.find(
+                (user: any) => user.username === customer.username
+            );
             expect(cust).toBeUndefined();
         });
 

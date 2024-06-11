@@ -7,7 +7,7 @@ import { ProductReview } from "../components/review";
 
 class ReviewRoutes {
     private controller: ReviewController;
-    private router: Router;
+    private readonly router: Router;
     private errorHandler: ErrorHandler;
     private authenticator: Authenticator;
 

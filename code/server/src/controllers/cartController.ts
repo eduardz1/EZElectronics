@@ -2,14 +2,9 @@ import { Cart } from "../components/cart";
 import { User } from "../components/user";
 import CartDAO from "../dao/cartDAO";
 import ProductDAO from "../dao/productDAO";
-import {
-    CartNotFoundError,
-    EmptyCartError,
-    ProductNotInCartError,
-} from "../errors/cartError";
+import { CartNotFoundError, ProductNotInCartError } from "../errors/cartError";
 import {
     EmptyProductStockError,
-    LowProductStockError,
     ProductNotFoundError,
 } from "../errors/productError";
 
@@ -70,30 +65,6 @@ class CartController {
      * @returns A Promise that resolves to `true` if the cart was successfully checked out.
      */
     async checkoutCart(user: User): Promise<boolean> {
-        const unpaidCart = await this.dao.getCart(user);
-        if (!unpaidCart) {
-            throw new CartNotFoundError();
-        }
-        if (unpaidCart.products.length === 0) {
-            throw new EmptyCartError();
-        }
-        await Promise.all(
-            unpaidCart.products.map(async (product) => {
-                const p = await this.productDao.getProductByModel(
-                    product.model,
-                );
-                if (!p) {
-                    throw new ProductNotFoundError();
-                }
-                if (p.quantity === 0) {
-                    throw new EmptyProductStockError();
-                }
-                if (p.quantity < product.quantity) {
-                    throw new LowProductStockError();
-                }
-            }),
-        );
-
         return this.dao.checkoutCart(user);
     }
 
@@ -134,10 +105,6 @@ class CartController {
      * @returns A Promise that resolves to `true` if the cart was successfully cleared.
      */
     async clearCart(user: User): Promise<boolean> {
-        if (!(await this.dao.getCart(user))) {
-            throw new CartNotFoundError();
-        }
-
         return this.dao.clearCart(user);
     }
 

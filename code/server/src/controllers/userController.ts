@@ -60,6 +60,7 @@ class UserController {
      * The function has different behavior depending on the role of the user calling it:
      * - Admins can retrieve any user
      * - Other roles can only retrieve their own information
+     * @param user - the user calling the function.
      * @param username - The username of the user to retrieve. The user must exist.
      * @returns A Promise that resolves to the user with the specified username.
      */
@@ -82,6 +83,7 @@ class UserController {
      * The function has different behavior depending on the role of the user calling it:
      * - Admins can delete any non-Admin user
      * - Other roles can only delete their own account
+     * @param user - The user calling the function.
      * @param username - The username of the user to delete. The user must exist.
      * @returns A Promise that resolves to true if the user has been deleted.
      */

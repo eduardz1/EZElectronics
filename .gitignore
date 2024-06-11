@@ -131,6 +131,9 @@ dist
 # VSCode settings
 .vscode/*
 
+# Jetbrains IDEs project files
+.idea
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
