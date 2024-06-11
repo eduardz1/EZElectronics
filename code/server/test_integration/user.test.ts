@@ -1,19 +1,19 @@
-import {
-    describe,
-    test,
-    expect,
-    beforeAll,
-    afterAll,
-    beforeEach,
-} from "@jest/globals";
+import { describe, test, expect, beforeAll, afterAll } from "@jest/globals";
 import request from "supertest";
 import { app } from "../index";
 import { cleanup } from "../src/db/cleanup";
-import { admin, customer, login, postUser, routePath } from "./helpers.test";
+import {
+    admin,
+    customer,
+    login,
+    logout,
+    postUser,
+    routePath,
+} from "./helpers.test";
+import { Role } from "../src/components/user";
 
 // Cookies for the users. We use them to keep users logged in. Creating them once
 // and saving them in variables outside of the tests will make cookies reusable
-let customerCookie: string;
 let adminCookie: string;
 
 // Before executing tests, we remove everything from our test database, create
@@ -22,8 +22,6 @@ beforeAll(async () => {
     await cleanup();
     await postUser(admin);
     adminCookie = await login(admin);
-    await request(app).post(`${routePath}/users`).send(customer);
-    customerCookie = await login(customer);
 });
 
 // After executing tests, we remove everything from our test database
@@ -31,45 +29,76 @@ afterAll(async () => {
     await cleanup();
 });
 
-// Clear database before each test to ensure isolation
-beforeEach(async () => {
-    await cleanup();
-    await postUser(admin);
-    adminCookie = await login(admin);
-    await postUser(customer);
-    customerCookie = await login(customer);
-});
-
+// A 'describe' block is a way to group tests. It can be used to group tests that
+// are related to the same functionality
+// In this example, tests are for the user routes
+// Inner 'describe' blocks define tests for each route
 describe("User routes integration tests", () => {
     describe(`POST ${routePath}/users`, () => {
-        // Test creating a new user
+        // A 'test' block is a single test. It should be a single logical unit
+        // of testing for a specific functionality and use case (e.g. correct
+        // behavior, error handling, authentication checks)
         test("It should return a 200 success code and create a new user", async () => {
-            const newUser = { ...customer, username: "newCustomer" };
+            // A 'request' function is used to send a request to the server. It
+            // is similar to the 'fetch' function in the browser. It executes an
+            // API call to the specified route, similarly to how the client does
+            // it. It is an actual call, with no mocking, so it tests the real
+            // behavior of the server. Route calls are asynchronous operations,
+            // so we need to use 'await' to wait for the response
             await request(app)
+                // The route path is specified here. Other operation types can
+                // be defined with similar blocks (e.g. 'get', 'patch', 'delete').
+                // Route and query parameters can be added to the path
                 .post(`${routePath}/users`)
-                .set("Cookie", adminCookie)
-                .send(newUser)
+                // In case of a POST request, the data is sent in the body of the
+                // request. It is specified with the 'send' block. The data sent
+                // should be consistent with the API specifications in terms of
+                // names and types
+                .send(customer)
+                // The 'expect' block is used to check the response status code.
+                // We expect a 200 status code for a successful operation
                 .expect(200);
 
+            // After the request is sent, we can add additional checks to verify
+            // the operation, since we need to be sure that the user is present
+            // in the database. A possible way is retrieving all users and
+            // looking for the user we just created.
+            // It is possible to assign the response to a variable and use it later.
             const users = await request(app)
                 .get(`${routePath}/users`)
+                // Authentication is specified with the 'set' block. Adding a
+                // cookie to the request will allow authentication (if the
+                // cookie has been created with the correct login route).
+                // Without this cookie, the request will be unauthorized
                 .set("Cookie", adminCookie)
                 .expect(200);
 
+            // Since we know that the database was empty at the beginning of our
+            // tests and we created two users (an Admin before starting and a
+            // Customer in this test), the array should contain only two users
+            expect(users.body).toHaveLength(2);
+
+            //We look for the user we created in the array of users
             const cust = users.body.find(
-                (user: any) => user.username === newUser.username,
+                (user: any) => user.username === customer.username,
             );
+
+            // We expect the user we have created to exist in the array. The
+            // parameter should also be equal to those we have sent
             expect(cust).toBeDefined();
-            expect(cust.name).toBe(newUser.name);
-            expect(cust.surname).toBe(newUser.surname);
-            expect(cust.role).toBe(newUser.role);
+            expect(cust.name).toBe(customer.name);
+            expect(cust.surname).toBe(customer.surname);
+            expect(cust.role).toBe(customer.role);
         });
 
-        // Test creating a user with missing parameters
+        // Tests for error conditions can be added in separate 'test' blocks.
+        // We can group together tests for the same condition, no need to create
+        // a test for each body parameter, for example
         test("It should return a 422 error code if at least one request body parameter is empty/missing", async () => {
             await request(app)
                 .post(`${routePath}/users`)
-                .set("Cookie", adminCookie)
+                // We send a request with an empty username. The express-validator
+                // checks will catch this and return a 422 error code
                 .send({
                     username: "",
                     name: "test",
@@ -81,7 +110,6 @@ describe("User routes integration tests", () => {
 
             await request(app)
                 .post(`${routePath}/users`)
-                .set("Cookie", adminCookie)
                 .send({
                     username: "test",
                     name: "",
@@ -89,7 +117,7 @@ describe("User routes integration tests", () => {
                     password: "test",
                     role: "Customer",
                 })
-                .expect(422);
+                .expect(422); //We can repeat the call for the remaining body parameters
         });
     });
 
@@ -122,6 +150,7 @@ describe("User routes integration tests", () => {
 
         // Test unauthorized access
         test("It should return a 401 error code if the user is not an Admin", async () => {
+            const customerCookie = await login(customer);
             await request(app)
                 .get(`${routePath}/users`)
                 .set("Cookie", customerCookie)
@@ -211,6 +240,14 @@ describe("User routes integration tests", () => {
     describe(`PATCH ${routePath}/users/:username`, () => {
         // Test updating a user's information
         test("It should update a user's information", async () => {
+            const oldUser = {
+                username: "oldUser",
+                name: "OldCustomer",
+                surname: "OldCustomer",
+                password: "oldpassword",
+                role: Role.CUSTOMER,
+            };
+
             const updatedUser = {
                 name: "UpdatedCustomer",
                 surname: "UpdatedCustomer",
@@ -218,8 +255,12 @@ describe("User routes integration tests", () => {
                 birthdate: "2000-01-01",
             };
 
+            // Create a new user
+            await postUser(oldUser);
+
+            await login(admin);
             const response = await request(app)
-                .patch(`${routePath}/users/${customer.username}`)
+                .patch(`${routePath}/users/${oldUser.username}`)
                 .set("Cookie", adminCookie)
                 .send(updatedUser)
                 .expect(200);
@@ -245,7 +286,7 @@ describe("User routes integration tests", () => {
         });
 
         // Test invalid birthdate
-        test("It should return a 400 error code if birthdate is invalid", async () => {
+        test("It should return a 422 error code if birthdate is invalid", async () => {
             await request(app)
                 .patch(`${routePath}/users/${customer.username}`)
                 .set("Cookie", adminCookie)
@@ -253,9 +294,9 @@ describe("User routes integration tests", () => {
                     name: "Updated",
                     surname: "User",
                     address: "New Address",
-                    birthdate: "2025-01-01",
+                    birthdate: "06-12-2000",
                 })
-                .expect(400);
+                .expect(422);
         });
     });
 });
@@ -264,6 +305,9 @@ describe("User authentication integration tests", () => {
     describe(`POST ${routePath}/sessions`, () => {
         // Test logging in a user
         test("It should return a 200 success code and log in a user", async () => {
+            // Re-create customer
+            await postUser(customer);
+
             const response = await request(app)
                 .post(`${routePath}/sessions`)
                 .send({
@@ -335,6 +379,7 @@ describe("User authentication integration tests", () => {
     describe(`DELETE ${routePath}/sessions/current`, () => {
         // Test logging out a user
         test("It should return a 200 success code and log out a user", async () => {
+            const customerCookie = await login(customer);
             await request(app)
                 .delete(`${routePath}/sessions/current`)
                 .set("Cookie", customerCookie)
@@ -345,6 +390,7 @@ describe("User authentication integration tests", () => {
     describe(`GET ${routePath}/sessions/current`, () => {
         // Test getting the current user
         test("It should return the current user", async () => {
+            const customerCookie = await login(customer);
             const response = await request(app)
                 .get(`${routePath}/sessions/current`)
                 .set("Cookie", customerCookie)

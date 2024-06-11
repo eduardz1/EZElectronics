@@ -7,7 +7,7 @@
         "start": "nodemon index.ts",
         "start_test": "cross-env NODE_ENV=test nodemon index.ts",
         "test": "cross-env NODE_ENV=test jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --silent",
-        "test_unit": "cross-env NODE_ENV=test jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --silent --testPathPattern=test_unit",
+        "test_unit": "cross-env NODE_ENV=test jest --coverage --colors --detectOpenHandles --forceExit --verbose --silent --testPathPattern=test_unit",
         "test_integration": "cross-env NODE_ENV=test jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --silent --testPathPattern=test_integration",
         "test_official": "cross-env NODE_ENV=test jest --runInBand --coverage --colors --detectOpenHandles --forceExit --verbose --silent --testPathPattern=test_official",
         "lint": "eslint . --fix"
