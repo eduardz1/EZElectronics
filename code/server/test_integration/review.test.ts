@@ -23,10 +23,6 @@ const reviewInfo = new ProductReview(
     "very nice smartphone",
 );
 
-let customerCookie: string;
-let adminCookie: string;
-let managerCookie: string;
-
 beforeAll(async () => {
     await cleanup();
 
@@ -34,9 +30,7 @@ beforeAll(async () => {
     await postUser(manager);
     await postUser(customer);
 
-    adminCookie = await login(admin);
-    customerCookie = await login(customer);
-    managerCookie = await login(manager);
+    const managerCookie = await login(manager);
 
     await postProduct(testProduct, managerCookie);
 
@@ -51,6 +45,7 @@ describe("Review routes integration tests", () => {
     describe("POST /reviews/:model", () => {
         test("It should return a 200 success code and add a new review", async () => {
             //simulate that the user has bought the product
+            const customerCookie = await login(customer);
             console.log("customerCookie", customerCookie);
             await request(app)
                 .post(`${routePath}/carts/`)
@@ -79,15 +74,19 @@ describe("Review routes integration tests", () => {
             const addedReview = reviews.body[0];
             expect(addedReview.score).toBe(reviewInfo.score);
             expect(addedReview.comment).toBe(reviewInfo.comment);
+            await logout(customerCookie);
         });
 
         test("It should return a 401 code", async () => {
             //deleting all reviews of all products
+            const adminCookie = await login(admin);
             await request(app)
                 .delete(`${routePath}/reviews`)
                 .set("Cookie", adminCookie)
                 .expect(200);
+            await logout(adminCookie);
             //simulate that the user has bought the product
+            const customerCookie = await login(customer);
             await request(app)
                 .post(`${routePath}/carts/`)
                 .set("Cookie", customerCookie)
@@ -107,17 +106,21 @@ describe("Review routes integration tests", () => {
             await request(app)
                 .get(`${routePath}/reviews/${reviewInfo.model}`)
                 .expect(401); //not authorized
+            await logout(customerCookie);
         });
     });
 
     describe("GET /reviews/:model", () => {
         test("It should return an array of reviews for a product", async () => {
             //deleting all reviews of all products
+            const adminCookie = await login(admin);
             await request(app)
                 .delete(`${routePath}/reviews`)
                 .set("Cookie", adminCookie)
                 .expect(200);
+            await logout(adminCookie);
             //simulate that the user has bought the product
+            const customerCookie = await login(customer);
             await request(app)
                 .post(`${routePath}/carts/`)
                 .set("Cookie", customerCookie)
@@ -141,11 +144,13 @@ describe("Review routes integration tests", () => {
             const addedReview = reviews.body[0];
             expect(addedReview.score).toBe(reviewInfo.score);
             expect(addedReview.comment).toBe(reviewInfo.comment);
+            await logout(customerCookie);
         });
     });
 
     describe("DELETE /reviews/:model", () => {
         test("It should return a 200 success code and delete the user's review", async () => {
+            const customerCookie = await login(customer);
             await request(app)
                 .delete(`${routePath}/reviews/${reviewInfo.model}`)
                 .set("Cookie", customerCookie)
@@ -156,16 +161,20 @@ describe("Review routes integration tests", () => {
                 .set("Cookie", customerCookie)
                 .expect(200);
             expect(reviews.body).toHaveLength(0);
+            await logout(customerCookie);
         });
     });
 
     describe("DELETE /reviews/:model/all", () => {
         test("It should return a 200 success code and delete all reviews of a product", async () => {
+            let adminCookie = await login(admin);
             //deleting all reviews of all products
             await request(app)
                 .delete(`${routePath}/reviews`)
                 .set("Cookie", adminCookie)
                 .expect(200);
+            await logout(adminCookie);
+            let customerCookie = await login(customer);
             //simulate that the user has bought the product
             await request(app)
                 .post(`${routePath}/carts/`)
@@ -182,26 +191,35 @@ describe("Review routes integration tests", () => {
                 .set("Cookie", customerCookie)
                 .send({ score: reviewInfo.score, comment: reviewInfo.comment })
                 .expect(200);
+            await logout(customerCookie);
 
+            adminCookie = await login(admin);
             await request(app)
                 .delete(`${routePath}/reviews/${reviewInfo.model}/all`)
                 .set("Cookie", adminCookie)
                 .expect(200);
+            await logout(adminCookie);
+
+            customerCookie = await login(customer);
 
             const reviews = await request(app)
                 .get(`${routePath}/reviews/${reviewInfo.model}`)
                 .set("Cookie", customerCookie)
                 .expect(200);
             expect(reviews.body).toHaveLength(0);
+            await logout(customerCookie);
         });
 
         test("It should return a 401 not authorized code", async () => {
+            const adminCookie = await login(admin);
             //deleting all reviews of all products
             await request(app)
                 .delete(`${routePath}/reviews`)
                 .set("Cookie", adminCookie)
                 .expect(200);
+            await logout(adminCookie);
             //simulate that the user has bought the product
+            const customerCookie = await login(customer);
             await request(app)
                 .post(`${routePath}/carts/`)
                 .set("Cookie", customerCookie)
@@ -221,16 +239,20 @@ describe("Review routes integration tests", () => {
             await request(app)
                 .delete(`${routePath}/reviews/${reviewInfo.model}/all`)
                 .expect(401); //not authorized
+            await logout(customerCookie);
         });
     });
 
     describe("DELETE /reviews", () => {
         test("It should return a 200 success code and delete all reviews", async () => {
+            let adminCookie = await login(admin);
             //deleting all reviews of all products
             await request(app)
                 .delete(`${routePath}/reviews`)
                 .set("Cookie", adminCookie)
                 .expect(200);
+            await logout(adminCookie);
+            let customerCookie = await login(customer);
             //simulate that the user has bought the product
             await request(app)
                 .post(`${routePath}/carts/`)
@@ -247,17 +269,25 @@ describe("Review routes integration tests", () => {
                 .set("Cookie", customerCookie)
                 .send({ score: reviewInfo.score, comment: reviewInfo.comment })
                 .expect(200);
+            await logout(customerCookie);
+
+            adminCookie = await login(admin);
 
             await request(app)
                 .delete(`${routePath}/reviews`)
                 .set("Cookie", adminCookie)
                 .expect(200);
 
+            await logout(adminCookie);
+
+            customerCookie = await login(customer);
+
             const reviews = await request(app)
                 .get(`${routePath}/reviews/${reviewInfo.model}`)
                 .set("Cookie", customerCookie)
                 .expect(200);
             expect(reviews.body).toHaveLength(0);
+            await logout(customerCookie);
         });
     });
 });
