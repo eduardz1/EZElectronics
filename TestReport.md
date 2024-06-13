@@ -15,7 +15,9 @@
 
 # Dependency graph
 
-![Dependency Graph](figures/dependency-graph.svg)
+Here we can see the complete dependency graph of the application. We can see that coupling is not optimal, a refactor could be done to improve the architecture.
+
+![Dependency graph](figures/dependency-graph.drawio.svg)
 
 # Integration approach
 
@@ -49,4 +51,4 @@
 
 ## Coverage white box
 
-Report here the screenshot of coverage values obtained with jest-- coverage
+![coverage](figures/coverage.png)
