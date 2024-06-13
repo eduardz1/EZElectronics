@@ -1,6 +1,5 @@
-import { test, expect, jest, describe, afterAll } from "@jest/globals";
+import { test, describe, afterAll, beforeAll } from "@jest/globals";
 import request from "supertest";
-import { Category, Product } from "../src/components/product";
 import { app } from "../index";
 import {
     admin,
@@ -10,20 +9,11 @@ import {
     manager,
     postProduct,
     postUser,
+    testProduct,
 } from "./helpers.test";
 import { cleanup } from "../src/db/cleanup";
-import { response } from "express";
 
 const baseURL = "/ezelectronics/products";
-
-const testProduct: Product = {
-    sellingPrice: 1,
-    model: "model",
-    category: Category.SMARTPHONE,
-    arrivalDate: "2022-01-01",
-    details: "details",
-    quantity: 1,
-};
 
 beforeAll(async () => {
     await cleanup();
@@ -33,8 +23,6 @@ beforeAll(async () => {
     await postUser(customer);
 
     const managerCookie = await login(manager);
-
-    await postProduct(testProduct, managerCookie);
 
     await logout(managerCookie);
 });
@@ -50,7 +38,7 @@ describe("Product routes", () => {
             await request(app)
                 .post(baseURL)
                 .set("Cookie", managerCookie)
-                .send({ testProduct })
+                .send(testProduct)
                 .expect(200);
         });
 
@@ -61,7 +49,7 @@ describe("Product routes", () => {
             await request(app)
                 .post(baseURL)
                 .set("Cookie", customerCookie)
-                .send({ testProduct })
+                .send(testProduct)
                 .expect(401);
         });
 
@@ -70,42 +58,85 @@ describe("Product routes", () => {
             await request(app)
                 .post(baseURL)
                 .set("Cookie", managerCookie)
-                .send({ testProduct })
+                .send(testProduct)
                 .expect(409);
         });
     });
 
     describe(`PATCH ${baseURL}/:model`, () => {
         test("Returns 200 OK and updates the product", async () => {
+            const updatedProduct = {
+                quantity: 10,
+                changeDate: "2024-04-01",
+            };
+
             const managerCookie = await login(manager);
             await request(app)
                 .patch(`${baseURL}/model`)
                 .set("Cookie", managerCookie)
-                .send({ testProduct, model: "newModel" })
+                .send(updatedProduct)
                 .expect(200);
         });
 
         test("Returns 401 Unauthorized if user is not a Manager or Admin", async () => {
+            const updatedProduct = {
+                quantity: 10,
+                changeDate: "2021-01-01",
+            };
+
             await request(app)
                 .patch(`${baseURL}/${testProduct.model}`)
-                .send({ testProduct, model: "newModel" })
+                .send(updatedProduct)
                 .expect(401);
 
             const customerCookie = await login(customer);
             await request(app)
                 .patch(`${baseURL}/${testProduct.model}`)
                 .set("Cookie", customerCookie)
-                .send({ testProduct, model: "newModel" })
+                .send(updatedProduct)
                 .expect(401);
         });
 
         test("Returns 404 Not Found if product does not exist", async () => {
+            const updatedProduct = {
+                quantity: 10,
+                changeDate: "2021-01-01",
+            };
+
             const managerCookie = await login(manager);
             await request(app)
-                .patch(`${baseURL}/model/nonexistent`)
+                .patch(`${baseURL}/nonexistent`)
                 .set("Cookie", managerCookie)
-                .send({ model: "newModel" })
+                .send(updatedProduct)
                 .expect(404);
+        });
+
+        test("Returns 400 if `changeDate` is after the current date", async () => {
+            const updatedProduct = {
+                quantity: 10,
+                changeDate: "3000-01-01",
+            };
+
+            const managerCookie = await login(manager);
+            await request(app)
+                .patch(`${baseURL}/${testProduct.model}`)
+                .set("Cookie", managerCookie)
+                .send(updatedProduct)
+                .expect(400);
+        });
+
+        test("Returns 400 if `changeDate` is before product's `arrivalDate`", async () => {
+            const updatedProduct = {
+                quantity: 10,
+                changeDate: "2020-01-01",
+            };
+
+            const managerCookie = await login(manager);
+            await request(app)
+                .patch(`${baseURL}/${testProduct.model}`)
+                .set("Cookie", managerCookie)
+                .send(updatedProduct)
+                .expect(400);
         });
     });
 
@@ -143,11 +174,30 @@ describe("Product routes", () => {
         });
 
         test("Returns 409 Not Found if product stock is empty", async () => {
-            const managerCookie = await login(manager);
+            let managerCookie = await login(manager);
+
+            // Post a low quantity product
+            const lowQuantityProduct = testProduct;
+            lowQuantityProduct.quantity = 1;
+            lowQuantityProduct.model = "lowQuantityProduct";
+
+            await postProduct(lowQuantityProduct, managerCookie);
+
+            await logout(managerCookie);
+            managerCookie = await login(manager);
+
+            // Sell the product
             await request(app)
-                .patch(`${baseURL}/model/sell`)
+                .patch(`${baseURL}/lowQuantityProduct/sell`)
                 .set("Cookie", managerCookie)
-                .send({ testProduct, quantity: 1 })
+                .send({ quantity: 1 })
+                .expect(200);
+
+            // Try to sell the product again
+            await request(app)
+                .patch(`${baseURL}/lowQuantityProduct/sell`)
+                .set("Cookie", managerCookie)
+                .send({ quantity: 1 })
                 .expect(409);
         });
 
@@ -208,7 +258,7 @@ describe("Product routes", () => {
         test("Returns 200 OK and all products of a model", async () => {
             const managerCookie = await login(manager);
             await request(app)
-                .get(`${baseURL}/?grouping=model&model=testProduct.model`)
+                .get(`${baseURL}/?grouping=model&model=model`)
                 .set("Cookie", managerCookie)
                 .expect(200);
         });
@@ -249,20 +299,12 @@ describe("Product routes", () => {
 
         test("Returns 401 Unauthorized if user is not logged in", async () => {
             await request(app).get(`${baseURL}/available`).expect(401);
-
-            const customerCookie = await login(customer);
-            await request(app)
-                .get(`${baseURL}/available`)
-                .set("Cookie", customerCookie)
-                .expect(401);
         });
 
         test("Returns 200 OK and all available products of a category", async () => {
             const managerCookie = await login(manager);
             await request(app)
-                .get(
-                    `${baseURL}/available?grouping=category&category=testProduct.category`,
-                )
+                .get(`${baseURL}/available?grouping=category&category=Laptop`)
                 .set("Cookie", managerCookie)
                 .expect(200);
         });
@@ -286,9 +328,7 @@ describe("Product routes", () => {
         test("Returns 200 OK and all products of a model", async () => {
             const managerCookie = await login(manager);
             await request(app)
-                .get(
-                    `${baseURL}/available?grouping=model&model=testProduct.model`,
-                )
+                .get(`${baseURL}/available?grouping=model&model=model`)
                 .set("Cookie", managerCookie)
                 .expect(200);
         });

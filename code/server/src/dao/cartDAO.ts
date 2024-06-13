@@ -85,6 +85,9 @@ class CartDAO {
                             (err: Error | null, row: any) => {
                                 if (err) return reject(err);
 
+                                if (!row)
+                                    return reject(new CartNotFoundError());
+
                                 const insertSql = `
                                     INSERT INTO
                                         products_in_cart(
@@ -160,15 +163,21 @@ class CartDAO {
 
                     if (!row) return resolve(null);
 
-                    const carts = new Cart(
-                        row.user,
-                        row.paid,
-                        row.paymentDate,
-                        row.total,
-                        await this.getProductsInCart(user, row.id),
-                    );
-
-                    resolve(carts);
+                    this.getProductsInCart(user, row.id)
+                        .then((products) =>
+                            resolve(
+                                new Cart(
+                                    row.customer,
+                                    !!row.paid,
+                                    row.paymentDate,
+                                    row.total,
+                                    products,
+                                ),
+                            ),
+                        )
+                        .catch((err) => {
+                            reject(err);
+                        });
                 },
             );
         });
@@ -201,18 +210,21 @@ class CartDAO {
             db.all(
                 sql,
                 [customer.username, id],
-                (err: Error | null, row: any[]) => {
+                (err: Error | null, rows: any[]) => {
                     if (err) return reject(err);
 
-                    const products: ProductInCart[] = row.map(
-                        (row) =>
+                    const products: ProductInCart[] = [];
+
+                    for (const row of rows) {
+                        products.push(
                             new ProductInCart(
                                 row.model,
                                 row.quantity,
                                 row.category,
                                 row.sellingPrice,
                             ),
-                    );
+                        );
+                    }
 
                     resolve(products);
                 },
@@ -245,72 +257,82 @@ class CartDAO {
 
                     if (!row) return reject(new CartNotFoundError());
 
-                    const products = await this.getProductsInCart(user, row.id);
+                    this.getProductsInCart(user, row.id)
+                        .then((products) => {
+                            if (products.length === 0)
+                                return reject(new EmptyCartError());
 
-                    if (products.length === 0)
-                        return reject(new EmptyCartError());
-
-                    for (const product of products) {
-                        const productSql = `
-                            SELECT
-                                quantity
-                            FROM
-                                products
-                            WHERE
-                                model = ?;`;
-
-                        db.get(
-                            productSql,
-                            [product.model],
-                            (err: Error | null, row: any) => {
-                                if (err) return reject(err);
-
-                                if (row.quantity === 0)
-                                    return reject(new ProductSoldError());
-
-                                if (row.quantity < product.quantity)
-                                    return reject(new LowProductStockError());
-
-                                const updateProduct = `
-                                    UPDATE
+                            for (const product of products) {
+                                const productSql = `
+                                    SELECT
+                                        quantity
+                                    FROM
                                         products
-                                    SET
-                                        quantity = quantity - ?
                                     WHERE
                                         model = ?;`;
 
-                                db.run(
-                                    updateProduct,
-                                    [product.quantity, product.model],
-                                    (err: Error | null) => {
+                                db.get(
+                                    productSql,
+                                    [product.model],
+                                    (err: Error | null, row: any) => {
                                         if (err) return reject(err);
 
-                                        const updateCart = `
+                                        if (row.quantity === 0)
+                                            return reject(
+                                                new ProductSoldError(),
+                                            );
+
+                                        if (row.quantity < product.quantity)
+                                            return reject(
+                                                new LowProductStockError(),
+                                            );
+
+                                        const updateProduct = `
                                             UPDATE
-                                                carts
+                                                products
                                             SET
-                                                paid = 1,
-                                                paymentDate = ?
+                                                quantity = quantity - ?
                                             WHERE
-                                                customer = ?
-                                                AND paid = 0;`;
+                                                model = ?;`;
 
                                         db.run(
-                                            updateCart,
-                                            [
-                                                dayjs().format("YYYY-MM-DD"),
-                                                user.username,
-                                            ],
-                                            (err: Error | null) =>
-                                                err
-                                                    ? reject(err)
-                                                    : resolve(true),
+                                            updateProduct,
+                                            [product.quantity, product.model],
+                                            (err: Error | null) => {
+                                                if (err) return reject(err);
+
+                                                const updateCart = `
+                                                    UPDATE
+                                                        carts
+                                                    SET
+                                                        paid = 1,
+                                                        paymentDate = ?
+                                                    WHERE
+                                                        customer = ?
+                                                        AND paid = 0;`;
+
+                                                db.run(
+                                                    updateCart,
+                                                    [
+                                                        dayjs().format(
+                                                            "YYYY-MM-DD",
+                                                        ),
+                                                        user.username,
+                                                    ],
+                                                    (err: Error | null) =>
+                                                        err
+                                                            ? reject(err)
+                                                            : resolve(true),
+                                                );
+                                            },
                                         );
                                     },
                                 );
-                            },
-                        );
-                    }
+                            }
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        });
                 },
             );
         });
@@ -339,17 +361,34 @@ class CartDAO {
                 async (err: Error | null, rows: any[]) => {
                     if (err) return reject(err);
 
-                    const carts = rows.map(async (row) => {
-                        return new Cart(
-                            row.customer,
-                            row.paid,
-                            row.paymentDate,
-                            row.total,
-                            await this.getProductsInCart(user, row.id),
-                        );
-                    });
+                    const carts: Cart[] = [];
 
-                    resolve(Promise.all(carts));
+                    for (const row of rows) {
+                        const products = await this.getProductsInCart(
+                            user,
+                            row.id,
+                        )
+                            .then((products) => products)
+                            .catch((err) => {
+                                return err;
+                            });
+
+                        if (products instanceof Error) {
+                            return reject(products);
+                        }
+
+                        carts.push(
+                            new Cart(
+                                row.customer,
+                                !!row.paid,
+                                row.paymentDate,
+                                row.total,
+                                products,
+                            ),
+                        );
+                    }
+
+                    resolve(carts);
                 },
             );
         });
@@ -472,9 +511,9 @@ class CartDAO {
                     WHERE
                         cartId = ?;`;
 
-                db.run(deleteSql, [row.id], (err: Error | null) =>
-                    err ? reject(err) : resolve(true),
-                );
+                db.run(deleteSql, [row.id], (err: Error | null) => {
+                    if (err) return reject(err);
+                });
 
                 const updateCart = `
                     UPDATE
@@ -484,10 +523,12 @@ class CartDAO {
                     WHERE
                         id = ?;`;
 
-                db.run(updateCart, [row.id], (err: Error | null) =>
-                    err ? reject(err) : resolve(true),
-                );
+                db.run(updateCart, [row.id], (err: Error | null) => {
+                    if (err) return reject(err);
+                });
             });
+
+            resolve(true);
         });
     }
 
@@ -513,22 +554,37 @@ class CartDAO {
         const sql = "SELECT * FROM carts";
 
         return new Promise<Cart[]>((resolve, reject) => {
-            db.all(sql, [], (err: Error | null, rows: any[]) => {
+            db.all(sql, [], async (err: Error | null, rows: any[]) => {
                 if (err) return reject(err);
 
-                if (!rows) return resolve([]);
+                const carts: Cart[] = [];
 
-                const carts = rows.map(async (row) => {
-                    return new Cart(
+                for (const row of rows) {
+                    const products = await this.getProductsInCart(
                         row.customer,
-                        row.paid,
-                        row.paymentDate,
-                        row.total,
-                        await this.getProductsInCart(row.customer, row.id),
-                    );
-                });
+                        row.id,
+                    )
+                        .then((products) => products)
+                        .catch((err) => {
+                            return err;
+                        });
 
-                resolve(Promise.all(carts));
+                    if (products instanceof Error) {
+                        return reject(products);
+                    }
+
+                    carts.push(
+                        new Cart(
+                            row.customer,
+                            !!row.paid,
+                            row.paymentDate,
+                            row.total,
+                            products,
+                        ),
+                    );
+                }
+
+                resolve(carts);
             });
         });
     }

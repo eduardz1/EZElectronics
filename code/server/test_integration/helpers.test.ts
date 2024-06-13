@@ -12,6 +12,8 @@ const customer = {
     surname: "customer",
     password: "customer",
     role: Role.CUSTOMER,
+    address: "address",
+    birthdate: "2001-02-14",
 };
 
 const admin = {
@@ -34,7 +36,7 @@ const testProduct = {
     sellingPrice: 100,
     model: "model",
     category: Category.SMARTPHONE,
-    arrivalDate: null,
+    arrivalDate: "2024-02-14",
     details: "details",
     quantity: 20,
 };

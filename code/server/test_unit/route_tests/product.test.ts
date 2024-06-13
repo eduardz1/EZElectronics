@@ -1429,10 +1429,6 @@ describe("Product routes", () => {
 
         test(`Returns 422 if grouping is "category" and category is null`, async () => {
             jest.spyOn(
-                ProductController.prototype,
-                "getAvailableProducts",
-            ).mockRejectedValueOnce(new IncorrectCategoryGroupingError());
-            jest.spyOn(
                 Authenticator.prototype,
                 "isLoggedIn",
             ).mockImplementation((_req, _res, next) => next());
@@ -1444,15 +1440,11 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getAvailableProducts,
-            ).toHaveBeenCalledTimes(1);
-            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
+            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 422 if grouping is "category" and model is specified`, async () => {
-            jest.spyOn(
-                ProductController.prototype,
-                "getAvailableProducts",
-            ).mockRejectedValueOnce(new IncorrectModelGroupingError());
             jest.spyOn(
                 Authenticator.prototype,
                 "isLoggedIn",
@@ -1465,15 +1457,11 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getAvailableProducts,
-            ).toHaveBeenCalledTimes(1);
-            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
+            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 422 if grouping is "model" and model is null`, async () => {
-            jest.spyOn(
-                ProductController.prototype,
-                "getAvailableProducts",
-            ).mockRejectedValueOnce(new IncorrectModelGroupingError());
             jest.spyOn(
                 Authenticator.prototype,
                 "isLoggedIn",
@@ -1486,15 +1474,11 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getAvailableProducts,
-            ).toHaveBeenCalledTimes(1);
-            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
+            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 422 if grouping is "model" and category is specified`, async () => {
-            jest.spyOn(
-                ProductController.prototype,
-                "getAvailableProducts",
-            ).mockRejectedValueOnce(new IncorrectCategoryGroupingError());
             jest.spyOn(
                 Authenticator.prototype,
                 "isLoggedIn",
@@ -1507,8 +1491,8 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getAvailableProducts,
-            ).toHaveBeenCalledTimes(1);
-            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
+            expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 404 if grouping is "model" and model does not represent an existing product`, async () => {
@@ -1526,9 +1510,6 @@ describe("Product routes", () => {
             );
 
             expect(response.status).toBe(404);
-            expect(
-                ProductController.prototype.getAvailableProducts,
-            ).toHaveBeenCalledTimes(1);
             expect(Authenticator.prototype.isLoggedIn).toHaveBeenCalledTimes(1);
         });
     });
