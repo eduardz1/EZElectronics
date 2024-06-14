@@ -702,11 +702,46 @@ Here we can see the complete dependency graph of the application. We can see tha
 
 <Report in the following table the coverage of functional requirements and scenarios(from official requirements) >
 
-| Functional Requirement or scenario | Test(s) |
-| :--------------------------------: | :-----: |
-|                FRx                 |         |
-|                FRy                 |         |
-|                ...                 |         |
+|   ID    |                              Name                              |                                                                            Test(s)                                                                             |
+| :-----: | :------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| **FR1** |                       **Manage account**                       |                                                                                                                                                                |
+|  FR1.1  |                             Login                              |                                                        test_integration/user.test.ts - `POST /sessions`                                                        |
+|  FR1.2  |                             Logout                             |                                                   test_integration/user.test.ts - `DELETE /sessions/current`                                                   |
+|  FR1.3  |                   Create a new user account                    |                                     test_integration/user.test.ts - `POST /users`, controller/user.test.ts - `createUser`                                      |
+| **FR2** |                        **Manage users**                        |                                                                                                                                                                |
+|  FR2.1  |                   Show the list of all users                   |                                       test_integration/user.test.ts - `GET /users`, controller/user.test.ts - `getUsers`                                       |
+|  FR2.2  |        Show the list of all users with a specific role         |                              test_integration/user.test.ts - `GET /users/roles/:role`, controller/user.test.ts - `getUsersByRole`                              |
+|  FR2.3  |             Show the information of a single user              |                             test_integration/user.test.ts - `GET /users/:username`, controller/user.test.ts - `getUserByUsername`                              |
+|  FR2.4  |            Update the information of a single user             |                              test_integration/user.test.ts - `PATCH /users/:username`, controller/user.test.ts - `updateUserInfo`                              |
+|  FR2.5  |                Delete a single _non Admin_ user                |                               test_integration/user.test.ts - `DELETE /users/:username`, controller/user.test.ts - `deleteUser`                                |
+|  FR2.6  |                  Delete all _non Admin_ users                  |                                     test_integration/user.test.ts - `DELETE /users`, controller/user.test.ts - `deleteAll`                                     |
+| **FR3** |                      **Manage products**                       |                                                                                                                                                                |
+|  FR3.1  |                 Register a set of new products                 |                       test_integration/product.test.ts - `POST /ezelectronics/products`, controller/product.test.ts - `registerProducts`                       |
+|  FR3.2  |                Update the quantity of a product                |                test_integration/product.test.ts - `PATCH /ezelectronics/products/:model`, controller/product.test.ts - `changeProductQuantity`                 |
+|  FR3.3  |                         Sell a product                         |                   test_integration/product.test.ts - `PATCH /ezelectronics/products/:model/sell`, controller/product.test.ts - `sellProduct`                   |
+|  FR3.4  |                 Show the list of all products                  |                          test_integration/product.test.ts - `GET /ezelectronics/products`, controller/product.test.ts - `getProducts`                          |
+| FR3.4.1 |            Show the list of all available products             |                test_integration/product.test.ts - `GET /ezelectronics/products/available`, controller/product.test.ts - `getAvailableProducts`                 |
+|  FR3.5  |      Show the list of all products with the same category      |          test_integration/product.test.ts - `GET /ezelectronics/products?grouping=category&category=...`, controller/product.test.ts - `getProducts`           |
+| FR3.5.1 | Show the list of all available products with the same category | test_integration/product.test.ts - `GET /ezelectronics/products/available?grouping=category&category=...`, controller/product.test.ts - `getAvailableProducts` |
+|  FR3.6  |       Show the list of all products with the same model        |             test_integration/product.test.ts - `GET /ezelectronics/products?grouping=model&model=...`, controller/product.test.ts - `getProducts`              |
+| FR3.6.1 |  Show the list of all available products with the same model   |    test_integration/product.test.ts - `GET /ezelectronics/products/available?grouping=model&model=...`, controller/product.test.ts - `getAvailableProducts`    |
+|  FR3.7  |                        Delete a product                        |                    test_integration/product.test.ts - `DELETE /ezelectronics/products/:model`, controller/product.test.ts - `deleteProduct`                    |
+|  FR3.8  |                      Delete all products                       |                     test_integration/product.test.ts - `DELETE /ezelectronics/products`, controller/product.test.ts - `deleteAllProducts`                      |
+| **FR4** |                       **Manage reviews**                       |                                                                                                                                                                |
+|  FR4.1  |                 Add a new review to a product                  |                               test_integration/review.test.ts - `POST /reviews/:model`, controller/review.test.ts - `addReview`                                |
+|  FR4.2  |       Get the list of all reviews assigned to a product        |                            test_integration/review.test.ts - `GET /reviews/:model`, controller/review.test.ts - `getProductReviews`                            |
+|  FR4.3  |               Delete a review given to a product               |                             test_integration/review.test.ts - `DELETE /reviews/:model`, controller/review.test.ts - `deleteReview`                             |
+|  FR4.4  |                Delete all reviews of a product                 |                      test_integration/review.test.ts - `DELETE /reviews/:model/all`, controller/review.test.ts - `deleteReviewsOfProduct`                      |
+|  FR4.5  |               Delete all reviews of all products               |                              test_integration/review.test.ts - `DELETE /reviews`, controller/review.test.ts - `deleteAllReviews`                               |
+| **FR5** |                        **Manage carts**                        |                                                                                                                                                                |
+|  FR5.1  |            Show the information of the current cart            |                            test_integration/cart.test.ts - `GET /ezelectronics/carts/current`, controller/cart.test.ts - `getCart`                             |
+|  FR5.2  |               Add a product to the current cart                |                               test_integration/cart.test.ts - `POST /ezelectronics/carts`, controller/cart.test.ts - `addToCart`                               |
+|  FR5.3  |                   Checkout the current cart                    |                        test_integration/cart.test.ts - `PATCH /ezelectronics/carts/checkout`, controller/cart.test.ts - `checkoutCart`                         |
+|  FR5.4  |               Show the history of the paid carts               |                        test_integration/cart.test.ts - `GET /ezelectronics/carts/history`, controller/cart.test.ts - `getCustomerCarts`                        |
+|  FR5.5  |             Remove a product from the current cart             |                test_integration/cart.test.ts - `DELETE /ezelectronics/carts/current/:model`, controller/cart.test.ts - `removeProductFromCart`                 |
+|  FR5.6  |                    Delete the current cart                     |                          test_integration/cart.test.ts - `DELETE /ezelectronics/carts/current`, controller/cart.test.ts - `clearCart`                          |
+|  FR5.7  |             See the list of all carts of all users             |                                                            controller/cart.test.ts - `getAllCarts`                                                             |
+|  FR5.8  |                        Delete all carts                        |                                                           controller/cart.test.ts - `deleteAllCarts`                                                           |
 
 ## Coverage white box
 
