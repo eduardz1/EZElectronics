@@ -33,9 +33,668 @@ Here we can see the complete dependency graph of the application. We can see tha
 
 <in the table below list the test cases defined For each test report the object tested, the test level (API, integration, unit) and the technique used to define the test case (BB/ eq partitioning, BB/ boundary, WB/ statement coverage, etc)> <split the table if needed>
 
-| Test case name | Object(s) tested | Test level | Technique used |
-| :------------: | :--------------: | :--------: | :------------: |
-|                |                  |            |                |
+|                     Test case name                     | Object(s) tested | Test level |    Technique used     |
+| :----------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|               **getIsUserAuthenticated**               |                  |            |                       |
+|       should return true for authenticated user        |     UserDAO      | Unit Test  | WB Statement Coverage |
+|         should reject with error for db error          |     UserDAO      | Unit Test  | WB Statement Coverage |
+|       should return false for incorrect password       |     UserDAO      | Unit Test  | WB Statement Coverage |
+|       should return false for non-existent user        |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                     **createUser**                     |                  |            |                       |
+|                should create a new user                |     UserDAO      | Unit Test  | WB Statement Coverage |
+| should throw UserAlreadyExistsError for duplicate user |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                      **getUsers**                      |                  |            |                       |
+|                should return all users                 |     UserDAO      | Unit Test  | WB Statement Coverage |
+|         should return empty array for no users         |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                   **getUserByRole**                    |                  |            |                       |
+|              should return users by role               |     UserDAO      | Unit Test  | WB Statement Coverage |
+|         should return empty array for no users         |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                     **deleteUser**                     |                  |            |                       |
+|                   should delete user                   |     UserDAO      | Unit Test  | WB Statement Coverage |
+|  should throw UserNotFoundError for non-existent user  |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                     **deleteAll**                      |                  |            |                       |
+|           should delete all non-admin users            |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                 **getUserByUsername**                  |                  |            |                       |
+|             should return user by username             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|  should throw UserNotFoundError for non-existent user  |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                 **checkIfUserExists**                  |                  |            |                       |
+|           should return true if user exists            |     UserDAO      | Unit Test  | WB Statement Coverage |
+|       should return false if user does not exist       |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                   **updateUserInfo**                   |                  |            |                       |
+|             should update user information             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|  should throw UserNotFoundError for non-existent user  |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+
+|                       Test case name                        | Object(s) tested | Test level |    Technique used     |
+| :---------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                        **addToCart**                        |                  |            |                       |
+|         Adds an already existing product to a Cart          |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                Adds a new product to a Cart                 |     CartDAO      | Unit Test  | WB Statement Coverage |
+| Fails to get join from carts, products_in_cart and products |     CartDAO      | Unit Test  | WB Statement Coverage |
+|              Fails to update products_in_cart               |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                    Fails to update carts                    |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                  Fails to get unpaid cart                   |     CartDAO      | Unit Test  | WB Statement Coverage |
+|            Fails to insert into products_in_cart            |     CartDAO      | Unit Test  | WB Statement Coverage |
+|           Fails to update carts for new products            |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                         **getCart**                         |                  |            |                       |
+|                     Gets a user's cart                      |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                 Fails to get a user's cart                  |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                Fails to get products in cart                |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                Error in `getProductsInCart`                 |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                    **getProductsInCart**                    |                  |            |                       |
+|               Gets a user's products in cart                |     CartDAO      | Unit Test  | WB Statement Coverage |
+|        Gets a user's products in cart (one product)         |     CartDAO      | Unit Test  | WB Statement Coverage |
+|           Gets a user's products in cart (empty)            |     CartDAO      | Unit Test  | WB Statement Coverage |
+|           Fails to get a user's products in cart            |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                      **checkoutCart**                       |                  |            |                       |
+|                  Checks out a user's cart                   |     CartDAO      | Unit Test  | WB Statement Coverage |
+|             Error in selecting the unpaid cart              |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                       No unpaid cart                        |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                     No products in cart                     |     CartDAO      | Unit Test  | WB Statement Coverage |
+|          Error in selecting quantity of a product           |     CartDAO      | Unit Test  | WB Statement Coverage |
+|          One of the products has been already sold          |     CartDAO      | Unit Test  | WB Statement Coverage |
+|      One of the products has less stock than requested      |     CartDAO      | Unit Test  | WB Statement Coverage |
+|             Error in updating products quantity             |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                   Error in updating cart                    |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                 Error in getProductsInCart                  |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                    **getCustomerCarts**                     |                  |            |                       |
+|                     Gets a user's carts                     |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                 Gets a user's carts (empty)                 |     CartDAO      | Unit Test  | WB Statement Coverage |
+|               Gets a user's carts (only one)                |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                  Error in selecting carts                   |     CartDAO      | Unit Test  | WB Statement Coverage |
+|             Error in selecting products in cart             |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                  **removeProductFromCart**                  |                  |            |                       |
+|     Removes a product from a user's cart (quantity > 1)     |     CartDAO      | Unit Test  | WB Statement Coverage |
+|     Removes a product from a user's cart (quantity = 1)     |     CartDAO      | Unit Test  | WB Statement Coverage |
+|           Error in select quantity and/or cartsId           |     CartDAO      | Unit Test  | WB Statement Coverage |
+|     Fails to remove product from cart, no product found     |     CartDAO      | Unit Test  | WB Statement Coverage |
+|          Error in updating quantity (quantity > 1)          |     CartDAO      | Unit Test  | WB Statement Coverage |
+|   Error in deleting from products_in_cart (quantity = 1)    |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                   Error in updating carts                   |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                        **clearCart**                        |                  |            |                       |
+|                    Clears a user's cart                     |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                       Cart not found                        |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                   Error in selecting cart                   |     CartDAO      | Unit Test  | WB Statement Coverage |
+|           Error in deleting from products_in_car            |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                   Error in updating cart                    |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                     **deleteAllCarts**                      |                  |            |                       |
+|                      Deletes all carts                      |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                  Fails to delete all carts                  |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                       **getAllCarts**                       |                  |            |                       |
+|                       Gets all carts                        |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                   Gets all carts (empty)                    |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                  Gets all carts (only one)                  |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                 Error in getProductsInCart                  |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                 Error in selecting all cart                 |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                       **createCart**                        |                  |            |                       |
+|                       Creates a cart                        |     CartDAO      | Unit Test  | WB Statement Coverage |
+|                   Fails to create a cart                    |     CartDAO      | Unit Test  | WB Statement Coverage |
+
+|                          Test case name                           | Object(s) tested | Test level |    Technique used     |
+| :---------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                       **registerProducts**                        |                  |            |                       |
+|                        Registers a product                        |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|              Register a product without arrival date              |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                Register a product without details                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|     Register a product without arrival date but with details      |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|      Register a product with details but without arrivalDate      |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|        Register a product without details and arrivalDate         |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                    Fails to register a product                    |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                       **getProductByModel**                       |                  |            |                       |
+|                      Gets a product by model                      |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|              Returns null when product is not found               |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                  Fails to get a product by model                  |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                     **changeProductQuantity**                     |                  |            |                       |
+|                 Changes the quantity of a product                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|       Changes the quantity of a product without change date       |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|             Fails to change the quantity of a product             |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                          **sellProduct**                          |                  |            |                       |
+|                          Sells a product                          |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|               Sells a product without selling date                |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                      Fails to sell a product                      |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                     **getProductsByCategory**                     |                  |            |                       |
+|              Gets all products of a certain category              |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|      Gets an array of a single product of a certain category      |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|         Returns an empty array when no products are found         |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                 Fails to get products by category                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                      **getProductsByModel**                       |                  |            |                       |
+|               Gets all products of a certain model                |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|       Gets an array of a single product of a certain model        |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|         Returns an empty array when no products are found         |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                  Fails to get products by model                   |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                        **getAllProducts**                         |                  |            |                       |
+|                         Gets all products                         |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                 Gets an array of a single product                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|         Returns an empty array when no products are found         |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                     Fails to get all products                     |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                **getAvailableProductsByCategory**                 |                  |            |                       |
+|         Gets all available products of a certain category         |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+| Gets an array of a single available product of a certain category |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|    Returns an empty array when no available products are found    |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|            Fails to get available products by category            |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                  **getAvailableProductsByModel**                  |                  |            |                       |
+|          Gets all available products of a certain model           |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|  Gets an array of a single available product of a certain model   |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|    Returns an empty array when no available products are found    |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|             Fails to get available products by model              |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                    **getAllAvailableProducts**                    |                  |            |                       |
+|                    Gets all available products                    |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|            Gets an array of a single available product            |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|    Returns an empty array when no available products are found    |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                Fails to get all available product                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                       **deleteAllProducts**                       |                  |            |                       |
+|              Deletes all products from the database               |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|          Fails to delete all products from the database           |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|                         **deleteProduct**                         |                  |            |                       |
+|                Deletes a product from the database                |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+|            Fails to delete a product from the database            |    ProcutDAO     | Unit Test  | WB Statement Coverage |
+
+|                            Test case name                             | Object(s) tested | Test level |    Technique used     |
+| :-------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                             **addReview**                             |                  |            |                       |
+|                             Add a review                              |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                         Fails to add a review                         |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                         **checkExistsReview**                         |                  |            |                       |
+|      Check for an existing review for a specif product and user       |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                Returns false when review is not found                 |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+| Fails to check for an existing review for a specific product and user |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                         **getProductReviews**                         |                  |            |                       |
+|               Gets all the review for a specific model                |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|             Returns empty array when review is not found              |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                    Fails to get a review by model                     |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                           **deleteReview**                            |                  |            |                       |
+|                  Deletes a review from the database                   |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|              Fails to delete a review from the database               |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                      **deleteReviewsOfProduct**                       |                  |            |                       |
+|               Deletes all reviews of a specific product               |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|             Fails to delete reviews of a specific product             |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|                         **deleteAllReviews**                          |                  |            |                       |
+|                 Deletes all reviews from the database                 |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+|             Fails to delete all reviews from the database             |    ReviewDAO     | Unit Test  | WB Statement Coverage |
+
+|                                Test case name                                 | Object(s) tested | Test level |    Technique used     |
+| :---------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                             **registerProducts**                              |                  |            |                       |
+|                     Insert a valid product in the system                      |  userController  | Unit Test  | WB Statement Coverage |
+|              Insert a product that already exists in the system               |  userController  | Unit Test  | WB Statement Coverage |
+|              Insert a product with an arrival date in the future              |  userController  | Unit Test  | WB Statement Coverage |
+|                           **changeProductQuantity**                           |                  |            |                       |
+|                      Increase the quantity of a product                       |  userController  | Unit Test  | WB Statement Coverage |
+|            Increase the quantity of a product that does not exist             |  userController  | Unit Test  | WB Statement Coverage |
+|      Increase the quantity of a product with a change date in the future      |  userController  | Unit Test  | WB Statement Coverage |
+| Increase the quantity of a product with a change date before the arrival date |  userController  | Unit Test  | WB Statement Coverage |
+|                                **sellProduct**                                |                  |            |                       |
+|                    Sell a product (decrease the quantity)                     |  userController  | Unit Test  | WB Statement Coverage |
+|            Decrease the quantity of a product that does not exist             |  userController  | Unit Test  | WB Statement Coverage |
+|               Sell a product with a selling date in the future                |  userController  | Unit Test  | WB Statement Coverage |
+|          Sell a product with a selling date before the arrival date           |  userController  | Unit Test  | WB Statement Coverage |
+|                    Sell a product that is already sold out                    |  userController  | Unit Test  | WB Statement Coverage |
+|                  Sell more units than the available quantity                  |  userController  | Unit Test  | WB Statement Coverage |
+|                                **getProducts**                                |                  |            |                       |
+|            Get all products with only one product in the database             |  userController  | Unit Test  | WB Statement Coverage |
+|            Get all products with multiple products in the database            |  userController  | Unit Test  | WB Statement Coverage |
+|          Get all products in the database even if some are sold out           |  userController  | Unit Test  | WB Statement Coverage |
+|               Get all products with no products in the database               |  userController  | Unit Test  | WB Statement Coverage |
+|                    Get all products with a category filter                    |  userController  | Unit Test  | WB Statement Coverage |
+|                     Get all products with a model filter                      |  userController  | Unit Test  | WB Statement Coverage |
+|       Try to get all products by category without specifying a category       |  userController  | Unit Test  | WB Statement Coverage |
+|          Try to get all products by category with a model specified           |  userController  | Unit Test  | WB Statement Coverage |
+|          Try to get all products by model without specifying a model          |  userController  | Unit Test  | WB Statement Coverage |
+|            Try to get all products by model with a category filter            |  userController  | Unit Test  | WB Statement Coverage |
+|          Try to get all products by model with a non-existing model           |  userController  | Unit Test  | WB Statement Coverage |
+|         Get all products without grouping but with a category filter          |  userController  | Unit Test  | WB Statement Coverage |
+|           Get all products without grouping but with a model filter           |  userController  | Unit Test  | WB Statement Coverage |
+|                           **getAvailableProducts**                            |                  |            |                       |
+|       Get all available products with only one product in the database        |  userController  | Unit Test  | WB Statement Coverage |
+|       Get all available products with multiple products in the database       |  userController  | Unit Test  | WB Statement Coverage |
+|          Get all available products with no products in the database          |  userController  | Unit Test  | WB Statement Coverage |
+|               Get all available products with a category filter               |  userController  | Unit Test  | WB Statement Coverage |
+|                Get all available products with a model filter                 |  userController  | Unit Test  | WB Statement Coverage |
+|  Try to get all available products by category without specifying a category  |  userController  | Unit Test  | WB Statement Coverage |
+|     Try to get all available products by model without specifying a model     |  userController  | Unit Test  | WB Statement Coverage |
+|     Try to get all available products by model with a non-existing model      |  userController  | Unit Test  | WB Statement Coverage |
+|    Get all available products without grouping but with a category filter     |  userController  | Unit Test  | WB Statement Coverage |
+|      Get all available products without grouping but with a model filter      |  userController  | Unit Test  | WB Statement Coverage |
+|                             **deleteAllProducts**                             |                  |            |                       |
+|                      Delete all products in the database                      |  userController  | Unit Test  | WB Statement Coverage |
+|                               **deleteProduct**                               |                  |            |                       |
+|                       Delete a product in the database                        |  userController  | Unit Test  | WB Statement Coverage |
+|                  Try to delete a product that does not exist                  |  userController  | Unit Test  | WB Statement Coverage |
+
+|                         Test case name                         | Object(s) tested | Test level |    Technique used     |
+| :------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                         **addToCart**                          |                  |            |                       |
+|                Add a valid product to the cart                 |  cartController  | Unit Test  | WB Statement Coverage |
+|     Returns an empty cart if the user does not have a cart     |  cartController  | Unit Test  | WB Statement Coverage |
+|   Fails in adding a product that does not exist to the cart    |  cartController  | Unit Test  | WB Statement Coverage |
+|   Fails in adding a product to the cart that is out of stock   |  cartController  | Unit Test  | WB Statement Coverage |
+|                          **getCart**                           |                  |            |                       |
+|                Get all items in the user's cart                |  cartController  | Unit Test  | WB Statement Coverage |
+|          Get cart items for a user with an empty cart          |  cartController  | Unit Test  | WB Statement Coverage |
+|                        **checkoutCart**                        |                  |            |                       |
+|                       Checkout the cart                        |  cartController  | Unit Test  | WB Statement Coverage |
+|           No information about an unpaid cart exists           |  cartController  | Unit Test  | WB Statement Coverage |
+|                     Checkout an empty cart                     |  cartController  | Unit Test  | WB Statement Coverage |
+|     At least one of the products in the cart is not found      |  cartController  | Unit Test  | WB Statement Coverage |
+|    At least one of the products in the cart is out of stock    |  cartController  | Unit Test  | WB Statement Coverage |
+|    At least one of the products in the cart is low on stock    |  cartController  | Unit Test  | WB Statement Coverage |
+|                      **getCustomerCarts**                      |                  |            |                       |
+|                  Get all carts for a customer                  |  cartController  | Unit Test  | WB Statement Coverage |
+|             Get carts for a customer with no carts             |  cartController  | Unit Test  | WB Statement Coverage |
+|                   **removeProductFromCart**                    |                  |            |                       |
+|                 Remove a product from the cart                 |  cartController  | Unit Test  | WB Statement Coverage |
+|       Remove a product from the cart that does not exist       |  cartController  | Unit Test  | WB Statement Coverage |
+|     Remove a product from the cart that is not in the cart     |  cartController  | Unit Test  | WB Statement Coverage |
+| Tries to remove a product from cart but no unpaid cart exists  |  cartController  | Unit Test  | WB Statement Coverage |
+|   Tries to remove a product from cart but the cart is empty    |  cartController  | Unit Test  | WB Statement Coverage |
+|                         **clearCart**                          |                  |            |                       |
+|              Clear all items from the user's cart              |  cartController  | Unit Test  | WB Statement Coverage |
+| Clear all items from the user's cart but no unpaid cart exists |  cartController  | Unit Test  | WB Statement Coverage |
+|                       **deleteAllCarts**                       |                  |            |                       |
+|               Delete all carts from the database               |  cartController  | Unit Test  | WB Statement Coverage |
+|                        **getAllCarts**                         |                  |            |                       |
+|                Get all carts from the database                 |  cartController  | Unit Test  | WB Statement Coverage |
+|         Get all carts from the database but none exist         |  cartController  | Unit Test  | WB Statement Coverage |
+
+|                          Test case name                           | Object(s) tested  | Test level |    Technique used     |
+| :---------------------------------------------------------------: | :---------------: | :--------: | :-------------------: |
+|                       **registerProducts**                        |                   |            |                       |
+|                        Register a product                         | productController | Unit Test  | WB Statement Coverage |
+|             RRegister a product without arrival date              | productController | Unit Test  | WB Statement Coverage |
+|                Register a product without details                 | productController | Unit Test  | WB Statement Coverage |
+|     Register a product without arrival date but with details      | productController | Unit Test  | WB Statement Coverage |
+|      Register a product with details but without arrivalDate      | productController | Unit Test  | WB Statement Coverage |
+|        Register a product without details and arrivalDate         | productController | Unit Test  | WB Statement Coverage |
+|                    Fails to register a product                    | productController | Unit Test  | WB Statement Coverage |
+|                       **getProductByModel**                       |                   |            |                       |
+|                      Gets a product by model                      | productController | Unit Test  | WB Statement Coverage |
+|              Returns null when product is not found               | productController | Unit Test  | WB Statement Coverage |
+|                  Fails to get a product by model                  | productController | Unit Test  | WB Statement Coverage |
+|                     **changeProductQuantity**                     |                   |            |                       |
+|                 Changes the quantity of a product                 | productController | Unit Test  | WB Statement Coverage |
+|       Changes the quantity of a product without change date       | productController | Unit Test  | WB Statement Coverage |
+|             Fails to change the quantity of a product             | productController | Unit Test  | WB Statement Coverage |
+|                          **sellProduct**                          |                   |            |                       |
+|                          Sells a product                          | productController | Unit Test  | WB Statement Coverage |
+|               Sells a product without selling date                | productController | Unit Test  | WB Statement Coverage |
+|                      Fails to sell a product                      | productController | Unit Test  | WB Statement Coverage |
+|                     **getProductsByCategory**                     |                   |            |                       |
+|              Gets all products of a certain category              | productController | Unit Test  | WB Statement Coverage |
+|      Gets an array of a single product of a certain category      | productController | Unit Test  | WB Statement Coverage |
+|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
+|                 Fails to get products by category                 | productController | Unit Test  | WB Statement Coverage |
+|                      **getProductsByModel**                       |                   |            |                       |
+|               Gets all products of a certain model                | productController | Unit Test  | WB Statement Coverage |
+|       Gets an array of a single product of a certain model        | productController | Unit Test  | WB Statement Coverage |
+|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
+|                  Fails to get products by model                   | productController | Unit Test  | WB Statement Coverage |
+|                        **getAllProducts**                         |                   |            |                       |
+|                         Gets all products                         | productController | Unit Test  | WB Statement Coverage |
+|                 Gets an array of a single product                 | productController | Unit Test  | WB Statement Coverage |
+|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
+|                     Fails to get all products                     | productController | Unit Test  | WB Statement Coverage |
+|                **getAvailableProductsByCategory**                 |                   |            |                       |
+|         Gets all available products of a certain category         | productController | Unit Test  | WB Statement Coverage |
+| Gets an array of a single available product of a certain category | productController | Unit Test  | WB Statement Coverage |
+|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
+|            Fails to get available products by category            | productController | Unit Test  | WB Statement Coverage |
+|                  **getAvailableProductsByModel**                  |                   |            |                       |
+|          Gets all available products of a certain model           | productController | Unit Test  | WB Statement Coverage |
+|  Gets an array of a single available product of a certain model   | productController | Unit Test  | WB Statement Coverage |
+|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
+|             Fails to get available products by model              | productController | Unit Test  | WB Statement Coverage |
+|                    **getAllAvailableProducts**                    |                   |            |                       |
+|                    Gets all available products                    | productController | Unit Test  | WB Statement Coverage |
+|            Gets an array of a single available product            | productController | Unit Test  | WB Statement Coverage |
+|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
+|                Fails to get all available products                | productController | Unit Test  | WB Statement Coverage |
+|                       **deleteAllProducts**                       |                   |            |                       |
+|              Deletes all products from the database               | productController | Unit Test  | WB Statement Coverage |
+|          Fails to delete all products from the database           | productController | Unit Test  | WB Statement Coverage |
+|                         **deleteProduct**                         |                   |            |                       |
+|                Deletes a product from the database                | productController | Unit Test  | WB Statement Coverage |
+|            Fails to delete a product from the database            | productController | Unit Test  | WB Statement Coverage |
+
+|                                   Test case name                                    | Object(s) tested | Test level |    Technique used     |
+| :---------------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                                    **addReview**                                    |                  |            |                       |
+|                                 should add a review                                 | reviewController | Unit Test  | WB Statement Coverage |
+|  should throw ProductNotFoundError when adding a review for a non-existing product  | reviewController | Unit Test  | WB Statement Coverage |
+|      should throw ExistingReviewError when adding a review that already exists      | reviewController | Unit Test  | WB Statement Coverage |
+|                                **getProductReviews**                                |                  |            |                       |
+|                                should return reviews                                | reviewController | Unit Test  | WB Statement Coverage |
+|                                  **deleteReview**                                   |                  |            |                       |
+|                               should delete a review                                | reviewController | Unit Test  | WB Statement Coverage |
+| should throw ProductNotFoundError when deleting a review for a non-existing product | reviewController | Unit Test  | WB Statement Coverage |
+|    should throw NoReviewProductError when deleting a review that does not exist     | reviewController | Unit Test  | WB Statement Coverage |
+|                             **deleteReviewsOfProduct**                              |                  |            |                       |
+|                       should delete all reviews of a product                        | reviewController | Unit Test  | WB Statement Coverage |
+|  should throw ProductNotFoundError when deleting reviews of a non-existing product  | reviewController | Unit Test  | WB Statement Coverage |
+|                                **deleteAllReviews**                                 |                  |            |                       |
+|                              should delete all reviews                              | reviewController | Unit Test  | WB Statement Coverage |
+
+|                                       Test case name                                        | Object(s) tested | Test level |    Technique used     |
+| :-----------------------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                               **POST /ezelectronics/users/**                                |                  |            |                       |
+|                                  Returns 200 if successful                                  |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 409 if user already exists                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 422 if username is missing                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 422 if name is missing                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                              Returns 422 if surname is missing                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 422 if password is missing                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 422 if role is missing                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 422 if role is invalid                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                                **GET /ezelectronics/users/**                                |                  |            |                       |
+|                                  Returns 200 if successful                                  |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 401 if user is not an admin                             |    User APIs     |  API Test  | WB Statement Coverage |
+|                          **GET /ezelectronics/users/roles/:role**                           |                  |            |                       |
+|                                  Returns 200 if successful                                  |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 422 if role is invalid                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 401 if user is not an admin                             |    User APIs     |  API Test  | WB Statement Coverage |
+|                           **GET /ezelectronics/users/:username**                            |                  |            |                       |
+|                 Returns 200 if successful, customer calling on its username                 |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|      Returns 200 if user is an admin and tries to retrieve another user's information       |    User APIs     |  API Test  | WB Statement Coverage |
+|    Returns 401 if user is not an admin and tries to retrieve another user's information     |    User APIs     |  API Test  | WB Statement Coverage |
+| Returns 401 if the calling user is an Admin an `username` represents a different Admin user |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 404 if user does not exist                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                          **DELETE /ezelectronics/users/:username**                          |                  |            |                       |
+|                                  Returns 200 if successful                                  |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 401 if user is not an admin                             |    User APIs     |  API Test  | WB Statement Coverage |
+|                              **DELETE /ezelectronics/users/**                               |                  |            |                       |
+|                                  Returns 200 if successful                                  |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 401 if user is not an admin                             |    User APIs     |  API Test  | WB Statement Coverage |
+|                          **PATCH /ezelectronics/users/:username**                           |                  |            |                       |
+|                                  Returns 200 if successful                                  |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    User APIs     |  API Test  | WB Statement Coverage |
+|            Returns 200 if successful, admin updating another user's information             |    User APIs     |  API Test  | WB Statement Coverage |
+|                             Returns 404 if user does not exist                              |    User APIs     |  API Test  | WB Statement Coverage |
+|             Returns 401 if username does not correspond to the user's username              |    User APIs     |  API Test  | WB Statement Coverage |
+|                     Returns 400 if birthdate is after the current date                      |    User APIs     |  API Test  | WB Statement Coverage |
+| Returns 401 if username does not correspond to the user's username and the user is an admin |    User APIs     |  API Test  | WB Statement Coverage |
+|                              **POST /ezelectronics/sessions**                               |                  |            |                       |
+|                                  Returns 200 if successful                                  |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                           Returns 401 if username does not exist                            |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                            Returns 401 if password is incorrect                             |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                         **DELETE /ezelectronics/sessions/current**                          |                  |            |                       |
+|                              Returns 200 if successful, logout                              |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 503 if an error occurs                                |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                            Returns 401 if user is not logged in                             |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                           **GET /ezelectronics/sessions/current**                           |                  |            |                       |
+|                                  Returns 200 if successful                                  |    Auth APIs     |  API Test  | WB Statement Coverage |
+|                            Returns 401 if user is not logged in                             |    Auth APIs     |  API Test  | WB Statement Coverage |
+
+|                                            Test case name                                            | Object(s) tested | Test level |    Technique used     |
+| :--------------------------------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                                    **GET /ezelectronics/carts/**                                     |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    Returns 503 if an error occurs                                    |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 401 if user is not a customer                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    **POST /ezelectronics/carts/**                                    |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 401 if user is not a customer                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 404 if product does not exist                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 409 if product is out of stock                                |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    Returns 422 if model is empty                                     |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                   **PATCH /ezelectronics/carts/**                                    |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 401 if user is not a customer                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                     Returns 404 if there is no information about an unpaid cart                      |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                  Returns 400 if there is an unpaid cart but it contains no products                  |    Cart APIs     |  API Test  | WB Statement Coverage |
+|            Returns 409 if there is at least one product in the cart that is out of stock             |    Cart APIs     |  API Test  | WB Statement Coverage |
+|    Returns 409 if at least one product in the cart has a quantity higher than the available stock    |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                 **GET /ezelectronics/carts/history**                                 |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    Returns 503 if an error occurs                                    |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 401 if user is not a customer                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                           **DELETE /ezelectronics/carts/products/:model**                            |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 401 if user is not a customer                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    Returns 404 if model is empty                                     |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 404 if product does not exist                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+| Returns 404 if there is no information about an unpaid cart, or if there are no products in the cart |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                            Returns 404 if the product is not in the cart                             |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                               **DELETE /ezelectronics/carts/current**                                |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                Returns 401 if user is not a customer                                 |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                     Returns 404 if there is no information about an unpaid cart                      |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                   **DELETE /ezelectronics/carts/**                                   |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                            Returns 401 if user is not an admin or manager                            |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    Returns 503 if an error occurs                                    |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                   **GET /ezelectronics/carts/all**                                   |                  |            |                       |
+|                                      Returns 200 if successful                                       |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                            Returns 401 if user is not an admin or manager                            |    Cart APIs     |  API Test  | WB Statement Coverage |
+|                                    Returns 503 if an error occurs                                    |    Cart APIs     |  API Test  | WB Statement Coverage |
+
+|                                   Test case name                                    | Object(s) tested | Test level |    Technique used     |
+| :---------------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                          **POST /ezelectronics/products/**                          |                  |            |                       |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                        Returns 422 if model is not a string                         |   Product APIs   |  API Test  | WB Statement Coverage |
+|                            Returns 422 if model is empty                            |   Product APIs   |  API Test  | WB Statement Coverage |
+|                       Returns 422 if category is not a string                       |   Product APIs   |  API Test  | WB Statement Coverage |
+|                          Returns 422 if category is empty                           |   Product APIs   |  API Test  | WB Statement Coverage |
+|               Returns 422 if category is not one of the allowed types               |   Product APIs   |  API Test  | WB Statement Coverage |
+|                       Returns 422 if quantity is not a number                       |   Product APIs   |  API Test  | WB Statement Coverage |
+|                          Returns 422 if quantity is empty                           |   Product APIs   |  API Test  | WB Statement Coverage |
+|                       Returns 422 if details is not a string                        |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 422 if sellingPrice is not a number                     |   Product APIs   |  API Test  | WB Statement Coverage |
+|                        Returns 422 if sellingPrice is empty                         |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 422 if arrivalDate is not a string                      |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 401 if user is not an admin or manager                    |   Product APIs   |  API Test  | WB Statement Coverage |
+| Returns 409 if model represents an already existing set of products in the database |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 400 if arrivalDate is in the future                     |   Product APIs   |  API Test  | WB Statement Coverage |
+|                      **PATCH /ezelectronics/products/:model**                       |                  |            |                       |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 401 if user is not an admin or manager                    |   Product APIs   |  API Test  | WB Statement Coverage |
+|                    Returns 404 (cannot patch) if model is empty                     |   Product APIs   |  API Test  | WB Statement Coverage |
+|                       Returns 422 if quantity is not a number                       |   Product APIs   |  API Test  | WB Statement Coverage |
+|                          Returns 422 if quantity is empty                           |   Product APIs   |  API Test  | WB Statement Coverage |
+|                      Returns 422 if changeDate is not a string                      |   Product APIs   |  API Test  | WB Statement Coverage |
+|             Returns 404 if model does not represent an existing product             |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 400 if changeDate is in the future                      |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 400 if changeDate is before arrivalDate                   |   Product APIs   |  API Test  | WB Statement Coverage |
+|                    **PATCH /ezelectronics/products/:model/sell**                    |                  |            |                       |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 401 if user is not an admin or manager                    |   Product APIs   |  API Test  | WB Statement Coverage |
+|                       Returns 422 if quantity is not a number                       |   Product APIs   |  API Test  | WB Statement Coverage |
+|                          Returns 422 if quantity is empty                           |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 422 if sellingDate is not a string                      |   Product APIs   |  API Test  | WB Statement Coverage |
+|             Returns 404 if model does not represent an existing product             |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 400 if sellingDate is in the future                     |   Product APIs   |  API Test  | WB Statement Coverage |
+|                  Returns 400 if sellingDate is before arrivalDate                   |   Product APIs   |  API Test  | WB Statement Coverage |
+|                     Returns 409 if the available quantity is 0                      |   Product APIs   |  API Test  | WB Statement Coverage |
+|    Returns 409 if the requested quantity is greater than the available quantity     |   Product APIs   |  API Test  | WB Statement Coverage |
+|                          **GET /ezelectronics/products/**                           |                  |            |                       |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 401 if user is not an admin or manager                    |   Product APIs   |  API Test  | WB Statement Coverage |
+|           Returns 200 if grouping is "category" and category is specified           |   Product APIs   |  API Test  | WB Statement Coverage |
+|              Returns 200 if grouping is "model" and model is specified              |   Product APIs   |  API Test  | WB Statement Coverage |
+|     Returns 422 if grouping is null and any of category or model are specified      |   Product APIs   |  API Test  | WB Statement Coverage |
+|             Returns 422 if grouping is "category" and category is null              |   Product APIs   |  API Test  | WB Statement Coverage |
+|            Returns 422 if grouping is "category" and model is specified             |   Product APIs   |  API Test  | WB Statement Coverage |
+|                Returns 422 if grouping is "model" and model is null                 |   Product APIs   |  API Test  | WB Statement Coverage |
+|            Returns 422 if grouping is "model" and category is specified             |   Product APIs   |  API Test  | WB Statement Coverage |
+| Returns 404 if grouping is "model" and model does not represent an existing product |   Product APIs   |  API Test  | WB Statement Coverage |
+|                      **GET /ezelectronics/products/available**                      |                  |            |                       |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                        Returns 401 if user is not logged in                         |   Product APIs   |  API Test  | WB Statement Coverage |
+|           Returns 200 if grouping is "category" and category is specified           |   Product APIs   |  API Test  | WB Statement Coverage |
+|              Returns 200 if grouping is "model" and model is specified              |   Product APIs   |  API Test  | WB Statement Coverage |
+|     Returns 422 if grouping is null and any of category or model are specified      |   Product APIs   |  API Test  | WB Statement Coverage |
+|             Returns 422 if grouping is "category" and category is null              |   Product APIs   |  API Test  | WB Statement Coverage |
+|            Returns 422 if grouping is "category" and model is specified             |   Product APIs   |  API Test  | WB Statement Coverage |
+|                Returns 422 if grouping is "model" and model is null                 |   Product APIs   |  API Test  | WB Statement Coverage |
+|            Returns 422 if grouping is "model" and category is specified             |   Product APIs   |  API Test  | WB Statement Coverage |
+| Returns 404 if grouping is "model" and model does not represent an existing product |   Product APIs   |  API Test  | WB Statement Coverage |
+|                      **DELETE /ezelectronics/products/:model**                      |   Product APIs   |  API Test  | WB Statement Coverage |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 401 if user is not an admin or manager                    |   Product APIs   |  API Test  | WB Statement Coverage |
+|             Returns 404 if model does not represent an existing product             |   Product APIs   |  API Test  | WB Statement Coverage |
+|                         **DELETE /ezelectronics/products/**                         |                  |            |                       |
+|                              Returns 200 if successful                              |   Product APIs   |  API Test  | WB Statement Coverage |
+|                           Returns 503 if an error occurs                            |   Product APIs   |  API Test  | WB Statement Coverage |
+|                   Returns 401 if user is not an admin or manager                    |   Product APIs   |  API Test  | WB Statement Coverage |
+
+|                             Test case name                             | Object(s) tested | Test level |    Technique used     |
+| :--------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                 **POST /ezelectronics/reviews/:model**                 |                  |            |                       |
+|                       Returns 200 if successful                        |   Review APIs    |  API Test  | WB Statement Coverage |
+|              Returns 404 (cannot patch) if model is empty              |   Review APIs    |  API Test  | WB Statement Coverage |
+|                 Returns 401 if user is not a customer                  |   Review APIs    |  API Test  | WB Statement Coverage |
+| Returns 409 if a review already exists for the product by the customer |   Review APIs    |  API Test  | WB Statement Coverage |
+|      Returns 404 if model does not represent an existing product       |   Review APIs    |  API Test  | WB Statement Coverage |
+|                 **GET /ezelectronics/reviews/:model**                  |                  |            |                       |
+|                       Returns 200 if successful                        |   Review APIs    |  API Test  | WB Statement Coverage |
+|             Returns 503 if an error in the database occurs             |   Review APIs    |  API Test  | WB Statement Coverage |
+|                **DELETE /ezelectronics/reviews/:model**                |                  |            |                       |
+|                       Returns 200 if successful                        |   Review APIs    |  API Test  | WB Statement Coverage |
+|                 Returns 401 if user is not a Customer                  |   Review APIs    |  API Test  | WB Statement Coverage |
+|      Returns 404 if model does not represent an existing product       |   Review APIs    |  API Test  | WB Statement Coverage |
+|       Returns 404 if user has not made a review for the product        |   Review APIs    |  API Test  | WB Statement Coverage |
+|              **DELETE /ezelectronics/reviews/:model/all**              |                  |            |                       |
+|                       Returns 200 if successful                        |   Review APIs    |  API Test  | WB Statement Coverage |
+|             Returns 401 if user is not an admin or manager             |   Review APIs    |  API Test  | WB Statement Coverage |
+|      Returns 404 if model does not represent an existing product       |   Review APIs    |  API Test  | WB Statement Coverage |
+|                   **DELETE /ezelectronics/reviews/**                   |                  |            |                       |
+|                       Returns 200 if successful                        |   Review APIs    |  API Test  | WB Statement Coverage |
+|             Returns 401 if user is not an admin or manager             |   Review APIs    |  API Test  | WB Statement Coverage |
+|             Returns 503 if an error in the database occurs             |   Review APIs    |  API Test  | WB Statement Coverage |
+
+|                                      Test case name                                       | Object(s) tested |    Test level    |    Technique used     |
+| :---------------------------------------------------------------------------------------: | :--------------: | :--------------: | :-------------------: |
+|                               **POST /ezelectronics/users**                               |                  |                  |                       |
+|                 It should return a 200 success code and create a new user                 |    User APIs     | Integration Test | WB Statement Coverage |
+| It should return a 422 error code if at least one request body parameter is empty/missing |    User APIs     | Integration Test | WB Statement Coverage |
+|                               **GET /ezelectronics/users**                                |                  |                  |                       |
+|                            It should return an array of users                             |    User APIs     | Integration Test | WB Statement Coverage |
+|               It should return a 401 error code if the user is not an Admin               |    User APIs     | Integration Test | WB Statement Coverage |
+|                         **GET /ezelectronics/users/roles/:role**                          |                  |                  |                       |
+|                  It should return an array of users with a specific role                  |    User APIs     | Integration Test | WB Statement Coverage |
+|                          It should fail if the role is not valid                          |    User APIs     | Integration Test | WB Statement Coverage |
+|                          **GET /ezelectronics/users/:username**                           |                  |                  |                       |
+|                            It should return a user by username                            |    User APIs     | Integration Test | WB Statement Coverage |
+|               It should return a 404 error code if the user does not exist                |    User APIs     | Integration Test | WB Statement Coverage |
+|                         **DELETE /ezelectronics/users/:username**                         |                  |                  |                       |
+|                            It should delete a user by username                            |    User APIs     | Integration Test | WB Statement Coverage |
+|               It should return a 404 error code if the user does not exist                |    User APIs     | Integration Test | WB Statement Coverage |
+|                         **PATCH /ezelectronics/users/:username**                          |                  |                  |                       |
+|                           It should update a user's information                           |    User APIs     | Integration Test | WB Statement Coverage |
+|               It should return a 404 error code if the user does not exist                |    User APIs     | Integration Test | WB Statement Coverage |
+|                 It should return a 422 error code if birthdate is invalid                 |    User APIs     | Integration Test | WB Statement Coverage |
+|                             **POST /ezelectronics/sessions**                              |                  |                  |                       |
+|                   It should return a 200 success code and log in a user                   |    Auth APIs     | Integration Test | WB Statement Coverage |
+|            It should return a 401 error code if the credentials are incorrect             |    Auth APIs     | Integration Test | WB Statement Coverage |
+|     It should return 422 if the request body is missing parameters or they are empty      |    Auth APIs     | Integration Test | WB Statement Coverage |
+|                        **DELETE /ezelectronics/sessions/current**                         |                  |                  |                       |
+|                  It should return a 200 success code and log out a user                   |    Auth APIs     | Integration Test | WB Statement Coverage |
+|                          **GET /ezelectronics/sessions/current**                          |                  |                  |                       |
+|                             It should return the current user                             |    Auth APIs     | Integration Test | WB Statement Coverage |
+|              It should return a 401 error code if the user is not logged in               |    Auth APIs     | Integration Test | WB Statement Coverage |
+
+|                                                    Test case name                                                    | Object(s) tested |    Test level    |    Technique used     |
+| :------------------------------------------------------------------------------------------------------------------: | :--------------: | :--------------: | :-------------------: |
+|                                            **GET /ezelectronics/carts/**                                             |                  |                  |                       |
+|                                      Returns 200 OK and the current user's cart                                      |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                  Returns 401 Unauthorized if user is not a customer                                  |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                            **POST /ezelectronics/carts/**                                            |                  |                  |                       |
+|                                     Returns 200 OK and updates the current cart                                      |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                  Returns 401 Unauthorized if user is not a customer                                  |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                              Returns 404 Not Found if the product model does not exist                               |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                      Returns 409 if the product is out of stock                                      |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                           **PATCH /ezelectronics/carts/**                                            |                  |                  |                       |
+|                                 Returns 200 OK and updates the current cart (81 ms)                                  |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                              Returns 401 Unauthorized if user is not a customer (93 ms)                              |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                   Returns 404 if there is no current cart (43 ms)                                    |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                      Returns 400 if the cart is empty (131 ms)                                       |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                          Returns 409 if there is at least one product out of stock (56 ms)                           |    Cart APIs     | Integration Test | WB Statement Coverage |
+| Returns 409 if there is at least one product whose available quantity is less than the quantity in the cart (111 ms) |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                         **GET /ezelectronics/carts/history**                                         |                  |                  |                       |
+|                          Returns 200 OK and the history of the current user's carts (47 ms)                          |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                              Returns 401 Unauthorized if user is not a customer (93 ms)                              |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                       **DELETE /ezelectronics/carts/current**                                        |                  |                  |                       |
+|                                  Returns 200 OK and clears the current cart (45 ms)                                  |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                             Returns 401 Unauthorized if user is not a customer (111 ms)                              |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                           **DELETE /ezelectronics/carts/**                                           |                  |                  |                       |
+|                                     Returns 200 OK and deletes all carts (64 ms)                                     |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                         Returns 401 Unauthorized if user is not an admin or manager (51 ms)                          |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                                           **GET /ezelectronics/carts/all**                                           |                  |                  |                       |
+|                                         Returns 200 OK and all carts (47 ms)                                         |    Cart APIs     | Integration Test | WB Statement Coverage |
+|                         Returns 401 Unauthorized if user is not an admin or manager (50 ms)                          |    Cart APIs     | Integration Test | WB Statement Coverage |
+
+|                                   Test case name                                    | Object(s) tested |    Test level    |    Technique used     |
+| :---------------------------------------------------------------------------------: | :--------------: | :--------------: | :-------------------: |
+|                          **POST /ezelectronics/products/**                          |                  |                  |                       |
+|                      Returns 200 OK and register a new Product                      |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 401 Unauthorized if user is not a Manager or Admin              |   Product APIs   | Integration Test | WB Statement Coverage |
+| Returns 409 if model represents an already existing set of products in the database |   Product APIs   | Integration Test | WB Statement Coverage |
+|                      **PATCH /ezelectronics/products/:model**                       |                  |                  |                       |
+|                       Returns 200 OK and updates the product                        |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 401 Unauthorized if user is not a Manager or Admin              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                   Returns 404 Not Found if product does not exist                   |   Product APIs   | Integration Test | WB Statement Coverage |
+|                Returns 400 if `changeDate` is after the current date                |   Product APIs   | Integration Test | WB Statement Coverage |
+|            Returns 400 if `changeDate` is before product's `arrivalDate`            |   Product APIs   | Integration Test | WB Statement Coverage |
+|                    **PATCH /ezelectronics/products/:model/sell**                    |                  |                  |                       |
+|                        Returns 200 OK and sells the product                         |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 401 Unauthorized if user is not a Manager or Admin              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                   Returns 404 Not Found if product does not exist                   |   Product APIs   | Integration Test | WB Statement Coverage |
+|                   Returns 409 Not Found if product stock is empty                   |   Product APIs   | Integration Test | WB Statement Coverage |
+|              Returns 409 Bad Request if quantity is greater than stock              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                          **GET /ezelectronics/products/**                           |                  |                  |                       |
+|                           Returns 200 OK and all products                           |   Product APIs   | Integration Test | WB Statement Coverage |
+|                     Returns 401 if user is not Admin or Manager                     |   Product APIs   | Integration Test | WB Statement Coverage |
+|                    Returns 200 OK and all products of a category                    |   Product APIs   | Integration Test | WB Statement Coverage |
+|                           Returns 422 if category is null                           |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 422 if grouping is category and model is specified              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                      eturns 200 OK and all products of a model                      |   Product APIs   | Integration Test | WB Statement Coverage |
+|                            Returns 422 if model is null                             |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 422 if grouping is model and category is specified              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                    Returns 404 Not Found if model does not exist                    |   Product APIs   | Integration Test | WB Statement Coverage |
+|                      **GET /ezelectronics/products/available**                      |                  |                  |                       |
+|                      Returns 200 OK and all available products                      |   Product APIs   | Integration Test | WB Statement Coverage |
+|                  Returns 401 Unauthorized if user is not logged in                  |   Product APIs   | Integration Test | WB Statement Coverage |
+|               Returns 200 OK and all available products of a category               |   Product APIs   | Integration Test | WB Statement Coverage |
+|                           Returns 422 if category is null                           |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 422 if grouping is category and model is specified              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                     Returns 200 OK and all products of a model                      |   Product APIs   | Integration Test | WB Statement Coverage |
+|                            Returns 422 if model is null                             |   Product APIs   | Integration Test | WB Statement Coverage |
+|             Returns 422 if grouping is model and category is specified              |   Product APIs   | Integration Test | WB Statement Coverage |
+|                    Returns 404 Not Found if model does not exist                    |   Product APIs   | Integration Test | WB Statement Coverage |
+|                      **DELETE /ezelectronics/products/:model**                      |                  |                  |                       |
+|                       Returns 200 OK and deletes the product                        |   Product APIs   | Integration Test | WB Statement Coverage |
+|              Returns 401 Unauthorized if user is not Admin or Manager               |   Product APIs   | Integration Test | WB Statement Coverage |
+|                   Returns 404 Not Found if product does not exist                   |   Product APIs   | Integration Test | WB Statement Coverage |
+|                         **DELETE /ezelectronics/products/**                         |                  |                  |                       |
+|                       Returns 200 OK and deletes all products                       |   Product APIs   | Integration Test | WB Statement Coverage |
+|              Returns 401 Unauthorized if user is not Admin or Manager               |   Product APIs   | Integration Test | WB Statement Coverage |
+
+|                             Test case name                              | Object(s) tested |    Test level    |    Technique used     |
+| :---------------------------------------------------------------------: | :--------------: | :--------------: | :-------------------: |
+|                        **POST /reviews/:model**                         |                  |                  |                       |
+|        It should return a 200 success code and add a new review         |   Review APIs    | Integration Test | WB Statement Coverage |
+|                       It should return a 401 code                       |   Review APIs    | Integration Test | WB Statement Coverage |
+|                         **GET /reviews/:model**                         |                  |                  |                       |
+|           It should return an array of reviews for a product            |   Review APIs    | Integration Test | WB Statement Coverage |
+|                       **DELETE /reviews/:model**                        |                  |                  |                       |
+|    It should return a 200 success code and delete the user's review     |   Review APIs    | Integration Test | WB Statement Coverage |
+|                     **DELETE /reviews/:model/all**                      |                  |                  |                       |
+| It should return a 200 success code and delete all reviews of a product |   Review APIs    | Integration Test | WB Statement Coverage |
+|               It should return a 401 not authorized code                |   Review APIs    | Integration Test | WB Statement Coverage |
+|                           **DELETE /reviews**                           |                  |                  |                       |
+|       It should return a 200 success code and delete all reviews        |   Review APIs    | Integration Test | WB Statement Coverage |
 
 # Coverage
 
