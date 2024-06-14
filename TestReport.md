@@ -21,13 +21,106 @@ Here we can see the complete dependency graph of the application. We can see tha
 
 # Integration approach
 
-    <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
+Our integration testing approach involved each team member focusing on their specific component of the system using a bottom-up methodology.
 
-    (ex: step1: unit A, step 2: unit A+B, step 3: unit A+B+C, etc)>
+Following the initial phase, where the system's components (users, products, carts, reviews) were divided among team members, the integration process
+involved the following steps:
 
-    <Some steps may  correspond to unit testing (ex step1 in ex above)>
+**1. Unit Testing For Each Component :**
 
-    <One step will  correspond to API testing, or testing unit route.js>
+**a.User Component**
+
+        a.1.User DAO Testing
+        a.2 User Controller Testing
+        a.3 User Route Testing
+
+**a.User Component**
+
+        b.1.Product DAO Testing
+        b.2 Product Controller Testing
+        b.3 Product Route Testing
+
+**c.Review Component**
+
+        c.1.Review DAO Testing
+        c.2 Review Controller Testing
+        c.3 Review Route Testing
+
+**d.Cart Component**
+
+        d.1.Cart DAO Testing
+        d.2 Cart Controller Testing
+        d.3 Cart Route Testing
+
+**2. Integeration Testing of the Different Compnent's Functionalities :**
+
+**a.1.User**
+
+    a.1.1. POST /users: Create a new user and handle various scenarios such as incorrect parameters.
+
+    a.1.2 GET /users: Retrieve all users and handle unauthorized access.
+
+    a.1.3 GET /users/roles/:role: Retrieve users by role and handle incorrect role input and unauthorized access.
+
+    a.1.4 GET /users/:username: Retrieve user data by username and handle non-existent user and unauthorized access.
+
+    a.1.5 DELETE /users/:username: Delete a user by username and handle non-existent user and unauthorized access.
+
+    a.1.6. DELETE /users:Delete all users and handle unauthorized access.
+
+    a.1.7. PATCH /users/:username: Update user data, manage non-existent user, validate parameters, and handle unauthorized access.
+
+**a.2.User Authentication**
+
+    a.2.1 POST /sessions: Log in a user and handle incorrect credentials and missing parameters.
+
+    b. DELETE /sessions/current: Log out a user.
+
+    c. GET /sessions/current: Retrieve the current logged-in user and handle unauthorized access.
+
+**b.Producet**
+
+    b.1. POST /products: Create a new product and handle unauthorized access and duplicate product scenarios.
+
+    b.2. PATCH /products/:model:Update product details and handle scenarios such as unauthorized access, non-existent products, invalid date ranges, and validation errors.
+
+    b.3. PATCH /products/:model/sell: Sell a product and handle scenarios such as unauthorized access, non-existent products, empty stock, and invalid quantity.
+
+    b.4. GET /products: Retrieve all products and handle unauthorized access, filter by category or model, and validation errors.
+
+    b.5. GET /products/available: Retrieve all available products and handle unauthorized access, filter by category or model, and validation errors.
+
+    b.6. DELETE /products/:model: Delete a product and handle unauthorized access and non-existent products.
+
+    b.7. DELETE /products:Delete all products and handle unauthorized access.
+
+**c.Review**
+
+    c.1. POST /reviews/:model: Add a new review and handle scenarios such as adding a review for a purchased product, and unauthorized access.
+
+    c.2. GET /reviews/:model: Retrieve reviews for a specific product and handle authorized access and ensure correct retrieval of reviews.
+
+    c.3. DELETE /reviews/:model: Delete a user's review for a product and ensure proper authorization and correct removal of the review.
+
+    c.4. DELETE /reviews/:model/all: Delete all reviews for a product, manage user authorization and ensure all reviews are deleted.
+
+    c.5. DELETE /reviews: Delete all reviews for all products, handling user authorization and ensuring all reviews are removed.
+
+**d.Cart**
+
+    d.1. GET /carts: Retrieve the current cart and handle unauthorized access. Ensure only customers can access this endpoint.
+
+    d.2. POST /carts: Add a product to the cart and handle scenarios such as unauthorized access, product not found, and out of stock conditions.
+
+    d.3. PATCH /carts: Checkout the cart and handle scenarios such as unauthorized access, no current cart, empty cart, and stock validation.
+
+    d.4. GET /carts/history: Retrieve the cart history for the current user and handle unauthorized access.
+
+    d.5. DELETE /carts/current: Clear the current cart and handle unauthorized access.
+
+    d.6. DELETE /carts: Delete all carts and handle unauthorized access, ensuring only admin or manager can perform this action.
+
+    d.7. GET /carts/all: Retrieve all carts and handle unauthorized access, ensuring only admin or manager can access this endpoint.
 
 # Tests
 
