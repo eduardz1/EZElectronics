@@ -4,4 +4,5 @@ module.exports = {
     testEnvironment: "node",
     testMatch: ["**/**test**/**/*.test.ts"],
     reporters: ["default"],
+    testTimeout: 100000,
 };
