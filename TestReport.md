@@ -4,14 +4,14 @@
 
 # Contents
 
--   [Test Report](#test-report)
--   [Contents](#contents)
--   [Dependency graph](#dependency-graph)
--   [Integration approach](#integration-approach)
--   [Tests](#tests)
--   [Coverage](#coverage)
-    -   [Coverage of FR](#coverage-of-fr)
-    -   [Coverage white box](#coverage-white-box)
+- [Test Report](#test-report)
+- [Contents](#contents)
+- [Dependency graph](#dependency-graph)
+- [Integration approach](#integration-approach)
+- [Tests](#tests)
+- [Coverage](#coverage)
+  - [Coverage of FR](#coverage-of-fr)
+  - [Coverage white box](#coverage-white-box)
 
 # Dependency graph
 
@@ -814,10 +814,10 @@ involved the following steps:
 |  FR3.3  |                         Sell a product                         |                   test_integration/product.test.ts - `PATCH /ezelectronics/products/:model/sell`, controller/product.test.ts - `sellProduct`                   |
 |  FR3.4  |                 Show the list of all products                  |                          test_integration/product.test.ts - `GET /ezelectronics/products`, controller/product.test.ts - `getProducts`                          |
 | FR3.4.1 |            Show the list of all available products             |                test_integration/product.test.ts - `GET /ezelectronics/products/available`, controller/product.test.ts - `getAvailableProducts`                 |
-|  FR3.5  |      Show the list of all products with the same category      |          test_integration/product.test.ts - `GET /ezelectronics/products?grouping=category&category=...`, controller/product.test.ts - `getProducts`           |
-| FR3.5.1 | Show the list of all available products with the same category | test_integration/product.test.ts - `GET /ezelectronics/products/available?grouping=category&category=...`, controller/product.test.ts - `getAvailableProducts` |
-|  FR3.6  |       Show the list of all products with the same model        |             test_integration/product.test.ts - `GET /ezelectronics/products?grouping=model&model=...`, controller/product.test.ts - `getProducts`              |
-| FR3.6.1 |  Show the list of all available products with the same model   |    test_integration/product.test.ts - `GET /ezelectronics/products/available?grouping=model&model=...`, controller/product.test.ts - `getAvailableProducts`    |
+|  FR3.5  |      Show the list of all products with the same category      |          test_integration/product.test.ts - `GET /ezelectronics/products`, `describe("ProductController")`, controller/product.test.ts - `getProducts`           |
+| FR3.5.1 | Show the list of all available products with the same category | test_integration/product.test.ts - `GET /ezelectronics/products`, `describe("ProductController")`, controller/product.test.ts - `getAvailableProducts` |
+|  FR3.6  |       Show the list of all products with the same model        |             test_integration/product.test.ts - `GET /ezelectronics/products, describe("ProductController")` , controller/product.test.ts - `getProducts`              |
+| FR3.6.1 |  Show the list of all available products with the same model   |    test_integration/product.test.ts - `GET /ezelectronics/products, describe("ProductController")` , controller/product.test.ts - `getAvailableProducts`    |
 |  FR3.7  |                        Delete a product                        |                    test_integration/product.test.ts - `DELETE /ezelectronics/products/:model`, controller/product.test.ts - `deleteProduct`                    |
 |  FR3.8  |                      Delete all products                       |                     test_integration/product.test.ts - `DELETE /ezelectronics/products`, controller/product.test.ts - `deleteAllProducts`                      |
 | **FR4** |                       **Manage reviews**                       |                                                                                                                                                                |
