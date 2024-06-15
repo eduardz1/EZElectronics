@@ -79,16 +79,12 @@ const postProduct = async (productInfo: Product, cookie: string) => {
  * @param userInfo The user information to be sent in the request body
  * @returns The cookie of the logged-in user
  */
-const login = async (userInfo: any): Promise<string> => {
-    return new Promise<string>((resolve, reject) => {
-        request(app)
-            .post(`${routePath}/sessions`)
-            .send(userInfo)
-            .expect(200)
-            .end((err, res) =>
-                err ? reject(err) : resolve(res.header["set-cookie"][0]),
-            );
-    });
+const login = async (userInfo: any) => {
+    const response = await request(app)
+        .post(`${routePath}/sessions`)
+        .send(userInfo)
+        .expect(200);
+    return response.header["set-cookie"][0];
 };
 
 /**
@@ -100,7 +96,7 @@ const logout = async (cookie: string) => {
         .delete(`${routePath}/sessions/current`)
         .set("Cookie", cookie)
         .expect(200)
-        .catch((err) => {
+        .catch((err: any) => {
             console.log(err);
         });
 };
