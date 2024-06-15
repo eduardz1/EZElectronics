@@ -1,25 +1,23 @@
 # Test Report
 
-<The goal of this document is to explain how the application was tested, detailing how the test cases were defined and what they cover>
-
-# Contents
+## Contents
 
 - [Test Report](#test-report)
-- [Contents](#contents)
-- [Dependency graph](#dependency-graph)
-- [Integration approach](#integration-approach)
-- [Tests](#tests)
-- [Coverage](#coverage)
-  - [Coverage of FR](#coverage-of-fr)
-  - [Coverage white box](#coverage-white-box)
+  - [Contents](#contents)
+  - [Dependency graph](#dependency-graph)
+  - [Integration approach](#integration-approach)
+  - [Tests](#tests)
+  - [Coverage](#coverage)
+    - [Coverage of FR](#coverage-of-fr)
+    - [Coverage white box](#coverage-white-box)
 
-# Dependency graph
+## Dependency graph
 
 Here we can see the complete dependency graph of the application. We can see that coupling is not optimal, a refactor could be done to improve the architecture.
 
 ![Dependency graph](figures/dependency-graph.drawio.svg)
 
-# Integration approach
+## Integration approach
 
 Our integration testing approach involved each team member focusing on their specific component of the system using a bottom-up methodology.
 
@@ -34,7 +32,7 @@ involved the following steps:
         a.2 User Controller Testing
         a.3 User Route Testing
 
-**a.User Component**
+**b.Product Component**
 
         b.1.Product DAO Testing
         b.2 Product Controller Testing
@@ -78,7 +76,7 @@ involved the following steps:
 
     c. GET /sessions/current: Retrieve the current logged-in user and handle unauthorized access.
 
-**b.Producet**
+**b.Product**
 
     b.1. POST /products: Create a new product and handle unauthorized access and duplicate product scenarios.
 
@@ -122,9 +120,7 @@ involved the following steps:
 
     d.7. GET /carts/all: Retrieve all carts and handle unauthorized access, ensuring only admin or manager can access this endpoint.
 
-# Tests
-
-<in the table below list the test cases defined For each test report the object tested, the test level (API, integration, unit) and the technique used to define the test case (BB/ eq partitioning, BB/ boundary, WB/ statement coverage, etc)> <split the table if needed>
+## Tests
 
 |                     Test case name                     | Object(s) tested | Test level |    Technique used     |
 | :----------------------------------------------------: | :--------------: | :--------: | :-------------------: |
@@ -789,11 +785,9 @@ involved the following steps:
 |                           **DELETE /reviews**                           |                  |                  |                       |
 |       It should return a 200 success code and delete all reviews        |   Review APIs    | Integration Test | WB Statement Coverage |
 
-# Coverage
+## Coverage
 
-## Coverage of FR
-
-<Report in the following table the coverage of functional requirements and scenarios(from official requirements) >
+### Coverage of FR
 
 |   ID    |                              Name                              |                                                                            Test(s)                                                                             |
 | :-----: | :------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -836,6 +830,6 @@ involved the following steps:
 |  FR5.7  |             See the list of all carts of all users             |                                                            controller/cart.test.ts - `getAllCarts`                                                             |
 |  FR5.8  |                        Delete all carts                        |                                                           controller/cart.test.ts - `deleteAllCarts`                                                           |
 
-## Coverage white box
+### Coverage white box
 
 ![coverage](figures/coverage.png)
