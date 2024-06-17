@@ -2,14 +2,14 @@
 
 ## Contents
 
--   [Test Report](#test-report)
-    -   [Contents](#contents)
-    -   [Dependency graph](#dependency-graph)
-    -   [Integration approach](#integration-approach)
-    -   [Tests](#tests)
-    -   [Coverage](#coverage)
-        -   [Coverage of FR](#coverage-of-fr)
-        -   [Coverage white box](#coverage-white-box)
+- [Test Report](#test-report)
+  - [Contents](#contents)
+  - [Dependency graph](#dependency-graph)
+  - [Integration approach](#integration-approach)
+  - [Tests](#tests)
+  - [Coverage](#coverage)
+    - [Coverage of FR](#coverage-of-fr)
+    - [Coverage white box](#coverage-white-box)
 
 ## Dependency graph
 
@@ -309,54 +309,54 @@ involved the following steps:
 |                 Deletes all reviews from the database                 |    ReviewDAO     | Unit Test  | WB Statement Coverage |
 |             Fails to delete all reviews from the database             |    ReviewDAO     | Unit Test  | WB Statement Coverage |
 
-|                                Test case name                                 | Object(s) tested | Test level |    Technique used     |
-| :---------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
-|                             **registerProducts**                              |                  |            |                       |
-|                     Insert a valid product in the system                      |  userController  | Unit Test  | WB Statement Coverage |
-|              Insert a product that already exists in the system               |  userController  | Unit Test  | WB Statement Coverage |
-|              Insert a product with an arrival date in the future              |  userController  | Unit Test  | WB Statement Coverage |
-|                           **changeProductQuantity**                           |                  |            |                       |
-|                      Increase the quantity of a product                       |  userController  | Unit Test  | WB Statement Coverage |
-|            Increase the quantity of a product that does not exist             |  userController  | Unit Test  | WB Statement Coverage |
-|      Increase the quantity of a product with a change date in the future      |  userController  | Unit Test  | WB Statement Coverage |
-| Increase the quantity of a product with a change date before the arrival date |  userController  | Unit Test  | WB Statement Coverage |
-|                                **sellProduct**                                |                  |            |                       |
-|                    Sell a product (decrease the quantity)                     |  userController  | Unit Test  | WB Statement Coverage |
-|            Decrease the quantity of a product that does not exist             |  userController  | Unit Test  | WB Statement Coverage |
-|               Sell a product with a selling date in the future                |  userController  | Unit Test  | WB Statement Coverage |
-|          Sell a product with a selling date before the arrival date           |  userController  | Unit Test  | WB Statement Coverage |
-|                    Sell a product that is already sold out                    |  userController  | Unit Test  | WB Statement Coverage |
-|                  Sell more units than the available quantity                  |  userController  | Unit Test  | WB Statement Coverage |
-|                                **getProducts**                                |                  |            |                       |
-|            Get all products with only one product in the database             |  userController  | Unit Test  | WB Statement Coverage |
-|            Get all products with multiple products in the database            |  userController  | Unit Test  | WB Statement Coverage |
-|          Get all products in the database even if some are sold out           |  userController  | Unit Test  | WB Statement Coverage |
-|               Get all products with no products in the database               |  userController  | Unit Test  | WB Statement Coverage |
-|                    Get all products with a category filter                    |  userController  | Unit Test  | WB Statement Coverage |
-|                     Get all products with a model filter                      |  userController  | Unit Test  | WB Statement Coverage |
-|       Try to get all products by category without specifying a category       |  userController  | Unit Test  | WB Statement Coverage |
-|          Try to get all products by category with a model specified           |  userController  | Unit Test  | WB Statement Coverage |
-|          Try to get all products by model without specifying a model          |  userController  | Unit Test  | WB Statement Coverage |
-|            Try to get all products by model with a category filter            |  userController  | Unit Test  | WB Statement Coverage |
-|          Try to get all products by model with a non-existing model           |  userController  | Unit Test  | WB Statement Coverage |
-|         Get all products without grouping but with a category filter          |  userController  | Unit Test  | WB Statement Coverage |
-|           Get all products without grouping but with a model filter           |  userController  | Unit Test  | WB Statement Coverage |
-|                           **getAvailableProducts**                            |                  |            |                       |
-|       Get all available products with only one product in the database        |  userController  | Unit Test  | WB Statement Coverage |
-|       Get all available products with multiple products in the database       |  userController  | Unit Test  | WB Statement Coverage |
-|          Get all available products with no products in the database          |  userController  | Unit Test  | WB Statement Coverage |
-|               Get all available products with a category filter               |  userController  | Unit Test  | WB Statement Coverage |
-|                Get all available products with a model filter                 |  userController  | Unit Test  | WB Statement Coverage |
-|  Try to get all available products by category without specifying a category  |  userController  | Unit Test  | WB Statement Coverage |
-|     Try to get all available products by model without specifying a model     |  userController  | Unit Test  | WB Statement Coverage |
-|     Try to get all available products by model with a non-existing model      |  userController  | Unit Test  | WB Statement Coverage |
-|    Get all available products without grouping but with a category filter     |  userController  | Unit Test  | WB Statement Coverage |
-|      Get all available products without grouping but with a model filter      |  userController  | Unit Test  | WB Statement Coverage |
-|                             **deleteAllProducts**                             |                  |            |                       |
-|                      Delete all products in the database                      |  userController  | Unit Test  | WB Statement Coverage |
-|                               **deleteProduct**                               |                  |            |                       |
-|                       Delete a product in the database                        |  userController  | Unit Test  | WB Statement Coverage |
-|                  Try to delete a product that does not exist                  |  userController  | Unit Test  | WB Statement Coverage |
+|                                Test case name                                 | Object(s) tested  | Test level |    Technique used     |
+| :---------------------------------------------------------------------------: | :---------------: | :--------: | :-------------------: |
+|                             **registerProducts**                              |                   |            |                       |
+|                     Insert a valid product in the system                      | productController | Unit Test  | WB Statement Coverage |
+|              Insert a product that already exists in the system               | productController | Unit Test  | WB Statement Coverage |
+|              Insert a product with an arrival date in the future              | productController | Unit Test  | WB Statement Coverage |
+|                           **changeProductQuantity**                           |                   |            |                       |
+|                      Increase the quantity of a product                       | productController | Unit Test  | WB Statement Coverage |
+|            Increase the quantity of a product that does not exist             | productController | Unit Test  | WB Statement Coverage |
+|      Increase the quantity of a product with a change date in the future      | productController | Unit Test  | WB Statement Coverage |
+| Increase the quantity of a product with a change date before the arrival date | productController | Unit Test  | WB Statement Coverage |
+|                                **sellProduct**                                |                   |            |                       |
+|                    Sell a product (decrease the quantity)                     | productController | Unit Test  | WB Statement Coverage |
+|            Decrease the quantity of a product that does not exist             | productController | Unit Test  | WB Statement Coverage |
+|               Sell a product with a selling date in the future                | productController | Unit Test  | WB Statement Coverage |
+|          Sell a product with a selling date before the arrival date           | productController | Unit Test  | WB Statement Coverage |
+|                    Sell a product that is already sold out                    | productController | Unit Test  | WB Statement Coverage |
+|                  Sell more units than the available quantity                  | productController | Unit Test  | WB Statement Coverage |
+|                                **getProducts**                                |                   |            |                       |
+|            Get all products with only one product in the database             | productController | Unit Test  | WB Statement Coverage |
+|            Get all products with multiple products in the database            | productController | Unit Test  | WB Statement Coverage |
+|          Get all products in the database even if some are sold out           | productController | Unit Test  | WB Statement Coverage |
+|               Get all products with no products in the database               | productController | Unit Test  | WB Statement Coverage |
+|                    Get all products with a category filter                    | productController | Unit Test  | WB Statement Coverage |
+|                     Get all products with a model filter                      | productController | Unit Test  | WB Statement Coverage |
+|       Try to get all products by category without specifying a category       | productController | Unit Test  | WB Statement Coverage |
+|          Try to get all products by category with a model specified           | productController | Unit Test  | WB Statement Coverage |
+|          Try to get all products by model without specifying a model          | productController | Unit Test  | WB Statement Coverage |
+|            Try to get all products by model with a category filter            | productController | Unit Test  | WB Statement Coverage |
+|          Try to get all products by model with a non-existing model           | productController | Unit Test  | WB Statement Coverage |
+|         Get all products without grouping but with a category filter          | productController | Unit Test  | WB Statement Coverage |
+|           Get all products without grouping but with a model filter           | productController | Unit Test  | WB Statement Coverage |
+|                           **getAvailableProducts**                            |                   |            |                       |
+|       Get all available products with only one product in the database        | productController | Unit Test  | WB Statement Coverage |
+|       Get all available products with multiple products in the database       | productController | Unit Test  | WB Statement Coverage |
+|          Get all available products with no products in the database          | productController | Unit Test  | WB Statement Coverage |
+|               Get all available products with a category filter               | productController | Unit Test  | WB Statement Coverage |
+|                Get all available products with a model filter                 | productController | Unit Test  | WB Statement Coverage |
+|  Try to get all available products by category without specifying a category  | productController | Unit Test  | WB Statement Coverage |
+|     Try to get all available products by model without specifying a model     | productController | Unit Test  | WB Statement Coverage |
+|     Try to get all available products by model with a non-existing model      | productController | Unit Test  | WB Statement Coverage |
+|    Get all available products without grouping but with a category filter     | productController | Unit Test  | WB Statement Coverage |
+|      Get all available products without grouping but with a model filter      | productController | Unit Test  | WB Statement Coverage |
+|                             **deleteAllProducts**                             |                   |            |                       |
+|                      Delete all products in the database                      | productController | Unit Test  | WB Statement Coverage |
+|                               **deleteProduct**                               |                   |            |                       |
+|                       Delete a product in the database                        | productController | Unit Test  | WB Statement Coverage |
+|                  Try to delete a product that does not exist                  | productController | Unit Test  | WB Statement Coverage |
 
 |                         Test case name                         | Object(s) tested | Test level |    Technique used     |
 | :------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
@@ -393,64 +393,35 @@ involved the following steps:
 |                Get all carts from the database                 |  cartController  | Unit Test  | WB Statement Coverage |
 |         Get all carts from the database but none exist         |  cartController  | Unit Test  | WB Statement Coverage |
 
-|                          Test case name                           | Object(s) tested  | Test level |    Technique used     |
-| :---------------------------------------------------------------: | :---------------: | :--------: | :-------------------: |
-|                       **registerProducts**                        |                   |            |                       |
-|                        Register a product                         | productController | Unit Test  | WB Statement Coverage |
-|             RRegister a product without arrival date              | productController | Unit Test  | WB Statement Coverage |
-|                Register a product without details                 | productController | Unit Test  | WB Statement Coverage |
-|     Register a product without arrival date but with details      | productController | Unit Test  | WB Statement Coverage |
-|      Register a product with details but without arrivalDate      | productController | Unit Test  | WB Statement Coverage |
-|        Register a product without details and arrivalDate         | productController | Unit Test  | WB Statement Coverage |
-|                    Fails to register a product                    | productController | Unit Test  | WB Statement Coverage |
-|                       **getProductByModel**                       |                   |            |                       |
-|                      Gets a product by model                      | productController | Unit Test  | WB Statement Coverage |
-|              Returns null when product is not found               | productController | Unit Test  | WB Statement Coverage |
-|                  Fails to get a product by model                  | productController | Unit Test  | WB Statement Coverage |
-|                     **changeProductQuantity**                     |                   |            |                       |
-|                 Changes the quantity of a product                 | productController | Unit Test  | WB Statement Coverage |
-|       Changes the quantity of a product without change date       | productController | Unit Test  | WB Statement Coverage |
-|             Fails to change the quantity of a product             | productController | Unit Test  | WB Statement Coverage |
-|                          **sellProduct**                          |                   |            |                       |
-|                          Sells a product                          | productController | Unit Test  | WB Statement Coverage |
-|               Sells a product without selling date                | productController | Unit Test  | WB Statement Coverage |
-|                      Fails to sell a product                      | productController | Unit Test  | WB Statement Coverage |
-|                     **getProductsByCategory**                     |                   |            |                       |
-|              Gets all products of a certain category              | productController | Unit Test  | WB Statement Coverage |
-|      Gets an array of a single product of a certain category      | productController | Unit Test  | WB Statement Coverage |
-|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
-|                 Fails to get products by category                 | productController | Unit Test  | WB Statement Coverage |
-|                      **getProductsByModel**                       |                   |            |                       |
-|               Gets all products of a certain model                | productController | Unit Test  | WB Statement Coverage |
-|       Gets an array of a single product of a certain model        | productController | Unit Test  | WB Statement Coverage |
-|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
-|                  Fails to get products by model                   | productController | Unit Test  | WB Statement Coverage |
-|                        **getAllProducts**                         |                   |            |                       |
-|                         Gets all products                         | productController | Unit Test  | WB Statement Coverage |
-|                 Gets an array of a single product                 | productController | Unit Test  | WB Statement Coverage |
-|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
-|                     Fails to get all products                     | productController | Unit Test  | WB Statement Coverage |
-|                **getAvailableProductsByCategory**                 |                   |            |                       |
-|         Gets all available products of a certain category         | productController | Unit Test  | WB Statement Coverage |
-| Gets an array of a single available product of a certain category | productController | Unit Test  | WB Statement Coverage |
-|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
-|            Fails to get available products by category            | productController | Unit Test  | WB Statement Coverage |
-|                  **getAvailableProductsByModel**                  |                   |            |                       |
-|          Gets all available products of a certain model           | productController | Unit Test  | WB Statement Coverage |
-|  Gets an array of a single available product of a certain model   | productController | Unit Test  | WB Statement Coverage |
-|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
-|             Fails to get available products by model              | productController | Unit Test  | WB Statement Coverage |
-|                    **getAllAvailableProducts**                    |                   |            |                       |
-|                    Gets all available products                    | productController | Unit Test  | WB Statement Coverage |
-|            Gets an array of a single available product            | productController | Unit Test  | WB Statement Coverage |
-|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
-|                Fails to get all available products                | productController | Unit Test  | WB Statement Coverage |
-|                       **deleteAllProducts**                       |                   |            |                       |
-|              Deletes all products from the database               | productController | Unit Test  | WB Statement Coverage |
-|          Fails to delete all products from the database           | productController | Unit Test  | WB Statement Coverage |
-|                         **deleteProduct**                         |                   |            |                       |
-|                Deletes a product from the database                | productController | Unit Test  | WB Statement Coverage |
-|            Fails to delete a product from the database            | productController | Unit Test  | WB Statement Coverage |
+|                        Test case name                         | Object(s) tested | Test level |    Technique used     |
+| :-----------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                        **createUser**                         |                  |            |                       |
+|                       Create a new user                       |  userController  | Unit Test  | WB Statement Coverage |
+|                  Fails to create a new user                   |  userController  | Unit Test  | WB Statement Coverage |
+|                         **getUsers**                          |                  |            |                       |
+|                         Get all users                         |  userController  | Unit Test  | WB Statement Coverage |
+|                        No users found                         |  userController  | Unit Test  | WB Statement Coverage |
+|                      **getUsersByRole**                       |                  |            |                       |
+|                       Get users by role                       |  userController  | Unit Test  | WB Statement Coverage |
+|                    No users found for role                    |  userController  | Unit Test  | WB Statement Coverage |
+|                    **getUsersByUsername**                     |                  |            |                       |
+|              Admin retrieves any non-admin user               |  userController  | Unit Test  | WB Statement Coverage |
+|           Non-admin retrieves their own information           |  userController  | Unit Test  | WB Statement Coverage |
+|    Non-admin tries to retrieve another user's information     |  userController  | Unit Test  | WB Statement Coverage |
+|          Admin tries to retrieve a non-existent user          |  userController  | Unit Test  | WB Statement Coverage |
+|    Admin tries to retrieve a different admin's information    |  userController  | Unit Test  | WB Statement Coverage |
+|                        **deleteUser**                         |                  |            |                       |
+|                Admin deletes a non-admin user                 |  userController  | Unit Test  | WB Statement Coverage |
+|              Non-admin deletes their own account              |  userController  | Unit Test  | WB Statement Coverage |
+|       Non-admin tries to delete another user's account        |  userController  | Unit Test  | WB Statement Coverage |
+|           Someone tries to delete an admin account            |  userController  | Unit Test  | WB Statement Coverage |
+|                         **deleteAll**                         |                  |            |                       |
+|               Admin deletes all non-admin users               |  userController  | Unit Test  | WB Statement Coverage |
+|                      **updateUserInfo**                       |                  |            |                       |
+|              User updates their own information               |  userController  | Unit Test  | WB Statement Coverage |
+|        User tries to update another user's information        |  userController  | Unit Test  | WB Statement Coverage |
+| User updates their information with a birthdate in the future |  userController  | Unit Test  | WB Statement Coverage |
+|    Update user information for a user that does not exist     |  userController  | Unit Test  | WB Statement Coverage |
 
 |                                   Test case name                                    | Object(s) tested | Test level |    Technique used     |
 | :---------------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
@@ -460,6 +431,7 @@ involved the following steps:
 |      should throw ExistingReviewError when adding a review that already exists      | reviewController | Unit Test  | WB Statement Coverage |
 |                                **getProductReviews**                                |                  |            |                       |
 |                                should return reviews                                | reviewController | Unit Test  | WB Statement Coverage |
+|  should throw ProductNotFoundError when getting reviews for a non-existing product  | reviewController | Unit Test  | WB Statement Coverage |
 |                                  **deleteReview**                                   |                  |            |                       |
 |                               should delete a review                                | reviewController | Unit Test  | WB Statement Coverage |
 | should throw ProductNotFoundError when deleting a review for a non-existing product | reviewController | Unit Test  | WB Statement Coverage |
