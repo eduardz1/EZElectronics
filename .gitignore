@@ -1,3 +1,6 @@
+# Prevent changes to the database
+*.db
+
 # Documents
 *.pdf
 
@@ -127,6 +130,9 @@ dist
 
 # VSCode settings
 .vscode/*
+
+# Jetbrains IDEs project files
+.idea
 
 # yarn v2
 .yarn/cache

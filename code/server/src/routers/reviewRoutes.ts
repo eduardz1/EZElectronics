@@ -1,30 +1,29 @@
-import express, { Router } from "express"
-import ErrorHandler from "../helper"
-import { body, param, query } from "express-validator"
-import ReviewController from "../controllers/reviewController"
-import Authenticator from "./auth"
-import { ProductReview } from "../components/review"
+import express, { Router } from "express";
+import ErrorHandler from "../helper";
+import { body } from "express-validator";
+import ReviewController from "../controllers/reviewController";
+import Authenticator from "./auth";
+import { ProductReview } from "../components/review";
 
 class ReviewRoutes {
-    private controller: ReviewController
-    private router: Router
-    private errorHandler: ErrorHandler
-    private authenticator: Authenticator
+    private controller: ReviewController;
+    private readonly router: Router;
+    private errorHandler: ErrorHandler;
+    private authenticator: Authenticator;
 
     constructor(authenticator: Authenticator) {
-        this.authenticator = authenticator
-        this.controller = new ReviewController()
-        this.router = express.Router()
-        this.errorHandler = new ErrorHandler()
-        this.initRoutes()
+        this.authenticator = authenticator;
+        this.controller = new ReviewController();
+        this.router = express.Router();
+        this.errorHandler = new ErrorHandler();
+        this.initRoutes();
     }
 
     getRouter(): Router {
-        return this.router
+        return this.router;
     }
 
     initRoutes() {
-
         /**
          * Route for adding a review to a product.
          * It requires the user calling it to be authenticated and to be a customer
@@ -36,26 +35,42 @@ class ReviewRoutes {
          */
         this.router.post(
             "/:model",
-            (req: any, res: any, next: any) => this.controller.addReview(req.params.model, req.user, req.body.score, req.body.comment)
-                .then(() => res.status(200).send())
-                .catch((err: Error) => {
-                    console.log(err)
-                    next(err)
-                })
-        )
+            body("score").isInt({ min: 1, max: 5 }),
+            body("comment").isString().notEmpty({ ignore_whitespace: true }),
+            this.errorHandler.validateRequest,
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .addReview(
+                        req.params.model,
+                        req.user,
+                        req.body.score,
+                        req.body.comment,
+                    )
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => {
+                        console.log(err);
+                        next(err);
+                    }),
+        );
 
         /**
          * Route for retrieving all reviews of a product.
-         * It requires the user to be authenticathed
+         * It requires the user to be authenticated
          * It expects a product model as a route parameter. This parameter must be a non-empty string and the product must exist.
          * It returns an array of reviews
          */
         this.router.get(
             "/:model",
-            (req: any, res: any, next: any) => this.controller.getProductReviews(req.params.model)
-                .then((reviews: any/*ProductReview[]*/) => res.status(200).json(reviews))
-                .catch((err: Error) => next(err))
-        )
+            this.authenticator.isLoggedIn,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .getProductReviews(req.params.model)
+                    .then((reviews: ProductReview[]) =>
+                        res.status(200).json(reviews),
+                    )
+                    .catch((err: Error) => next(err)),
+        );
 
         /**
          * Route for deleting the review made by a user for one product.
@@ -65,13 +80,16 @@ class ReviewRoutes {
          */
         this.router.delete(
             "/:model",
-            (req: any, res: any, next: any) => this.controller.deleteReview(req.params.model, req.user)
-                .then(() => res.status(200).send())
-                .catch((err: Error) => {
-                    console.log(err)
-                    next(err)
-                })
-        )
+            this.authenticator.isCustomer,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteReview(req.params.model, req.user)
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => {
+                        console.log(err);
+                        next(err);
+                    }),
+        );
 
         /**
          * Route for deleting all reviews of a product.
@@ -81,10 +99,13 @@ class ReviewRoutes {
          */
         this.router.delete(
             "/:model/all",
-            (req: any, res: any, next: any) => this.controller.deleteReviewsOfProduct(req.params.model)
-                .then(() => res.status(200).send())
-                .catch((err: Error) => next(err))
-        )
+            this.authenticator.isAdminOrManager,
+            (req: any, res: any, next: any) =>
+                this.controller
+                    .deleteReviewsOfProduct(req.params.model)
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => next(err)),
+        );
 
         /**
          * Route for deleting all reviews of all products.
@@ -93,10 +114,13 @@ class ReviewRoutes {
          */
         this.router.delete(
             "/",
-            (req: any, res: any, next: any) => this.controller.deleteAllReviews()
-                .then(() => res.status(200).send())
-                .catch((err: Error) => next(err))
-        )
+            this.authenticator.isAdminOrManager,
+            (_req: any, res: any, next: any) =>
+                this.controller
+                    .deleteAllReviews()
+                    .then(() => res.status(200).send())
+                    .catch((err: Error) => next(err)),
+        );
     }
 }
 
