@@ -92,6 +92,10 @@ class UserController {
             throw new UserNotAdminError();
         }
 
+        if ((await this.dao.getUserByUsername(username)).role === "Admin") {
+            throw new UserIsAdminError();
+        }
+
         return this.dao.deleteUser(username);
     }
 
