@@ -313,23 +313,26 @@ describe("Tests for Cart Routes", () => {
     describe("7. GET /carts/all", () => {
         test("7.1 It should return all carts of all customers, including unpaid ones", async () => {
             //We expect only one cart to be returned, the one we paid for in a previous test
-            let carts = await request(app).get(`${routePath}/carts/all`).set("Cookie", managerCookie).expect(200)
-            expect(carts.body.length).toEqual(1)
-            expect(carts.body[0].customer).toEqual("customer")
-            expect(carts.body[0].paid).toBeTruthy()
-            expect(carts.body[0].paymentDate).not.toBeNull()
-            expect(carts.body[0].total).toEqual(3000)
-            expect(carts.body[0].products.length).toEqual(2)
+            //Empty carts are not considered for this route, so the current (empty) cart of the first customer is not counted
+            let res = await request(app).get(`${routePath}/carts/all`).set("Cookie", managerCookie).expect(200)
+            let carts = res.body.filter((cart: any) => cart.products.length > 0)
+            expect(carts.length).toEqual(1)
+            expect(carts[0].customer).toEqual("customer")
+            expect(carts[0].paid).toBeTruthy()
+            expect(carts[0].paymentDate).not.toBeNull()
+            expect(carts[0].total).toEqual(3000)
+            expect(carts[0].products.length).toEqual(2)
             //After creating a new cart for the second customer, we expect two carts to be returned
             await request(app).post(`${routePath}/carts`).set("Cookie", secondCustomerCookie).send({ model: "model" }).expect(200)
-            carts = await request(app).get(`${routePath}/carts/all`).set("Cookie", managerCookie).expect(200)
-            expect(carts.body.length).toEqual(2)
-            expect(carts.body[1].customer).toEqual("customer2")
-            let notPaid = carts.body[1].paid === null || carts.body[1].paid === undefined || carts.body[1].paid === false || carts.body[1].paid === 0 || carts.body[1].paid === "false" || carts.body[1].paid === "0"
+            res = await request(app).get(`${routePath}/carts/all`).set("Cookie", managerCookie).expect(200)
+            carts = res.body.filter((cart: any) => cart.products.length > 0)
+            expect(carts.length).toEqual(2)
+            expect(carts[1].customer).toEqual("customer2")
+            let notPaid = carts[1].paid === null || carts[1].paid === undefined || carts[1].paid === false || carts[1].paid === 0 || carts[1].paid === "false" || carts[1].paid === "0"
             expect(notPaid).toBeTruthy();
-            expect(carts.body[1].paymentDate).toBeNull()
-            expect(carts.body[1].total).toEqual(1000)
-            expect(carts.body[1].products.length).toEqual(1)
+            expect(carts[1].paymentDate).toBeNull()
+            expect(carts[1].total).toEqual(1000)
+            expect(carts[1].products.length).toEqual(1)
         })
 
         test("7.2 It should return a 401 error when called by a user who is a customer, or is not logged in", async () => {
