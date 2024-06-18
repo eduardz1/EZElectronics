@@ -2,14 +2,14 @@
 
 ## Contents
 
-- [Test Report](#test-report)
-  - [Contents](#contents)
-  - [Dependency graph](#dependency-graph)
-  - [Integration approach](#integration-approach)
-  - [Tests](#tests)
-  - [Coverage](#coverage)
-    - [Coverage of FR](#coverage-of-fr)
-    - [Coverage white box](#coverage-white-box)
+-   [Test Report](#test-report)
+    -   [Contents](#contents)
+    -   [Dependency graph](#dependency-graph)
+    -   [Integration approach](#integration-approach)
+    -   [Tests](#tests)
+    -   [Coverage](#coverage)
+        -   [Coverage of FR](#coverage-of-fr)
+        -   [Coverage white box](#coverage-white-box)
 
 ## Dependency graph
 
@@ -313,6 +313,7 @@ involved the following steps:
 |                     Insert a valid product in the system                      | productController | Unit Test  | WB Statement Coverage |
 |              Insert a product that already exists in the system               | productController | Unit Test  | WB Statement Coverage |
 |              Insert a product with an arrival date in the future              | productController | Unit Test  | WB Statement Coverage |
+|        Insert a product without an arrival date (use the current date)        | productController | Unit Test  | WB Statement Coverage |
 |                           **changeProductQuantity**                           |                   |            |                       |
 |                      Increase the quantity of a product                       | productController | Unit Test  | WB Statement Coverage |
 |            Increase the quantity of a product that does not exist             | productController | Unit Test  | WB Statement Coverage |

@@ -132,20 +132,20 @@ class ProductController {
     ): Promise<Product[]> {
         switch (grouping) {
             case "category":
-                if (!category) throw new IncorrectCategoryGroupingError();
-                if (model) throw new IncorrectGroupingError();
+                if (!category || model)
+                    throw new IncorrectCategoryGroupingError();
 
                 return this.dao.getProductsByCategory(category);
             case "model":
-                // debugger
-                if (!model) throw new IncorrectModelGroupingError();
-                if (category) throw new IncorrectGroupingError();
+                if (!model || category) throw new IncorrectModelGroupingError();
                 if (!(await this.dao.getProductByModel(model))) {
                     throw new ProductNotFoundError();
                 }
+
                 return this.dao.getProductsByModel(model);
             default:
                 if (category || model) throw new IncorrectGroupingError();
+
                 return this.dao.getAllProducts();
         }
     }
@@ -164,19 +164,20 @@ class ProductController {
     ): Promise<Product[]> {
         switch (grouping) {
             case "category":
-                if (!category) throw new IncorrectCategoryGroupingError();
-                if (model) throw new IncorrectGroupingError();
+                if (!category || model)
+                    throw new IncorrectCategoryGroupingError();
 
                 return this.dao.getAvailableProductsByCategory(category);
             case "model":
-                if (!model) throw new IncorrectModelGroupingError();
-                if (category) throw new IncorrectGroupingError();
+                if (!model || category) throw new IncorrectModelGroupingError();
                 if (!(await this.dao.getProductByModel(model))) {
                     throw new ProductNotFoundError();
                 }
+
                 return this.dao.getAvailableProductsByModel(model);
             default:
                 if (category || model) throw new IncorrectGroupingError();
+
                 return this.dao.getAllAvailableProducts();
         }
     }

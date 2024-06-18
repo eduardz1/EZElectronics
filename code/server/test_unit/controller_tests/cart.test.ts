@@ -50,7 +50,7 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const testCart = new Cart(testUser.username, false, null, 0, [
                 {
@@ -63,31 +63,31 @@ describe("CartController", () => {
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
             jest.spyOn(CartDAO.prototype, "addToCart").mockResolvedValueOnce(
-                true
+                true,
             );
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                testCart
+                testCart,
             );
 
             const controller = new CartController();
             const response = await controller.addToCart(
                 testUser,
-                testProduct.model
+                testProduct.model,
             );
 
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.addToCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.addToCart).toHaveBeenCalledWith(
                 testUser,
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
@@ -109,40 +109,40 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const emptyCart = new Cart(testUser.username, false, null, 0, []);
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
             jest.spyOn(CartDAO.prototype, "addToCart").mockResolvedValueOnce(
-                true
+                true,
             );
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                null
+                null,
             );
             jest.spyOn(CartDAO.prototype, "createCart").mockResolvedValueOnce(
-                emptyCart
+                emptyCart,
             );
 
             const controller = new CartController();
             const response = await controller.addToCart(
                 testUser,
-                testProduct.model
+                testProduct.model,
             );
 
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.addToCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.addToCart).toHaveBeenCalledWith(
                 testUser,
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
@@ -158,16 +158,16 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(null);
 
             const controller = new CartController();
             await expect(
-                controller.addToCart(testUser, "nonExistentModel")
+                controller.addToCart(testUser, "nonExistentModel"),
             ).rejects.toThrow(ProductNotFoundError);
         });
 
@@ -186,17 +186,17 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
 
             const controller = new CartController();
             await expect(
-                controller.addToCart(testUser, testProduct.model)
+                controller.addToCart(testUser, testProduct.model),
             ).rejects.toThrow(EmptyProductStockError);
         });
     });
@@ -209,7 +209,7 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const testCart = new Cart(testUser.username, false, null, 0, [
                 {
@@ -221,7 +221,7 @@ describe("CartController", () => {
             ]);
 
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                testCart
+                testCart,
             );
 
             const controller = new CartController();
@@ -239,10 +239,10 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                null
+                null,
             );
 
             const controller = new CartController();
@@ -251,7 +251,7 @@ describe("CartController", () => {
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
             expect(response).toEqual(
-                new Cart(testUser.username, false, null, 0, [])
+                new Cart(testUser.username, false, null, 0, []),
             );
         });
     });
@@ -264,14 +264,14 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockResolvedValueOnce(
-                true
+                true,
             );
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockResolvedValueOnce(
-                true
+                true,
             );
 
             const controller = new CartController();
@@ -279,7 +279,7 @@ describe("CartController", () => {
 
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
 
             expect(response).toBe(true);
@@ -292,21 +292,21 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockRejectedValue(
-                new CartNotFoundError()
+                new CartNotFoundError(),
             );
 
             const controller = new CartController();
             await expect(controller.checkoutCart(testUser)).rejects.toThrow(
-                CartNotFoundError
+                CartNotFoundError,
             );
 
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
         });
 
@@ -317,21 +317,21 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockRejectedValue(
-                new EmptyCartError()
+                new EmptyCartError(),
             );
 
             const controller = new CartController();
             await expect(controller.checkoutCart(testUser)).rejects.toThrow(
-                EmptyCartError
+                EmptyCartError,
             );
 
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
         });
 
@@ -342,21 +342,21 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockRejectedValue(
-                new ProductNotFoundError()
+                new ProductNotFoundError(),
             );
 
             const controller = new CartController();
             await expect(controller.checkoutCart(testUser)).rejects.toThrow(
-                ProductNotFoundError
+                ProductNotFoundError,
             );
 
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
         });
 
@@ -367,21 +367,21 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockRejectedValueOnce(
-                new ProductSoldError()
+                new ProductSoldError(),
             );
 
             const controller = new CartController();
             await expect(controller.checkoutCart(testUser)).rejects.toThrow(
-                ProductSoldError
+                ProductSoldError,
             );
 
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
         });
 
@@ -392,21 +392,21 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(CartDAO.prototype, "checkoutCart").mockRejectedValue(
-                new LowProductStockError()
+                new LowProductStockError(),
             );
 
             const controller = new CartController();
             await expect(controller.checkoutCart(testUser)).rejects.toThrow(
-                LowProductStockError
+                LowProductStockError,
             );
 
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.checkoutCart).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
         });
     });
@@ -419,7 +419,7 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const testCart = new Cart(testUser.username, false, null, 0, [
                 {
@@ -432,7 +432,7 @@ describe("CartController", () => {
 
             jest.spyOn(
                 CartDAO.prototype,
-                "getCustomerCarts"
+                "getCustomerCarts",
             ).mockResolvedValueOnce([testCart]);
 
             const controller = new CartController();
@@ -440,7 +440,7 @@ describe("CartController", () => {
 
             expect(CartDAO.prototype.getCustomerCarts).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCustomerCarts).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
             expect(response).toEqual([testCart]);
         });
@@ -452,12 +452,12 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(
                 CartDAO.prototype,
-                "getCustomerCarts"
+                "getCustomerCarts",
             ).mockResolvedValueOnce([]);
 
             const controller = new CartController();
@@ -465,7 +465,7 @@ describe("CartController", () => {
 
             expect(CartDAO.prototype.getCustomerCarts).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCustomerCarts).toHaveBeenCalledWith(
-                testUser
+                testUser,
             );
             expect(response).toEqual([]);
         });
@@ -479,7 +479,7 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const testProduct = {
                 model: "testModel",
@@ -500,33 +500,33 @@ describe("CartController", () => {
 
             jest.spyOn(
                 CartDAO.prototype,
-                "removeProductFromCart"
+                "removeProductFromCart",
             ).mockResolvedValueOnce(true);
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                testCart
+                testCart,
             );
 
             const controller = new CartController();
             const response = await controller.removeProductFromCart(
                 testUser,
-                "testModel"
+                "testModel",
             );
 
             expect(
-                CartDAO.prototype.removeProductFromCart
+                CartDAO.prototype.removeProductFromCart,
             ).toHaveBeenCalledTimes(1);
             expect(
-                CartDAO.prototype.removeProductFromCart
+                CartDAO.prototype.removeProductFromCart,
             ).toHaveBeenCalledWith(testUser, "testModel");
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                "testModel"
+                "testModel",
             );
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
@@ -541,24 +541,24 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(null);
 
             const controller = new CartController();
             await expect(
-                controller.removeProductFromCart(testUser, "nonExistentModel")
+                controller.removeProductFromCart(testUser, "nonExistentModel"),
             ).rejects.toThrow(ProductNotFoundError);
 
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                "nonExistentModel"
+                "nonExistentModel",
             );
         });
 
@@ -569,7 +569,7 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const testProduct = {
                 model: "testModel",
@@ -590,22 +590,22 @@ describe("CartController", () => {
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                testCart
+                testCart,
             );
 
             const controller = new CartController();
             await expect(
-                controller.removeProductFromCart(testUser, testProduct.model)
+                controller.removeProductFromCart(testUser, testProduct.model),
             ).rejects.toThrow(ProductNotInCartError);
 
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
@@ -626,27 +626,27 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                null
+                null,
             );
 
             const controller = new CartController();
             await expect(
-                controller.removeProductFromCart(testUser, testProduct.model)
+                controller.removeProductFromCart(testUser, testProduct.model),
             ).rejects.toThrow(CartNotFoundError);
 
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
@@ -667,28 +667,28 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             const testCart = new Cart(testUser.username, false, null, 0, []);
 
             jest.spyOn(
                 ProductDAO.prototype,
-                "getProductByModel"
+                "getProductByModel",
             ).mockResolvedValueOnce(testProduct);
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                testCart
+                testCart,
             );
 
             const controller = new CartController();
             await expect(
-                controller.removeProductFromCart(testUser, testProduct.model)
+                controller.removeProductFromCart(testUser, testProduct.model),
             ).rejects.toThrow(CartNotFoundError);
 
             expect(
-                ProductDAO.prototype.getProductByModel
+                ProductDAO.prototype.getProductByModel,
             ).toHaveBeenCalledTimes(1);
             expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
-                testProduct.model
+                testProduct.model,
             );
             expect(CartDAO.prototype.getCart).toHaveBeenCalledTimes(1);
             expect(CartDAO.prototype.getCart).toHaveBeenCalledWith(testUser);
@@ -703,13 +703,13 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
             jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
-                new Cart(testUser.username, false, null, 0, [])
+                new Cart(testUser.username, false, null, 0, []),
             );
             jest.spyOn(CartDAO.prototype, "clearCart").mockResolvedValueOnce(
-                true
+                true,
             );
 
             const controller = new CartController();
@@ -727,15 +727,13 @@ describe("CartController", () => {
                 "User",
                 Role.CUSTOMER,
                 "",
-                ""
+                "",
             );
-            jest.spyOn(CartDAO.prototype, "getCart").mockRejectedValue(
-                new CartNotFoundError()
-            );
+            jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValue(null);
 
             const controller = new CartController();
             await expect(controller.clearCart(testUser)).rejects.toThrow(
-                CartNotFoundError
+                CartNotFoundError,
             );
 
             expect(CartDAO.prototype.clearCart).toHaveBeenCalledTimes(0);
@@ -746,7 +744,7 @@ describe("CartController", () => {
         test("Delete all carts from the database", async () => {
             jest.spyOn(
                 CartDAO.prototype,
-                "deleteAllCarts"
+                "deleteAllCarts",
             ).mockResolvedValueOnce(true);
 
             const controller = new CartController();
@@ -774,7 +772,7 @@ describe("CartController", () => {
 
         test("Get all carts from the database but none exist", async () => {
             jest.spyOn(CartDAO.prototype, "getAllCarts").mockResolvedValueOnce(
-                []
+                [],
             );
 
             const controller = new CartController();

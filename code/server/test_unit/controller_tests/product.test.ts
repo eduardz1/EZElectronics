@@ -19,6 +19,7 @@ import {
     ProductNotFoundError,
 } from "../../src/errors/productError";
 import { DateError } from "../../src/utilities";
+import dayjs from "dayjs";
 
 beforeEach(() => {
     jest.mock("../../src/dao/productDAO");
@@ -155,6 +156,48 @@ describe("ProductController", () => {
                     testProduct.arrivalDate,
                 ),
             ).rejects.toThrow(DateError);
+        });
+
+        test("Insert a product without an arrival date (use the current date)", async () => {
+            const testProduct = {
+                model: "test",
+                category: Category.SMARTPHONE,
+                quantity: 1,
+                details: "test",
+                sellingPrice: 1,
+                arrivalDate: "2022-01-01",
+            };
+            jest.spyOn(
+                ProductDAO.prototype,
+                "getProductByModel",
+            ).mockResolvedValueOnce(null);
+            jest.spyOn(
+                ProductDAO.prototype,
+                "registerProducts",
+            ).mockResolvedValueOnce(true);
+
+            const controller = new ProductController();
+            const response = await controller.registerProducts(
+                testProduct.model,
+                testProduct.category,
+                testProduct.quantity,
+                testProduct.details,
+                testProduct.sellingPrice,
+                null,
+            );
+
+            expect(ProductDAO.prototype.registerProducts).toHaveBeenCalledTimes(
+                1,
+            );
+            expect(ProductDAO.prototype.registerProducts).toHaveBeenCalledWith(
+                testProduct.model,
+                testProduct.category,
+                testProduct.quantity,
+                testProduct.details,
+                testProduct.sellingPrice,
+                dayjs().format("YYYY-MM-DD"),
+            );
+            expect(response).toBe(true);
         });
     });
 
@@ -586,7 +629,7 @@ describe("ProductController", () => {
             const controller = new ProductController();
             await expect(
                 controller.getProducts("category", Category.SMARTPHONE, "test"),
-            ).rejects.toThrow(IncorrectGroupingError);
+            ).rejects.toThrow(IncorrectCategoryGroupingError);
         });
 
         test("Try to get all products by model without specifying a model", async () => {
