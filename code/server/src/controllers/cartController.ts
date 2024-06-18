@@ -105,6 +105,10 @@ class CartController {
      * @returns A Promise that resolves to `true` if the cart was successfully cleared.
      */
     async clearCart(user: User): Promise<boolean> {
+        if (!(await this.dao.getCart(user))) {
+            throw new CartNotFoundError();
+        }
+
         return this.dao.clearCart(user);
     }
 

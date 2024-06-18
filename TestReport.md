@@ -2,14 +2,14 @@
 
 ## Contents
 
--   [Test Report](#test-report)
-    -   [Contents](#contents)
-    -   [Dependency graph](#dependency-graph)
-    -   [Integration approach](#integration-approach)
-    -   [Tests](#tests)
-    -   [Coverage](#coverage)
-        -   [Coverage of FR](#coverage-of-fr)
-        -   [Coverage white box](#coverage-white-box)
+- [Test Report](#test-report)
+  - [Contents](#contents)
+  - [Dependency graph](#dependency-graph)
+  - [Integration approach](#integration-approach)
+  - [Tests](#tests)
+  - [Coverage](#coverage)
+    - [Coverage of FR](#coverage-of-fr)
+    - [Coverage white box](#coverage-white-box)
 
 ## Dependency graph
 
@@ -210,7 +210,6 @@ involved the following steps:
 |                   Error in updating carts                   |     CartDAO      | Unit Test  | WB Statement Coverage |
 |                        **clearCart**                        |                  |            |                       |
 |                    Clears a user's cart                     |     CartDAO      | Unit Test  | WB Statement Coverage |
-|                       Cart not found                        |     CartDAO      | Unit Test  | WB Statement Coverage |
 |                   Error in selecting cart                   |     CartDAO      | Unit Test  | WB Statement Coverage |
 |           Error in deleting from products_in_car            |     CartDAO      | Unit Test  | WB Statement Coverage |
 |                   Error in updating cart                    |     CartDAO      | Unit Test  | WB Statement Coverage |

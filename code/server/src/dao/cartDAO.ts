@@ -163,7 +163,7 @@ class CartDAO {
 
                     if (!row) return resolve(null);
 
-                    this.getProductsInCart(user, row.id)
+                    this.getProductsInCart(user.username, row.id)
                         .then((products) =>
                             resolve(
                                 new Cart(
@@ -185,11 +185,11 @@ class CartDAO {
 
     /**
      * Retrieves all products in the user's cart.
-     * @param customer The user whose cart will be retrieved.
+     * @param username The user whose cart will be retrieved.
      * @param id The id of the cart to retrieve products from.
      * @returns A Promise that resolves to an array of products in the cart.
      */
-    getProductsInCart(customer: User, id: string): Promise<ProductInCart[]> {
+    getProductsInCart(username: string, id: string): Promise<ProductInCart[]> {
         const sql = `
             SELECT
                 products.model AS model,
@@ -207,28 +207,24 @@ class CartDAO {
                 AND carts.id = ?;`;
 
         return new Promise<ProductInCart[]>((resolve, reject) => {
-            db.all(
-                sql,
-                [customer.username, id],
-                (err: Error | null, rows: any[]) => {
-                    if (err) return reject(err);
+            db.all(sql, [username, id], (err: Error | null, rows: any[]) => {
+                if (err) return reject(err);
 
-                    const products: ProductInCart[] = [];
+                const products: ProductInCart[] = [];
 
-                    for (const row of rows) {
-                        products.push(
-                            new ProductInCart(
-                                row.model,
-                                row.quantity,
-                                row.category,
-                                row.sellingPrice,
-                            ),
-                        );
-                    }
+                for (const row of rows) {
+                    products.push(
+                        new ProductInCart(
+                            row.model,
+                            row.quantity,
+                            row.category,
+                            row.sellingPrice,
+                        ),
+                    );
+                }
 
-                    resolve(products);
-                },
-            );
+                resolve(products);
+            });
         });
     }
 
@@ -257,7 +253,7 @@ class CartDAO {
 
                     if (!row) return reject(new CartNotFoundError());
 
-                    this.getProductsInCart(user, row.id)
+                    this.getProductsInCart(user.username, row.id)
                         .then((products) => {
                             if (products.length === 0)
                                 return reject(new EmptyCartError());
@@ -365,7 +361,7 @@ class CartDAO {
 
                     for (const row of rows) {
                         const products = await this.getProductsInCart(
-                            user,
+                            user.username,
                             row.id,
                         )
                             .then((products) => products)
@@ -501,8 +497,6 @@ class CartDAO {
         return new Promise<boolean>((resolve, reject) => {
             db.get(sql, [user.username], (err: Error | null, row: any) => {
                 if (err) return reject(err);
-
-                if (!row) return reject(new CartNotFoundError());
 
                 const deleteSql = `
                     DELETE

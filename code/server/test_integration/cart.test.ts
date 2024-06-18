@@ -56,6 +56,10 @@ const baseURL = "/ezelectronics/carts";
 beforeAll(async () => {
     await cleanup();
 
+    //The cleanup function may not finish in time for the next operation, leading to potential issues
+    //We wait 15 seconds before writing to the database, ensuring that the test suite contains what we need
+    await new Promise((resolve) => setTimeout(resolve, 15000));
+
     await postUser(customer);
     await postUser(manager);
     await postUser(admin);
