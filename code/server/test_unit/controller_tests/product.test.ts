@@ -195,7 +195,7 @@ describe("ProductController", () => {
             ).toHaveBeenCalledTimes(1);
             expect(
                 ProductDAO.prototype.changeProductQuantity,
-            ).toHaveBeenCalledWith(testProduct.model, 2, "2022-01-02");
+            ).toHaveBeenCalledWith(testProduct.model, 2);
             expect(response).toBe(2);
         });
 
@@ -586,7 +586,7 @@ describe("ProductController", () => {
             const controller = new ProductController();
             await expect(
                 controller.getProducts("category", Category.SMARTPHONE, "test"),
-            ).rejects.toThrow(IncorrectCategoryGroupingError);
+            ).rejects.toThrow(IncorrectGroupingError);
         });
 
         test("Try to get all products by model without specifying a model", async () => {

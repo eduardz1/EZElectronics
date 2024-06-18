@@ -54,7 +54,7 @@ class ProductController {
             quantity,
             details,
             sellingPrice,
-            arrivalDate,
+            arrivalDate || dayjs().format("YYYY-MM-DD"),
         );
     }
 
@@ -83,7 +83,6 @@ class ProductController {
         return this.dao.changeProductQuantity(
             model,
             product.quantity + newQuantity,
-            changeDate,
         );
     }
 
@@ -133,11 +132,14 @@ class ProductController {
     ): Promise<Product[]> {
         switch (grouping) {
             case "category":
-                if (!category || model)
-                    throw new IncorrectCategoryGroupingError();
+                if (!category) throw new IncorrectCategoryGroupingError();
+                if (model) throw new IncorrectGroupingError();
+
                 return this.dao.getProductsByCategory(category);
             case "model":
-                if (!model || category) throw new IncorrectModelGroupingError();
+                // debugger
+                if (!model) throw new IncorrectModelGroupingError();
+                if (category) throw new IncorrectGroupingError();
                 if (!(await this.dao.getProductByModel(model))) {
                     throw new ProductNotFoundError();
                 }
@@ -163,9 +165,12 @@ class ProductController {
         switch (grouping) {
             case "category":
                 if (!category) throw new IncorrectCategoryGroupingError();
+                if (model) throw new IncorrectGroupingError();
+
                 return this.dao.getAvailableProductsByCategory(category);
             case "model":
                 if (!model) throw new IncorrectModelGroupingError();
+                if (category) throw new IncorrectGroupingError();
                 if (!(await this.dao.getProductByModel(model))) {
                     throw new ProductNotFoundError();
                 }

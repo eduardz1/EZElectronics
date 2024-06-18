@@ -61,7 +61,7 @@ class ProductRoutes {
             body("category").isString().isIn(Object.values(Category)),
             body("quantity").isInt({ gt: 0 }),
             body("details").isString(),
-            body("sellingPrice").isNumeric(),
+            body("sellingPrice").isInt({ gt: 0 }),
             body("arrivalDate")
                 .optional({ checkFalsy: true })
                 .isString()
@@ -164,6 +164,25 @@ class ProductRoutes {
          */
         this.router.get(
             "/",
+            query("grouping").optional().isIn(["category", "model"]),
+            query("category")
+                .if(query("grouping").equals("category"))
+                .isIn(Object.values(Category)),
+            query("category")
+                .if(query("grouping").equals("model"))
+                .not()
+                .exists(),
+            query("category")
+                .if(query("grouping").not().exists())
+                .not()
+                .exists(),
+            query("model")
+                .if(query("grouping").equals("category"))
+                .not()
+                .exists(),
+            query("model").if(query("grouping").equals("model")).notEmpty(),
+            query("model").if(query("grouping").not().exists()).not().exists(),
+            this.errorHandler.validateRequest,
             this.authenticator.isAdminOrManager,
             (req: any, res: any, next: any) =>
                 this.controller
@@ -192,23 +211,24 @@ class ProductRoutes {
          */
         this.router.get(
             "/available",
-            query("grouping")
-                .optional({ checkFalsy: true })
-                .isIn(["category", "model"]),
+            query("grouping").optional().isIn(["category", "model"]),
             query("category")
                 .if(query("grouping").equals("category"))
-                .isIn(Object.values(Category))
+                .isIn(Object.values(Category)),
+            query("category")
                 .if(query("grouping").equals("model"))
-                .isEmpty()
-                .if(query("grouping").isEmpty())
-                .isEmpty(),
+                .not()
+                .exists(),
+            query("category")
+                .if(query("grouping").not().exists())
+                .not()
+                .exists(),
             query("model")
-                .if(query("grouping").equals("model"))
-                .notEmpty()
                 .if(query("grouping").equals("category"))
-                .isEmpty()
-                .if(query("grouping").isEmpty())
-                .isEmpty(),
+                .not()
+                .exists(),
+            query("model").if(query("grouping").equals("model")).notEmpty(),
+            query("model").if(query("grouping").not().exists()).not().exists(),
             this.errorHandler.validateRequest,
             this.authenticator.isLoggedIn,
             (req: any, res: any, next: any) =>

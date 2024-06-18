@@ -2,14 +2,14 @@
 
 ## Contents
 
-- [Test Report](#test-report)
-  - [Contents](#contents)
-  - [Dependency graph](#dependency-graph)
-  - [Integration approach](#integration-approach)
-  - [Tests](#tests)
-  - [Coverage](#coverage)
-    - [Coverage of FR](#coverage-of-fr)
-    - [Coverage white box](#coverage-white-box)
+-   [Test Report](#test-report)
+    -   [Contents](#contents)
+    -   [Dependency graph](#dependency-graph)
+    -   [Integration approach](#integration-approach)
+    -   [Tests](#tests)
+    -   [Coverage](#coverage)
+        -   [Coverage of FR](#coverage-of-fr)
+        -   [Coverage white box](#coverage-white-box)
 
 ## Dependency graph
 
@@ -243,7 +243,6 @@ involved the following steps:
 |                  Fails to get a product by model                  |    ProcutDAO     | Unit Test  | WB Statement Coverage |
 |                     **changeProductQuantity**                     |                  |            |                       |
 |                 Changes the quantity of a product                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
-|       Changes the quantity of a product without change date       |    ProcutDAO     | Unit Test  | WB Statement Coverage |
 |             Fails to change the quantity of a product             |    ProcutDAO     | Unit Test  | WB Statement Coverage |
 |                          **sellProduct**                          |                  |            |                       |
 |                          Sells a product                          |    ProcutDAO     | Unit Test  | WB Statement Coverage |

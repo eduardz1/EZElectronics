@@ -90,34 +90,15 @@ class ProductDAO {
      *
      * @param model - The model of the product.
      * @param newQuantity - The new quantity of the product.
-     * @param changeDate - The date of the change (optional).
      * @returns A promise that resolves to the new quantity of the product.
      */
 
-    changeProductQuantity(
-        model: string,
-        newQuantity: number,
-        changeDate: string | null,
-    ): Promise<number> {
+    changeProductQuantity(model: string, newQuantity: number): Promise<number> {
         return new Promise<number>((resolve, reject) => {
-            const sql =
-                "UPDATE products SET quantity = ?" +
-                (changeDate ? ", arrivalDate = ?" : "") +
-                " WHERE model = ?";
+            const sql = "UPDATE products SET quantity = ? WHERE model = ?";
 
-            db.run(
-                sql,
-                changeDate
-                    ? [newQuantity, changeDate, model]
-                    : [newQuantity, model],
-                (err: Error | null) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-
-                    resolve(newQuantity);
-                },
+            db.run(sql, [newQuantity, model], (err: Error | null) =>
+                err ? reject(err) : resolve(newQuantity),
             );
         });
     }

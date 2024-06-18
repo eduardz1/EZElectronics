@@ -1200,10 +1200,10 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getProducts,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
             expect(
                 Authenticator.prototype.isAdminOrManager,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 422 if grouping is "category" and model is specified`, async () => {
@@ -1223,10 +1223,10 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getProducts,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
             expect(
                 Authenticator.prototype.isAdminOrManager,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 422 if grouping is "model" and model is null`, async () => {
@@ -1246,10 +1246,10 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getProducts,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
             expect(
                 Authenticator.prototype.isAdminOrManager,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 422 if grouping is "model" and category is specified`, async () => {
@@ -1269,10 +1269,10 @@ describe("Product routes", () => {
             expect(response.status).toBe(422);
             expect(
                 ProductController.prototype.getProducts,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
             expect(
                 Authenticator.prototype.isAdminOrManager,
-            ).toHaveBeenCalledTimes(1);
+            ).toHaveBeenCalledTimes(0);
         });
 
         test(`Returns 404 if grouping is "model" and model does not represent an existing product`, async () => {

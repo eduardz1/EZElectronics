@@ -374,7 +374,7 @@ describe("UserController", () => {
                 "testUser",
                 "Test",
                 "User",
-                Role.CUSTOMER,
+                Role.ADMIN,
                 "Test Address",
                 "2000-01-01",
             );
