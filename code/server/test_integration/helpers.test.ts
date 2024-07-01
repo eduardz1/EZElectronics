@@ -80,11 +80,18 @@ const postProduct = async (productInfo: Product, cookie: string) => {
  * @returns The cookie of the logged-in user
  */
 const login = async (userInfo: any) => {
-    const response = await request(app)
-        .post(`${routePath}/sessions`)
-        .send(userInfo)
-        .expect(200);
-    return response.header["set-cookie"][0];
+    return new Promise<string>((resolve, reject) => {
+        request(app)
+            .post(`${routePath}/sessions`)
+            .send(userInfo)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(res.header["set-cookie"][0]);
+            });
+    });
 };
 
 /**

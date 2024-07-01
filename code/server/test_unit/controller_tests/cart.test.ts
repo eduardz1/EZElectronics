@@ -705,6 +705,9 @@ describe("CartController", () => {
                 "",
                 "",
             );
+            jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValueOnce(
+                new Cart(testUser.username, false, null, 0, []),
+            );
             jest.spyOn(CartDAO.prototype, "clearCart").mockResolvedValueOnce(
                 true,
             );
@@ -726,17 +729,14 @@ describe("CartController", () => {
                 "",
                 "",
             );
-            jest.spyOn(CartDAO.prototype, "clearCart").mockRejectedValue(
-                new CartNotFoundError(),
-            );
+            jest.spyOn(CartDAO.prototype, "getCart").mockResolvedValue(null);
 
             const controller = new CartController();
             await expect(controller.clearCart(testUser)).rejects.toThrow(
                 CartNotFoundError,
             );
 
-            expect(CartDAO.prototype.clearCart).toHaveBeenCalledTimes(1);
-            expect(CartDAO.prototype.clearCart).toHaveBeenCalledWith(testUser);
+            expect(CartDAO.prototype.clearCart).toHaveBeenCalledTimes(0);
         });
     });
 

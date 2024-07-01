@@ -18,6 +18,10 @@ const baseURL = "/ezelectronics/products";
 beforeAll(async () => {
     await cleanup();
 
+    //The cleanup function may not finish in time for the next operation, leading to potential issues
+    //We wait 15 seconds before writing to the database, ensuring that the test suite contains what we need
+    await new Promise((resolve) => setTimeout(resolve, 15000));
+
     await postUser(admin);
     await postUser(manager);
     await postUser(customer);
@@ -232,9 +236,7 @@ describe("Product routes", () => {
         test("Returns 200 OK and all products of a category", async () => {
             const managerCookie = await login(manager);
             await request(app)
-                .get(
-                    `${baseURL}/?grouping=category&category=testProduct.category`,
-                )
+                .get(`${baseURL}/?grouping=category&category=Smartphone`)
                 .set("Cookie", managerCookie)
                 .expect(200);
         });
@@ -250,7 +252,7 @@ describe("Product routes", () => {
         test("Returns 422 if grouping is category and model is specified", async () => {
             const managerCookie = await login(manager);
             await request(app)
-                .get(`${baseURL}/?grouping=category&model=testProduct.model`)
+                .get(`${baseURL}/?grouping=category&model=model`)
                 .set("Cookie", managerCookie)
                 .expect(422);
         });
@@ -274,7 +276,7 @@ describe("Product routes", () => {
         test("Returns 422 if grouping is model and category is specified", async () => {
             const managerCookie = await login(manager);
             await request(app)
-                .get(`${baseURL}/?grouping=model&category=thisProduct.category`)
+                .get(`${baseURL}/?grouping=model&category=Smartphone`)
                 .set("Cookie", managerCookie)
                 .expect(422);
         });

@@ -304,6 +304,19 @@ describe("UserController", () => {
             jest.spyOn(UserDAO.prototype, "deleteUser").mockResolvedValueOnce(
                 true,
             );
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(
+                new User(
+                    "testUser",
+                    "Test",
+                    "User",
+                    Role.CUSTOMER,
+                    "Test Address",
+                    "2000-01-01",
+                ),
+            );
             const controller = new UserController();
             const response = await controller.deleteUser(adminUser, "testUser");
 
@@ -326,6 +339,11 @@ describe("UserController", () => {
             jest.spyOn(UserDAO.prototype, "deleteUser").mockResolvedValueOnce(
                 true,
             );
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(testUser);
+
             const controller = new UserController();
             const response = await controller.deleteUser(testUser, "testUser");
 
@@ -349,6 +367,35 @@ describe("UserController", () => {
             await expect(
                 controller.deleteUser(testUser, "targetUser"),
             ).rejects.toThrow(UserNotAdminError);
+        });
+
+        test("Someone tries to delete an admin account", async () => {
+            const testUser = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.ADMIN,
+                "Test Address",
+                "2000-01-01",
+            );
+            jest.spyOn(
+                UserDAO.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(
+                new User(
+                    "admin",
+                    "Admin",
+                    "User",
+                    Role.ADMIN,
+                    "Admin Address",
+                    "1990-01-01",
+                ),
+            );
+            const controller = new UserController();
+
+            await expect(
+                controller.deleteUser(testUser, "admin"),
+            ).rejects.toThrow(UserIsAdminError);
         });
     });
 

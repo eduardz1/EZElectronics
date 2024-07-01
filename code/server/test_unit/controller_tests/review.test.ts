@@ -16,7 +16,7 @@ import {
     ExistingReviewError,
     NoReviewProductError,
 } from "../../src/errors/reviewError";
-import { Category } from "../../src/components/product";
+import { Category, Product } from "../../src/components/product";
 
 beforeEach(() => {
     jest.mock("../../src/dao/reviewDAO");
@@ -234,6 +234,19 @@ describe("ReviewController", () => {
                 ReviewDAO.prototype,
                 "getProductReviews",
             ).mockResolvedValueOnce(testReviews);
+            jest.spyOn(
+                ProductDAO.prototype,
+                "getProductByModel",
+            ).mockResolvedValueOnce(
+                new Product(
+                    100,
+                    "model1",
+                    Category.SMARTPHONE,
+                    "2021-06-01",
+                    "details",
+                    5,
+                ),
+            );
 
             const controller = new ReviewController();
             const reviews = await controller.getProductReviews(
@@ -243,6 +256,38 @@ describe("ReviewController", () => {
                 testReviews[0].model,
             );
             expect(reviews).toEqual(testReviews);
+        });
+
+        test("should throw ProductNotFoundError when getting reviews for a non-existing product", async () => {
+            jest.spyOn(
+                ProductDAO.prototype,
+                "getProductByModel",
+            ).mockResolvedValueOnce(null);
+
+            const testUser = {
+                username: "user",
+                name: "name",
+                surname: "surname",
+                role: Role.CUSTOMER,
+                address: "address",
+                birthdate: "1956-05-31",
+            };
+
+            const testReview = {
+                model: "model",
+                user: testUser,
+                score: 5,
+                date: "2021-06-01",
+                comment: "Great product!",
+            };
+
+            const controller = new ReviewController();
+            await expect(
+                controller.getProductReviews(testReview.model),
+            ).rejects.toThrow(ProductNotFoundError);
+            expect(ProductDAO.prototype.getProductByModel).toHaveBeenCalledWith(
+                testReview.model,
+            );
         });
     });
 

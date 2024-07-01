@@ -13,6 +13,11 @@ let adminCookie: string;
 // an Admin user and log in as Admin, saving the cookie in the corresponding variable
 beforeAll(async () => {
     await cleanup();
+
+    //The cleanup function may not finish in time for the next operation, leading to potential issues
+    //We wait 15 seconds before writing to the database, ensuring that the test suite contains what we need
+    await new Promise((resolve) => setTimeout(resolve, 15000));
+
     await postUser(admin);
     adminCookie = await login(admin);
 });

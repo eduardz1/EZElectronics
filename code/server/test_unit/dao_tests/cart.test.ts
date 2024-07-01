@@ -545,7 +545,7 @@ describe("CartDAO", () => {
                     return {} as Database;
                 },
             );
-            const result = await cartDAO.getProductsInCart(customer, "1");
+            const result = await cartDAO.getProductsInCart(customer.username, "1");
             expect(result).toEqual([testCartItem, testCartItem2]);
         });
 
@@ -571,7 +571,7 @@ describe("CartDAO", () => {
                     return {} as Database;
                 },
             );
-            const result = await cartDAO.getProductsInCart(customer, "1");
+            const result = await cartDAO.getProductsInCart(customer.username, "1");
             expect(result).toEqual([testCartItem]);
         });
 
@@ -598,7 +598,7 @@ describe("CartDAO", () => {
                 },
             );
             const result = await cartDAO.getProductsInCart(
-                testCartItem.user,
+                testCartItem.user.username,
                 testCartItem.productId,
             );
             expect(result).toEqual([]);
@@ -613,7 +613,7 @@ describe("CartDAO", () => {
                 },
             );
             await expect(
-                cartDAO.getProductsInCart(customer, "1"),
+                cartDAO.getProductsInCart(customer.username, "1"),
             ).rejects.toBeInstanceOf(Error);
         });
     });
@@ -1396,20 +1396,6 @@ describe("CartDAO", () => {
             const result = await cartDAO.clearCart(customer);
 
             expect(result).toBe(true);
-        });
-
-        test("Cart not found", async () => {
-            const cartDAO = new CartDAO();
-            jest.spyOn(db, "get").mockImplementation(
-                (_sql, _params, callback) => {
-                    callback(null, null);
-                    return {} as Database;
-                },
-            );
-
-            await expect(cartDAO.clearCart(customer)).rejects.toBeInstanceOf(
-                CartNotFoundError,
-            );
         });
 
         test("Error in selecting cart", async () => {

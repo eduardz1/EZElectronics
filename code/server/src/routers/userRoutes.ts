@@ -132,7 +132,7 @@ class UserRoutes {
          */
         this.router.delete(
             "/:username",
-            this.authenticator.isAdmin,
+            this.authenticator.isLoggedIn,
             (req: any, res: any, next: any) =>
                 this.controller
                     .deleteUser(req.user, req.params.username)
@@ -168,6 +168,7 @@ class UserRoutes {
          */
         this.router.patch(
             "/:username",
+            this.authenticator.isLoggedIn,
             param("username").isString().notEmpty({ ignore_whitespace: true }),
             body("name").isString().notEmpty({ ignore_whitespace: true }),
             body("surname").isString().notEmpty({ ignore_whitespace: true }),

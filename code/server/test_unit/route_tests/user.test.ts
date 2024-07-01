@@ -492,10 +492,24 @@ describe("UserRoutes", () => {
                 UserController.prototype,
                 "deleteUser",
             ).mockResolvedValueOnce(true);
-
-            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
-                (_req: any, _res: any, next: any) => next(),
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(
+                new User(
+                    "testUser",
+                    "Test",
+                    "User",
+                    Role.CUSTOMER,
+                    "Address",
+                    "2000-01-01",
+                ),
             );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
             const response = await request(app).delete(`${baseURL}/testUser`);
 
@@ -508,10 +522,24 @@ describe("UserRoutes", () => {
                 UserController.prototype,
                 "deleteUser",
             ).mockRejectedValueOnce(new Error("Error"));
-
-            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
-                (_req: any, _res: any, next: any) => next(),
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(
+                new User(
+                    "testUser",
+                    "Test",
+                    "User",
+                    Role.CUSTOMER,
+                    "Address",
+                    "2000-01-01",
+                ),
             );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
             const response = await request(app).delete(`${baseURL}/testUser`);
 
@@ -519,23 +547,48 @@ describe("UserRoutes", () => {
             expect(UserController.prototype.deleteUser).toHaveBeenCalled();
         });
 
-        test("Returns 401 if user is not an admin", async () => {
+        test("Returns 401 if user is not logged in", async () => {
             jest.spyOn(
-                UserController.prototype,
-                "deleteUser",
-            ).mockResolvedValueOnce(true);
-
-            jest.spyOn(Authenticator.prototype, "isAdmin").mockImplementation(
-                (_req: any, res: any, _next: any) =>
-                    res
-                        .status(401)
-                        .json({ error: "Unauthorized", status: 401 }),
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, res: any, _next: any) =>
+                res.status(401).json({ error: "Unauthorized", status: 401 }),
             );
 
             const response = await request(app).delete(`${baseURL}/testUser`);
 
             expect(response.status).toBe(401);
             expect(UserController.prototype.deleteUser).not.toHaveBeenCalled();
+        });
+
+        test("Returns 401 if user that is being deleted is an admin", async () => {
+            jest.spyOn(
+                UserController.prototype,
+                "deleteUser",
+            ).mockRejectedValueOnce(new UserIsAdminError());
+            jest.spyOn(
+                UserController.prototype,
+                "getUserByUsername",
+            ).mockResolvedValueOnce(
+                new User(
+                    "testUser",
+                    "Test",
+                    "User",
+                    Role.ADMIN,
+                    "Address",
+                    "2000-01-01",
+                ),
+            );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app).delete(`${baseURL}/testUser`);
+
+            expect(response.status).toBe(401);
+            expect(UserController.prototype.deleteUser).toHaveBeenCalled();
         });
     });
 
@@ -609,6 +662,11 @@ describe("UserRoutes", () => {
                 "updateUserInfo",
             ).mockResolvedValue(updatedUser);
 
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
             const response = await request(app)
                 .patch(`${baseURL}/testUser`)
                 .set("user", JSON.stringify(user))
@@ -633,6 +691,127 @@ describe("UserRoutes", () => {
             );
         });
 
+        test("Returns 422 if name is missing", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(422);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if surname is missing", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    address: "New Address",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(422);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if address is missing", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    birthdate: "2000-01-01",
+                });
+
+            expect(response.status).toBe(422);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).not.toHaveBeenCalled();
+        });
+
+        test("Returns 422 if birthdate is not an ISO8601 date", async () => {
+            const user = new User(
+                "testUser",
+                "Test",
+                "User",
+                Role.CUSTOMER,
+                "Address",
+                "2000-01-01",
+            );
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
+            const response = await request(app)
+                .patch(`${baseURL}/testUser`)
+                .set("user", JSON.stringify(user))
+                .send({
+                    name: "Updated",
+                    surname: "User",
+                    address: "New Address",
+                    birthdate: "01-01-2000",
+                });
+
+            expect(response.status).toBe(422);
+            expect(
+                UserController.prototype.updateUserInfo,
+            ).not.toHaveBeenCalled();
+        });
+
         test("Returns 503 if an error occurs", async () => {
             const user = new User(
                 "testUser",
@@ -646,6 +825,11 @@ describe("UserRoutes", () => {
                 UserController.prototype,
                 "updateUserInfo",
             ).mockRejectedValue(new Error("Error"));
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
             const response = await request(app)
                 .patch(`${baseURL}/testUser`)
@@ -692,6 +876,11 @@ describe("UserRoutes", () => {
                 "updateUserInfo",
             ).mockResolvedValue(updatedUser);
 
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
             const response = await request(app)
                 .patch(`${baseURL}/testUser`)
                 .set("user", JSON.stringify(user))
@@ -730,6 +919,11 @@ describe("UserRoutes", () => {
                 "updateUserInfo",
             ).mockRejectedValue(new UserNotFoundError());
 
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
             const response = await request(app)
                 .patch(`${baseURL}/testUser`)
                 .set("user", JSON.stringify(user))
@@ -766,6 +960,11 @@ describe("UserRoutes", () => {
                 UserController.prototype,
                 "updateUserInfo",
             ).mockRejectedValue(new UserNotAdminError());
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
             const response = await request(app)
                 .patch(`${baseURL}/testUser2`)
@@ -804,6 +1003,11 @@ describe("UserRoutes", () => {
                 "updateUserInfo",
             ).mockRejectedValue(new DateError());
 
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
+
             const response = await request(app)
                 .patch(`${baseURL}/testUser`)
                 .set("user", JSON.stringify(user))
@@ -840,6 +1044,11 @@ describe("UserRoutes", () => {
                 UserController.prototype,
                 "updateUserInfo",
             ).mockRejectedValue(new UserNotAdminError());
+
+            jest.spyOn(
+                Authenticator.prototype,
+                "isLoggedIn",
+            ).mockImplementation((_req: any, _res: any, next: any) => next());
 
             const response = await request(app)
                 .patch(`${baseURL}/testUser2`)

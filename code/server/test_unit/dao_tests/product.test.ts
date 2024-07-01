@@ -213,34 +213,7 @@ describe("ProductDAO", () => {
                     return {} as Database;
                 },
             );
-            const result = await productDAO.changeProductQuantity(
-                "model",
-                5,
-                "2021-10-11",
-            );
-            expect(result).toBe(5);
-        });
-
-        test("Changes the quantity of a product without change date", async () => {
-            const productDAO = new ProductDAO();
-            jest.spyOn(db, "run").mockImplementation(
-                (_sql, _params, callback) => {
-                    callback(null, {
-                        model: "model",
-                        category: Category.LAPTOP,
-                        quantity: 10,
-                        details: "details",
-                        sellingPrice: 10,
-                        arrivalDate: "2021-10-10",
-                    });
-                    return {} as Database;
-                },
-            );
-            const result = await productDAO.changeProductQuantity(
-                "model",
-                5,
-                null,
-            );
+            const result = await productDAO.changeProductQuantity("model", 5);
             expect(result).toBe(5);
         });
 
@@ -252,11 +225,9 @@ describe("ProductDAO", () => {
                     return {} as Database;
                 },
             );
-            productDAO
-                .changeProductQuantity("model", 5, "2021-10-11")
-                .catch((error) => {
-                    expect(error).toBeInstanceOf(Error);
-                });
+            productDAO.changeProductQuantity("model", 5).catch((error) => {
+                expect(error).toBeInstanceOf(Error);
+            });
         });
     });
 

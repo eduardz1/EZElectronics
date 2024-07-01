@@ -29,7 +29,7 @@ class ReviewController {
         model: string,
         user: User,
         score: number,
-        comment: string,
+        comment: string
     ): Promise<void> {
         if (!(await this.productDao.getProductByModel(model))) {
             throw new ProductNotFoundError();
@@ -47,6 +47,9 @@ class ReviewController {
      * @returns A Promise that resolves to an array of ProductReview objects
      */
     async getProductReviews(model: string): Promise<ProductReview[]> {
+        if (!(await this.productDao.getProductByModel(model))) {
+            throw new ProductNotFoundError();
+        }
         return this.dao.getProductReviews(model);
     }
 
@@ -71,6 +74,7 @@ class ReviewController {
      * Deletes all reviews for a product
      * @param model The model of the product to delete the reviews from
      * @returns A Promise that resolves to nothing
+     * @throws ProductNotFoundError if the product does not exist
      */
     async deleteReviewsOfProduct(model: string): Promise<void> {
         if (!(await this.productDao.getProductByModel(model))) {

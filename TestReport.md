@@ -2,14 +2,14 @@
 
 ## Contents
 
-- [Test Report](#test-report)
-  - [Contents](#contents)
-  - [Dependency graph](#dependency-graph)
-  - [Integration approach](#integration-approach)
-  - [Tests](#tests)
-  - [Coverage](#coverage)
-    - [Coverage of FR](#coverage-of-fr)
-    - [Coverage white box](#coverage-white-box)
+-   [Test Report](#test-report)
+    -   [Contents](#contents)
+    -   [Dependency graph](#dependency-graph)
+    -   [Integration approach](#integration-approach)
+    -   [Tests](#tests)
+    -   [Coverage](#coverage)
+        -   [Coverage of FR](#coverage-of-fr)
+        -   [Coverage white box](#coverage-white-box)
 
 ## Dependency graph
 
@@ -122,44 +122,45 @@ involved the following steps:
 
 ## Tests
 
-|                     Test case name                     | Object(s) tested | Test level |    Technique used     |
-| :----------------------------------------------------: | :--------------: | :--------: | :-------------------: |
-|               **getIsUserAuthenticated**               |                  |            |                       |
-|       should return true for authenticated user        |     UserDAO      | Unit Test  | WB Statement Coverage |
-|         should reject with error for db error          |     UserDAO      | Unit Test  | WB Statement Coverage |
-|       should return false for incorrect password       |     UserDAO      | Unit Test  | WB Statement Coverage |
-|       should return false for non-existent user        |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                     **createUser**                     |                  |            |                       |
-|                should create a new user                |     UserDAO      | Unit Test  | WB Statement Coverage |
-| should throw UserAlreadyExistsError for duplicate user |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                      **getUsers**                      |                  |            |                       |
-|                should return all users                 |     UserDAO      | Unit Test  | WB Statement Coverage |
-|         should return empty array for no users         |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                   **getUserByRole**                    |                  |            |                       |
-|              should return users by role               |     UserDAO      | Unit Test  | WB Statement Coverage |
-|         should return empty array for no users         |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                     **deleteUser**                     |                  |            |                       |
-|                   should delete user                   |     UserDAO      | Unit Test  | WB Statement Coverage |
-|  should throw UserNotFoundError for non-existent user  |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                     **deleteAll**                      |                  |            |                       |
-|           should delete all non-admin users            |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                 **getUserByUsername**                  |                  |            |                       |
-|             should return user by username             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|  should throw UserNotFoundError for non-existent user  |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                 **checkIfUserExists**                  |                  |            |                       |
-|           should return true if user exists            |     UserDAO      | Unit Test  | WB Statement Coverage |
-|       should return false if user does not exist       |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|                   **updateUserInfo**                   |                  |            |                       |
-|             should update user information             |     UserDAO      | Unit Test  | WB Statement Coverage |
-|  should throw UserNotFoundError for non-existent user  |     UserDAO      | Unit Test  | WB Statement Coverage |
-|            should throw error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                        Test case name                        | Object(s) tested | Test level |    Technique used     |
+| :----------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                  **getIsUserAuthenticated**                  |                  |            |                       |
+|          should return true for authenticated user           |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should reject with error for db error             |     UserDAO      | Unit Test  | WB Statement Coverage |
+|          should return false for incorrect password          |     UserDAO      | Unit Test  | WB Statement Coverage |
+|          should return false for non-existent user           |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                        **createUser**                        |                  |            |                       |
+|                   should create a new user                   |     UserDAO      | Unit Test  | WB Statement Coverage |
+|    should throw UserAlreadyExistsError for duplicate user    |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                         **getUsers**                         |                  |            |                       |
+|                   should return all users                    |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should return empty array for no users            |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                      **getUserByRole**                       |                  |            |                       |
+|                 should return users by role                  |     UserDAO      | Unit Test  | WB Statement Coverage |
+|            should return empty array for no users            |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                        **deleteUser**                        |                  |            |                       |
+|                      should delete user                      |     UserDAO      | Unit Test  | WB Statement Coverage |
+|     should throw UserNotFoundError for non-existent user     |     UserDAO      | Unit Test  | WB Statement Coverage |
+| should throw UserIsAdminError when trying to delete an admin |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                        **deleteAll**                         |                  |            |                       |
+|              should delete all non-admin users               |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                    **getUserByUsername**                     |                  |            |                       |
+|                should return user by username                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|     should throw UserNotFoundError for non-existent user     |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                    **checkIfUserExists**                     |                  |            |                       |
+|              should return true if user exists               |     UserDAO      | Unit Test  | WB Statement Coverage |
+|          should return false if user does not exist          |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|                      **updateUserInfo**                      |                  |            |                       |
+|                should update user information                |     UserDAO      | Unit Test  | WB Statement Coverage |
+|     should throw UserNotFoundError for non-existent user     |     UserDAO      | Unit Test  | WB Statement Coverage |
+|               should throw error for db error                |     UserDAO      | Unit Test  | WB Statement Coverage |
 
 |                       Test case name                        | Object(s) tested | Test level |    Technique used     |
 | :---------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
@@ -209,7 +210,6 @@ involved the following steps:
 |                   Error in updating carts                   |     CartDAO      | Unit Test  | WB Statement Coverage |
 |                        **clearCart**                        |                  |            |                       |
 |                    Clears a user's cart                     |     CartDAO      | Unit Test  | WB Statement Coverage |
-|                       Cart not found                        |     CartDAO      | Unit Test  | WB Statement Coverage |
 |                   Error in selecting cart                   |     CartDAO      | Unit Test  | WB Statement Coverage |
 |           Error in deleting from products_in_car            |     CartDAO      | Unit Test  | WB Statement Coverage |
 |                   Error in updating cart                    |     CartDAO      | Unit Test  | WB Statement Coverage |
@@ -242,7 +242,6 @@ involved the following steps:
 |                  Fails to get a product by model                  |    ProcutDAO     | Unit Test  | WB Statement Coverage |
 |                     **changeProductQuantity**                     |                  |            |                       |
 |                 Changes the quantity of a product                 |    ProcutDAO     | Unit Test  | WB Statement Coverage |
-|       Changes the quantity of a product without change date       |    ProcutDAO     | Unit Test  | WB Statement Coverage |
 |             Fails to change the quantity of a product             |    ProcutDAO     | Unit Test  | WB Statement Coverage |
 |                          **sellProduct**                          |                  |            |                       |
 |                          Sells a product                          |    ProcutDAO     | Unit Test  | WB Statement Coverage |
@@ -308,54 +307,55 @@ involved the following steps:
 |                 Deletes all reviews from the database                 |    ReviewDAO     | Unit Test  | WB Statement Coverage |
 |             Fails to delete all reviews from the database             |    ReviewDAO     | Unit Test  | WB Statement Coverage |
 
-|                                Test case name                                 | Object(s) tested | Test level |    Technique used     |
-| :---------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
-|                             **registerProducts**                              |                  |            |                       |
-|                     Insert a valid product in the system                      |  userController  | Unit Test  | WB Statement Coverage |
-|              Insert a product that already exists in the system               |  userController  | Unit Test  | WB Statement Coverage |
-|              Insert a product with an arrival date in the future              |  userController  | Unit Test  | WB Statement Coverage |
-|                           **changeProductQuantity**                           |                  |            |                       |
-|                      Increase the quantity of a product                       |  userController  | Unit Test  | WB Statement Coverage |
-|            Increase the quantity of a product that does not exist             |  userController  | Unit Test  | WB Statement Coverage |
-|      Increase the quantity of a product with a change date in the future      |  userController  | Unit Test  | WB Statement Coverage |
-| Increase the quantity of a product with a change date before the arrival date |  userController  | Unit Test  | WB Statement Coverage |
-|                                **sellProduct**                                |                  |            |                       |
-|                    Sell a product (decrease the quantity)                     |  userController  | Unit Test  | WB Statement Coverage |
-|            Decrease the quantity of a product that does not exist             |  userController  | Unit Test  | WB Statement Coverage |
-|               Sell a product with a selling date in the future                |  userController  | Unit Test  | WB Statement Coverage |
-|          Sell a product with a selling date before the arrival date           |  userController  | Unit Test  | WB Statement Coverage |
-|                    Sell a product that is already sold out                    |  userController  | Unit Test  | WB Statement Coverage |
-|                  Sell more units than the available quantity                  |  userController  | Unit Test  | WB Statement Coverage |
-|                                **getProducts**                                |                  |            |                       |
-|            Get all products with only one product in the database             |  userController  | Unit Test  | WB Statement Coverage |
-|            Get all products with multiple products in the database            |  userController  | Unit Test  | WB Statement Coverage |
-|          Get all products in the database even if some are sold out           |  userController  | Unit Test  | WB Statement Coverage |
-|               Get all products with no products in the database               |  userController  | Unit Test  | WB Statement Coverage |
-|                    Get all products with a category filter                    |  userController  | Unit Test  | WB Statement Coverage |
-|                     Get all products with a model filter                      |  userController  | Unit Test  | WB Statement Coverage |
-|       Try to get all products by category without specifying a category       |  userController  | Unit Test  | WB Statement Coverage |
-|          Try to get all products by category with a model specified           |  userController  | Unit Test  | WB Statement Coverage |
-|          Try to get all products by model without specifying a model          |  userController  | Unit Test  | WB Statement Coverage |
-|            Try to get all products by model with a category filter            |  userController  | Unit Test  | WB Statement Coverage |
-|          Try to get all products by model with a non-existing model           |  userController  | Unit Test  | WB Statement Coverage |
-|         Get all products without grouping but with a category filter          |  userController  | Unit Test  | WB Statement Coverage |
-|           Get all products without grouping but with a model filter           |  userController  | Unit Test  | WB Statement Coverage |
-|                           **getAvailableProducts**                            |                  |            |                       |
-|       Get all available products with only one product in the database        |  userController  | Unit Test  | WB Statement Coverage |
-|       Get all available products with multiple products in the database       |  userController  | Unit Test  | WB Statement Coverage |
-|          Get all available products with no products in the database          |  userController  | Unit Test  | WB Statement Coverage |
-|               Get all available products with a category filter               |  userController  | Unit Test  | WB Statement Coverage |
-|                Get all available products with a model filter                 |  userController  | Unit Test  | WB Statement Coverage |
-|  Try to get all available products by category without specifying a category  |  userController  | Unit Test  | WB Statement Coverage |
-|     Try to get all available products by model without specifying a model     |  userController  | Unit Test  | WB Statement Coverage |
-|     Try to get all available products by model with a non-existing model      |  userController  | Unit Test  | WB Statement Coverage |
-|    Get all available products without grouping but with a category filter     |  userController  | Unit Test  | WB Statement Coverage |
-|      Get all available products without grouping but with a model filter      |  userController  | Unit Test  | WB Statement Coverage |
-|                             **deleteAllProducts**                             |                  |            |                       |
-|                      Delete all products in the database                      |  userController  | Unit Test  | WB Statement Coverage |
-|                               **deleteProduct**                               |                  |            |                       |
-|                       Delete a product in the database                        |  userController  | Unit Test  | WB Statement Coverage |
-|                  Try to delete a product that does not exist                  |  userController  | Unit Test  | WB Statement Coverage |
+|                                Test case name                                 | Object(s) tested  | Test level |    Technique used     |
+| :---------------------------------------------------------------------------: | :---------------: | :--------: | :-------------------: |
+|                             **registerProducts**                              |                   |            |                       |
+|                     Insert a valid product in the system                      | productController | Unit Test  | WB Statement Coverage |
+|              Insert a product that already exists in the system               | productController | Unit Test  | WB Statement Coverage |
+|              Insert a product with an arrival date in the future              | productController | Unit Test  | WB Statement Coverage |
+|        Insert a product without an arrival date (use the current date)        | productController | Unit Test  | WB Statement Coverage |
+|                           **changeProductQuantity**                           |                   |            |                       |
+|                      Increase the quantity of a product                       | productController | Unit Test  | WB Statement Coverage |
+|            Increase the quantity of a product that does not exist             | productController | Unit Test  | WB Statement Coverage |
+|      Increase the quantity of a product with a change date in the future      | productController | Unit Test  | WB Statement Coverage |
+| Increase the quantity of a product with a change date before the arrival date | productController | Unit Test  | WB Statement Coverage |
+|                                **sellProduct**                                |                   |            |                       |
+|                    Sell a product (decrease the quantity)                     | productController | Unit Test  | WB Statement Coverage |
+|            Decrease the quantity of a product that does not exist             | productController | Unit Test  | WB Statement Coverage |
+|               Sell a product with a selling date in the future                | productController | Unit Test  | WB Statement Coverage |
+|          Sell a product with a selling date before the arrival date           | productController | Unit Test  | WB Statement Coverage |
+|                    Sell a product that is already sold out                    | productController | Unit Test  | WB Statement Coverage |
+|                  Sell more units than the available quantity                  | productController | Unit Test  | WB Statement Coverage |
+|                                **getProducts**                                |                   |            |                       |
+|            Get all products with only one product in the database             | productController | Unit Test  | WB Statement Coverage |
+|            Get all products with multiple products in the database            | productController | Unit Test  | WB Statement Coverage |
+|          Get all products in the database even if some are sold out           | productController | Unit Test  | WB Statement Coverage |
+|               Get all products with no products in the database               | productController | Unit Test  | WB Statement Coverage |
+|                    Get all products with a category filter                    | productController | Unit Test  | WB Statement Coverage |
+|                     Get all products with a model filter                      | productController | Unit Test  | WB Statement Coverage |
+|       Try to get all products by category without specifying a category       | productController | Unit Test  | WB Statement Coverage |
+|          Try to get all products by category with a model specified           | productController | Unit Test  | WB Statement Coverage |
+|          Try to get all products by model without specifying a model          | productController | Unit Test  | WB Statement Coverage |
+|            Try to get all products by model with a category filter            | productController | Unit Test  | WB Statement Coverage |
+|          Try to get all products by model with a non-existing model           | productController | Unit Test  | WB Statement Coverage |
+|         Get all products without grouping but with a category filter          | productController | Unit Test  | WB Statement Coverage |
+|           Get all products without grouping but with a model filter           | productController | Unit Test  | WB Statement Coverage |
+|                           **getAvailableProducts**                            |                   |            |                       |
+|       Get all available products with only one product in the database        | productController | Unit Test  | WB Statement Coverage |
+|       Get all available products with multiple products in the database       | productController | Unit Test  | WB Statement Coverage |
+|          Get all available products with no products in the database          | productController | Unit Test  | WB Statement Coverage |
+|               Get all available products with a category filter               | productController | Unit Test  | WB Statement Coverage |
+|                Get all available products with a model filter                 | productController | Unit Test  | WB Statement Coverage |
+|  Try to get all available products by category without specifying a category  | productController | Unit Test  | WB Statement Coverage |
+|     Try to get all available products by model without specifying a model     | productController | Unit Test  | WB Statement Coverage |
+|     Try to get all available products by model with a non-existing model      | productController | Unit Test  | WB Statement Coverage |
+|    Get all available products without grouping but with a category filter     | productController | Unit Test  | WB Statement Coverage |
+|      Get all available products without grouping but with a model filter      | productController | Unit Test  | WB Statement Coverage |
+|                             **deleteAllProducts**                             |                   |            |                       |
+|                      Delete all products in the database                      | productController | Unit Test  | WB Statement Coverage |
+|                               **deleteProduct**                               |                   |            |                       |
+|                       Delete a product in the database                        | productController | Unit Test  | WB Statement Coverage |
+|                  Try to delete a product that does not exist                  | productController | Unit Test  | WB Statement Coverage |
 
 |                         Test case name                         | Object(s) tested | Test level |    Technique used     |
 | :------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
@@ -392,64 +392,35 @@ involved the following steps:
 |                Get all carts from the database                 |  cartController  | Unit Test  | WB Statement Coverage |
 |         Get all carts from the database but none exist         |  cartController  | Unit Test  | WB Statement Coverage |
 
-|                          Test case name                           | Object(s) tested  | Test level |    Technique used     |
-| :---------------------------------------------------------------: | :---------------: | :--------: | :-------------------: |
-|                       **registerProducts**                        |                   |            |                       |
-|                        Register a product                         | productController | Unit Test  | WB Statement Coverage |
-|             RRegister a product without arrival date              | productController | Unit Test  | WB Statement Coverage |
-|                Register a product without details                 | productController | Unit Test  | WB Statement Coverage |
-|     Register a product without arrival date but with details      | productController | Unit Test  | WB Statement Coverage |
-|      Register a product with details but without arrivalDate      | productController | Unit Test  | WB Statement Coverage |
-|        Register a product without details and arrivalDate         | productController | Unit Test  | WB Statement Coverage |
-|                    Fails to register a product                    | productController | Unit Test  | WB Statement Coverage |
-|                       **getProductByModel**                       |                   |            |                       |
-|                      Gets a product by model                      | productController | Unit Test  | WB Statement Coverage |
-|              Returns null when product is not found               | productController | Unit Test  | WB Statement Coverage |
-|                  Fails to get a product by model                  | productController | Unit Test  | WB Statement Coverage |
-|                     **changeProductQuantity**                     |                   |            |                       |
-|                 Changes the quantity of a product                 | productController | Unit Test  | WB Statement Coverage |
-|       Changes the quantity of a product without change date       | productController | Unit Test  | WB Statement Coverage |
-|             Fails to change the quantity of a product             | productController | Unit Test  | WB Statement Coverage |
-|                          **sellProduct**                          |                   |            |                       |
-|                          Sells a product                          | productController | Unit Test  | WB Statement Coverage |
-|               Sells a product without selling date                | productController | Unit Test  | WB Statement Coverage |
-|                      Fails to sell a product                      | productController | Unit Test  | WB Statement Coverage |
-|                     **getProductsByCategory**                     |                   |            |                       |
-|              Gets all products of a certain category              | productController | Unit Test  | WB Statement Coverage |
-|      Gets an array of a single product of a certain category      | productController | Unit Test  | WB Statement Coverage |
-|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
-|                 Fails to get products by category                 | productController | Unit Test  | WB Statement Coverage |
-|                      **getProductsByModel**                       |                   |            |                       |
-|               Gets all products of a certain model                | productController | Unit Test  | WB Statement Coverage |
-|       Gets an array of a single product of a certain model        | productController | Unit Test  | WB Statement Coverage |
-|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
-|                  Fails to get products by model                   | productController | Unit Test  | WB Statement Coverage |
-|                        **getAllProducts**                         |                   |            |                       |
-|                         Gets all products                         | productController | Unit Test  | WB Statement Coverage |
-|                 Gets an array of a single product                 | productController | Unit Test  | WB Statement Coverage |
-|         Returns an empty array when no products are found         | productController | Unit Test  | WB Statement Coverage |
-|                     Fails to get all products                     | productController | Unit Test  | WB Statement Coverage |
-|                **getAvailableProductsByCategory**                 |                   |            |                       |
-|         Gets all available products of a certain category         | productController | Unit Test  | WB Statement Coverage |
-| Gets an array of a single available product of a certain category | productController | Unit Test  | WB Statement Coverage |
-|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
-|            Fails to get available products by category            | productController | Unit Test  | WB Statement Coverage |
-|                  **getAvailableProductsByModel**                  |                   |            |                       |
-|          Gets all available products of a certain model           | productController | Unit Test  | WB Statement Coverage |
-|  Gets an array of a single available product of a certain model   | productController | Unit Test  | WB Statement Coverage |
-|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
-|             Fails to get available products by model              | productController | Unit Test  | WB Statement Coverage |
-|                    **getAllAvailableProducts**                    |                   |            |                       |
-|                    Gets all available products                    | productController | Unit Test  | WB Statement Coverage |
-|            Gets an array of a single available product            | productController | Unit Test  | WB Statement Coverage |
-|    Returns an empty array when no available products are found    | productController | Unit Test  | WB Statement Coverage |
-|                Fails to get all available products                | productController | Unit Test  | WB Statement Coverage |
-|                       **deleteAllProducts**                       |                   |            |                       |
-|              Deletes all products from the database               | productController | Unit Test  | WB Statement Coverage |
-|          Fails to delete all products from the database           | productController | Unit Test  | WB Statement Coverage |
-|                         **deleteProduct**                         |                   |            |                       |
-|                Deletes a product from the database                | productController | Unit Test  | WB Statement Coverage |
-|            Fails to delete a product from the database            | productController | Unit Test  | WB Statement Coverage |
+|                        Test case name                         | Object(s) tested | Test level |    Technique used     |
+| :-----------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
+|                        **createUser**                         |                  |            |                       |
+|                       Create a new user                       |  userController  | Unit Test  | WB Statement Coverage |
+|                  Fails to create a new user                   |  userController  | Unit Test  | WB Statement Coverage |
+|                         **getUsers**                          |                  |            |                       |
+|                         Get all users                         |  userController  | Unit Test  | WB Statement Coverage |
+|                        No users found                         |  userController  | Unit Test  | WB Statement Coverage |
+|                      **getUsersByRole**                       |                  |            |                       |
+|                       Get users by role                       |  userController  | Unit Test  | WB Statement Coverage |
+|                    No users found for role                    |  userController  | Unit Test  | WB Statement Coverage |
+|                    **getUsersByUsername**                     |                  |            |                       |
+|              Admin retrieves any non-admin user               |  userController  | Unit Test  | WB Statement Coverage |
+|           Non-admin retrieves their own information           |  userController  | Unit Test  | WB Statement Coverage |
+|    Non-admin tries to retrieve another user's information     |  userController  | Unit Test  | WB Statement Coverage |
+|          Admin tries to retrieve a non-existent user          |  userController  | Unit Test  | WB Statement Coverage |
+|    Admin tries to retrieve a different admin's information    |  userController  | Unit Test  | WB Statement Coverage |
+|                        **deleteUser**                         |                  |            |                       |
+|                Admin deletes a non-admin user                 |  userController  | Unit Test  | WB Statement Coverage |
+|              Non-admin deletes their own account              |  userController  | Unit Test  | WB Statement Coverage |
+|       Non-admin tries to delete another user's account        |  userController  | Unit Test  | WB Statement Coverage |
+|           Someone tries to delete an admin account            |  userController  | Unit Test  | WB Statement Coverage |
+|                         **deleteAll**                         |                  |            |                       |
+|               Admin deletes all non-admin users               |  userController  | Unit Test  | WB Statement Coverage |
+|                      **updateUserInfo**                       |                  |            |                       |
+|              User updates their own information               |  userController  | Unit Test  | WB Statement Coverage |
+|        User tries to update another user's information        |  userController  | Unit Test  | WB Statement Coverage |
+| User updates their information with a birthdate in the future |  userController  | Unit Test  | WB Statement Coverage |
+|    Update user information for a user that does not exist     |  userController  | Unit Test  | WB Statement Coverage |
 
 |                                   Test case name                                    | Object(s) tested | Test level |    Technique used     |
 | :---------------------------------------------------------------------------------: | :--------------: | :--------: | :-------------------: |
@@ -459,6 +430,7 @@ involved the following steps:
 |      should throw ExistingReviewError when adding a review that already exists      | reviewController | Unit Test  | WB Statement Coverage |
 |                                **getProductReviews**                                |                  |            |                       |
 |                                should return reviews                                | reviewController | Unit Test  | WB Statement Coverage |
+|  should throw ProductNotFoundError when getting reviews for a non-existing product  | reviewController | Unit Test  | WB Statement Coverage |
 |                                  **deleteReview**                                   |                  |            |                       |
 |                               should delete a review                                | reviewController | Unit Test  | WB Statement Coverage |
 | should throw ProductNotFoundError when deleting a review for a non-existing product | reviewController | Unit Test  | WB Statement Coverage |
@@ -513,6 +485,10 @@ involved the following steps:
 |             Returns 401 if username does not correspond to the user's username              |    User APIs     |  API Test  | WB Statement Coverage |
 |                     Returns 400 if birthdate is after the current date                      |    User APIs     |  API Test  | WB Statement Coverage |
 | Returns 401 if username does not correspond to the user's username and the user is an admin |    User APIs     |  API Test  | WB Statement Coverage |
+|                       Returns 422 if birthdate is not an ISO8601 date                       |    User APIs     |  API Test  | WB Statement Coverage |
+|                              Returns 422 if address is missing                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                              Returns 422 if surname is missing                              |    User APIs     |  API Test  | WB Statement Coverage |
+|                               Returns 422 if name is missing                                |    User APIs     |  API Test  | WB Statement Coverage |
 |                              **POST /ezelectronics/sessions**                               |                  |            |                       |
 |                                  Returns 200 if successful                                  |    Auth APIs     |  API Test  | WB Statement Coverage |
 |                           Returns 401 if username does not exist                            |    Auth APIs     |  API Test  | WB Statement Coverage |
@@ -789,46 +765,46 @@ involved the following steps:
 
 ### Coverage of FR
 
-|   ID    |                              Name                              |                                                                            Test(s)                                                                             |
-| :-----: | :------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| **FR1** |                       **Manage account**                       |                                                                                                                                                                |
-|  FR1.1  |                             Login                              |                                                        test_integration/user.test.ts - `POST /sessions`                                                        |
-|  FR1.2  |                             Logout                             |                                                   test_integration/user.test.ts - `DELETE /sessions/current`                                                   |
-|  FR1.3  |                   Create a new user account                    |                                     test_integration/user.test.ts - `POST /users`, controller/user.test.ts - `createUser`                                      |
-| **FR2** |                        **Manage users**                        |                                                                                                                                                                |
-|  FR2.1  |                   Show the list of all users                   |                                       test_integration/user.test.ts - `GET /users`, controller/user.test.ts - `getUsers`                                       |
-|  FR2.2  |        Show the list of all users with a specific role         |                              test_integration/user.test.ts - `GET /users/roles/:role`, controller/user.test.ts - `getUsersByRole`                              |
-|  FR2.3  |             Show the information of a single user              |                             test_integration/user.test.ts - `GET /users/:username`, controller/user.test.ts - `getUserByUsername`                              |
-|  FR2.4  |            Update the information of a single user             |                              test_integration/user.test.ts - `PATCH /users/:username`, controller/user.test.ts - `updateUserInfo`                              |
-|  FR2.5  |                Delete a single _non Admin_ user                |                               test_integration/user.test.ts - `DELETE /users/:username`, controller/user.test.ts - `deleteUser`                                |
-|  FR2.6  |                  Delete all _non Admin_ users                  |                                     test_integration/user.test.ts - `DELETE /users`, controller/user.test.ts - `deleteAll`                                     |
-| **FR3** |                      **Manage products**                       |                                                                                                                                                                |
-|  FR3.1  |                 Register a set of new products                 |                       test_integration/product.test.ts - `POST /ezelectronics/products`, controller/product.test.ts - `registerProducts`                       |
-|  FR3.2  |                Update the quantity of a product                |                test_integration/product.test.ts - `PATCH /ezelectronics/products/:model`, controller/product.test.ts - `changeProductQuantity`                 |
-|  FR3.3  |                         Sell a product                         |                   test_integration/product.test.ts - `PATCH /ezelectronics/products/:model/sell`, controller/product.test.ts - `sellProduct`                   |
-|  FR3.4  |                 Show the list of all products                  |                          test_integration/product.test.ts - `GET /ezelectronics/products`, controller/product.test.ts - `getProducts`                          |
-| FR3.4.1 |            Show the list of all available products             |                test_integration/product.test.ts - `GET /ezelectronics/products/available`, controller/product.test.ts - `getAvailableProducts`                 |
-|  FR3.5  |      Show the list of all products with the same category      |          test_integration/product.test.ts - `GET /ezelectronics/products`, `describe("ProductController")`, controller/product.test.ts - `getProducts`           |
+|   ID    |                              Name                              |                                                                        Test(s)                                                                         |
+| :-----: | :------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------: |
+| **FR1** |                       **Manage account**                       |                                                                                                                                                        |
+|  FR1.1  |                             Login                              |                                                    test_integration/user.test.ts - `POST /sessions`                                                    |
+|  FR1.2  |                             Logout                             |                                               test_integration/user.test.ts - `DELETE /sessions/current`                                               |
+|  FR1.3  |                   Create a new user account                    |                                 test_integration/user.test.ts - `POST /users`, controller/user.test.ts - `createUser`                                  |
+| **FR2** |                        **Manage users**                        |                                                                                                                                                        |
+|  FR2.1  |                   Show the list of all users                   |                                   test_integration/user.test.ts - `GET /users`, controller/user.test.ts - `getUsers`                                   |
+|  FR2.2  |        Show the list of all users with a specific role         |                          test_integration/user.test.ts - `GET /users/roles/:role`, controller/user.test.ts - `getUsersByRole`                          |
+|  FR2.3  |             Show the information of a single user              |                         test_integration/user.test.ts - `GET /users/:username`, controller/user.test.ts - `getUserByUsername`                          |
+|  FR2.4  |            Update the information of a single user             |                          test_integration/user.test.ts - `PATCH /users/:username`, controller/user.test.ts - `updateUserInfo`                          |
+|  FR2.5  |                Delete a single _non Admin_ user                |                           test_integration/user.test.ts - `DELETE /users/:username`, controller/user.test.ts - `deleteUser`                            |
+|  FR2.6  |                  Delete all _non Admin_ users                  |                                 test_integration/user.test.ts - `DELETE /users`, controller/user.test.ts - `deleteAll`                                 |
+| **FR3** |                      **Manage products**                       |                                                                                                                                                        |
+|  FR3.1  |                 Register a set of new products                 |                   test_integration/product.test.ts - `POST /ezelectronics/products`, controller/product.test.ts - `registerProducts`                   |
+|  FR3.2  |                Update the quantity of a product                |            test_integration/product.test.ts - `PATCH /ezelectronics/products/:model`, controller/product.test.ts - `changeProductQuantity`             |
+|  FR3.3  |                         Sell a product                         |               test_integration/product.test.ts - `PATCH /ezelectronics/products/:model/sell`, controller/product.test.ts - `sellProduct`               |
+|  FR3.4  |                 Show the list of all products                  |                      test_integration/product.test.ts - `GET /ezelectronics/products`, controller/product.test.ts - `getProducts`                      |
+| FR3.4.1 |            Show the list of all available products             |            test_integration/product.test.ts - `GET /ezelectronics/products/available`, controller/product.test.ts - `getAvailableProducts`             |
+|  FR3.5  |      Show the list of all products with the same category      |     test_integration/product.test.ts - `GET /ezelectronics/products`, `describe("ProductController")`, controller/product.test.ts - `getProducts`      |
 | FR3.5.1 | Show the list of all available products with the same category | test_integration/product.test.ts - `GET /ezelectronics/products`, `describe("ProductController")`, controller/product.test.ts - `getAvailableProducts` |
-|  FR3.6  |       Show the list of all products with the same model        |             test_integration/product.test.ts - `GET /ezelectronics/products, describe("ProductController")` , controller/product.test.ts - `getProducts`              |
-| FR3.6.1 |  Show the list of all available products with the same model   |    test_integration/product.test.ts - `GET /ezelectronics/products, describe("ProductController")` , controller/product.test.ts - `getAvailableProducts`    |
-|  FR3.7  |                        Delete a product                        |                    test_integration/product.test.ts - `DELETE /ezelectronics/products/:model`, controller/product.test.ts - `deleteProduct`                    |
-|  FR3.8  |                      Delete all products                       |                     test_integration/product.test.ts - `DELETE /ezelectronics/products`, controller/product.test.ts - `deleteAllProducts`                      |
-| **FR4** |                       **Manage reviews**                       |                                                                                                                                                                |
-|  FR4.1  |                 Add a new review to a product                  |                               test_integration/review.test.ts - `POST /reviews/:model`, controller/review.test.ts - `addReview`                                |
-|  FR4.2  |       Get the list of all reviews assigned to a product        |                            test_integration/review.test.ts - `GET /reviews/:model`, controller/review.test.ts - `getProductReviews`                            |
-|  FR4.3  |               Delete a review given to a product               |                             test_integration/review.test.ts - `DELETE /reviews/:model`, controller/review.test.ts - `deleteReview`                             |
-|  FR4.4  |                Delete all reviews of a product                 |                      test_integration/review.test.ts - `DELETE /reviews/:model/all`, controller/review.test.ts - `deleteReviewsOfProduct`                      |
-|  FR4.5  |               Delete all reviews of all products               |                              test_integration/review.test.ts - `DELETE /reviews`, controller/review.test.ts - `deleteAllReviews`                               |
-| **FR5** |                        **Manage carts**                        |                                                                                                                                                                |
-|  FR5.1  |            Show the information of the current cart            |                            test_integration/cart.test.ts - `GET /ezelectronics/carts/current`, controller/cart.test.ts - `getCart`                             |
-|  FR5.2  |               Add a product to the current cart                |                               test_integration/cart.test.ts - `POST /ezelectronics/carts`, controller/cart.test.ts - `addToCart`                               |
-|  FR5.3  |                   Checkout the current cart                    |                        test_integration/cart.test.ts - `PATCH /ezelectronics/carts/checkout`, controller/cart.test.ts - `checkoutCart`                         |
-|  FR5.4  |               Show the history of the paid carts               |                        test_integration/cart.test.ts - `GET /ezelectronics/carts/history`, controller/cart.test.ts - `getCustomerCarts`                        |
-|  FR5.5  |             Remove a product from the current cart             |                test_integration/cart.test.ts - `DELETE /ezelectronics/carts/current/:model`, controller/cart.test.ts - `removeProductFromCart`                 |
-|  FR5.6  |                    Delete the current cart                     |                          test_integration/cart.test.ts - `DELETE /ezelectronics/carts/current`, controller/cart.test.ts - `clearCart`                          |
-|  FR5.7  |             See the list of all carts of all users             |                                                            controller/cart.test.ts - `getAllCarts`                                                             |
-|  FR5.8  |                        Delete all carts                        |                                                           controller/cart.test.ts - `deleteAllCarts`                                                           |
+|  FR3.6  |       Show the list of all products with the same model        |      test_integration/product.test.ts - `GET /ezelectronics/products, describe("ProductController")` , controller/product.test.ts - `getProducts`      |
+| FR3.6.1 |  Show the list of all available products with the same model   | test_integration/product.test.ts - `GET /ezelectronics/products, describe("ProductController")` , controller/product.test.ts - `getAvailableProducts`  |
+|  FR3.7  |                        Delete a product                        |                test_integration/product.test.ts - `DELETE /ezelectronics/products/:model`, controller/product.test.ts - `deleteProduct`                |
+|  FR3.8  |                      Delete all products                       |                 test_integration/product.test.ts - `DELETE /ezelectronics/products`, controller/product.test.ts - `deleteAllProducts`                  |
+| **FR4** |                       **Manage reviews**                       |                                                                                                                                                        |
+|  FR4.1  |                 Add a new review to a product                  |                           test_integration/review.test.ts - `POST /reviews/:model`, controller/review.test.ts - `addReview`                            |
+|  FR4.2  |       Get the list of all reviews assigned to a product        |                        test_integration/review.test.ts - `GET /reviews/:model`, controller/review.test.ts - `getProductReviews`                        |
+|  FR4.3  |               Delete a review given to a product               |                         test_integration/review.test.ts - `DELETE /reviews/:model`, controller/review.test.ts - `deleteReview`                         |
+|  FR4.4  |                Delete all reviews of a product                 |                  test_integration/review.test.ts - `DELETE /reviews/:model/all`, controller/review.test.ts - `deleteReviewsOfProduct`                  |
+|  FR4.5  |               Delete all reviews of all products               |                          test_integration/review.test.ts - `DELETE /reviews`, controller/review.test.ts - `deleteAllReviews`                           |
+| **FR5** |                        **Manage carts**                        |                                                                                                                                                        |
+|  FR5.1  |            Show the information of the current cart            |                        test_integration/cart.test.ts - `GET /ezelectronics/carts/current`, controller/cart.test.ts - `getCart`                         |
+|  FR5.2  |               Add a product to the current cart                |                           test_integration/cart.test.ts - `POST /ezelectronics/carts`, controller/cart.test.ts - `addToCart`                           |
+|  FR5.3  |                   Checkout the current cart                    |                    test_integration/cart.test.ts - `PATCH /ezelectronics/carts/checkout`, controller/cart.test.ts - `checkoutCart`                     |
+|  FR5.4  |               Show the history of the paid carts               |                    test_integration/cart.test.ts - `GET /ezelectronics/carts/history`, controller/cart.test.ts - `getCustomerCarts`                    |
+|  FR5.5  |             Remove a product from the current cart             |            test_integration/cart.test.ts - `DELETE /ezelectronics/carts/current/:model`, controller/cart.test.ts - `removeProductFromCart`             |
+|  FR5.6  |                    Delete the current cart                     |                      test_integration/cart.test.ts - `DELETE /ezelectronics/carts/current`, controller/cart.test.ts - `clearCart`                      |
+|  FR5.7  |             See the list of all carts of all users             |                                                        controller/cart.test.ts - `getAllCarts`                                                         |
+|  FR5.8  |                        Delete all carts                        |                                                       controller/cart.test.ts - `deleteAllCarts`                                                       |
 
 ### Coverage white box
 
